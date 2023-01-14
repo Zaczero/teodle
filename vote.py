@@ -8,7 +8,7 @@ from clip import Clip
 from rank import Rank
 
 MAX_STARS = 2
-VOTE_WHITELIST = set(os.getenv('VOTE_WHITELIST', '').split(','))
+VOTE_WHITELIST = set(os.getenv('VOTE_WHITELIST', '').lower().split(','))
 
 
 class VoteState(Enum):
@@ -113,6 +113,8 @@ class Vote:
         self.teo_rank = next(r for r in self.clip.ranks if r.text == text)
 
     def cast_user_vote(self, username: str, rank: str) -> bool:
+        username = username.lower()
+        
         if self.state != VoteState.VOTING:
             return False
 
