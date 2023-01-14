@@ -1,15 +1,16 @@
-from rank import RankImage, Rank
+from rank import Rank
 
 
 class Clip:
     embed: bool
     url: str
+    credits: str
     ranks: list[Rank]
-    answer: str
     answer_idx: int = -1
 
     def __init__(self, text: str):
         lines = [line.strip() for line in text.split('\n') if line.strip()]
+        assert len(lines) >= 3, 'Clip must contain at least 3 lines: url, credits, rank'
 
         self.embed = lines[0].startswith('embed')
 
@@ -20,9 +21,10 @@ class Clip:
 
         assert self.url.startswith('http'), f'Invalid URL: {self.url}'
 
+        self.credits = lines[1]
         self.ranks = []
 
-        for i, line in enumerate(lines[1:]):
+        for i, line in enumerate(lines[2:]):
             line = line.lower().strip().replace(' ', '_')
 
             rank = Rank(line.lstrip('*_').lstrip())
@@ -30,9 +32,12 @@ class Clip:
 
             if line.startswith('*'):
                 assert self.answer_idx < 0, f'Found multiple answers for {self.url}'
-                self.answer = rank.text
                 self.answer_idx = i
 
         assert self.ranks, f'No ranks were provided for {self.url}'
         assert self.answer_idx > -1, f'No answer was provided for {self.url}'
         assert len(set(self.ranks)) == len(self.ranks), f'Duplicate ranks for {self.url}'
+
+    @property
+    def answer(self) -> Rank:
+        return self.ranks[self.answer_idx]

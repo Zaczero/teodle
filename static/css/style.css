@@ -6,6 +6,12 @@ iframe {
     border: 0;
 }
 
+.credits {
+    color: #888;
+    letter-spacing: .2px;
+    font-size: 0.75em;
+}
+
 .card-body {
     padding-bottom: 0;
 }

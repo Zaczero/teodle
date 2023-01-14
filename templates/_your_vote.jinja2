@@ -1,4 +1,4 @@
-{% macro new(your_vote, vote, get_image_url) %}
+{% macro new(your_vote, vote) %}
 
     <div class="your-vote">
 
@@ -11,10 +11,10 @@
                     <td>
                         <div class="row g-2">
                             <div class="col-3">
-                                <img class="img-fluid" src="{{ get_image_url(your_vote) }}">
+                                <img class="img-fluid" src="/rank/{{ your_vote.raw }}">
                             </div>
                             <div class="col">
-                                {{ your_vote.title() }}
+                                {{ your_vote.title }}
                             </div>
                         </div>
                     </td>
@@ -24,10 +24,10 @@
                     <td>
                         <div class="row g-2">
                             <div class="col-3">
-                                <img class="img-fluid" src="{{ get_image_url(vote.clip.answer) }}">
+                                <img class="img-fluid" src="/rank/{{ vote.clip.answer.raw }}">
                             </div>
                             <div class="col">
-                                {{ vote.clip.answer.title() }}
+                                {{ vote.clip.answer.title }}
                             </div>
                         </div>
                     </td>

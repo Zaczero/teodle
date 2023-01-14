@@ -14,20 +14,26 @@
         {% endif %}
     </div>
 
+{% endblock %}
+{% block body_nocontainer %}
+
     <form action="/cast_vote" method="post">
 
-        <div class="row g-2 text-center mb-4">
+        <div class="row g-2 justify-content-center text-center mx-2 mb-4">
             {% for rank in vote.clip.ranks %}
-                <div class="col mb-2">
-                    <input id="option-{{ rank.text }}" type="radio" class="btn-check" name="rank"
+                <div class="col-auto mb-2">
+                    <input id="option-{{ rank.text }}"
+                           type="radio"
+                           class="btn-check"
+                           name="rank"
                            value="{{ rank.text }}"
                            required>
                     <label for="option-{{ rank.text }}" class="btn btn-light border">
 
-                        <span class="d-flex flex-column">
+                        <span class="d-flex flex-column align-items-center">
 
                             <div class="d-flex align-items-center" style="width: 120px; height: 120px">
-                                <img class="img-fluid" src="{{ get_image_url(rank.text) }}">
+                                <img class="img-fluid" src="/rank/{{ rank.raw }}">
                             </div>
 
                             <span>
@@ -41,21 +47,29 @@
             {% endfor %}
         </div>
 
-        <div class="d-flex justify-content-between">
-            <div>
-                <div class="btn border rounded">
-                    <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
-                    <span class="ms-1">
+        <div class="container">
+            <div class="d-flex justify-content-between">
+
+                <div>
+                    <div class="btn border rounded">
+                        <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
+                        <span class="ms-1">
                         Total votes: <b id="total-votes">🛜</b>
                     </span>
+                    </div>
+
+                    <div class="btn border rounded">
+                        Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
+                    </div>
+
+                    <div class="btn border rounded">
+                        by <b>{{ vote.clip.credits }}</b>
+                    </div>
                 </div>
 
-                <div class="btn border rounded">
-                    Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
-                </div>
+                <input type="submit" class="btn btn-primary" value="Submit vote">
+
             </div>
-
-            <input type="submit" class="btn btn-primary" value="Submit vote">
         </div>
     </form>
 

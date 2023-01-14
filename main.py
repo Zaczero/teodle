@@ -1,5 +1,6 @@
 import base64
 import os
+import random
 import traceback
 from asyncio import create_task, sleep, Event, Lock
 from pathlib import Path
@@ -34,6 +35,14 @@ vote_event = Event()
 socket: Optional[WebSocketClientProtocol] = None
 socket_event = Event()
 socket_lock = Lock()
+
+
+# vote.begin_next_clip()
+# vote.cast_user_vote(str(random.random()), 'silver')
+# vote.cast_user_vote(str(random.random()), 'silver')
+# vote.cast_user_vote(str(random.random()), 'silver')
+# vote.cast_user_vote(str(random.random()), 'silverelite')
+# vote.cast_user_vote(str(random.random()), 'silverelite')
 
 
 @app.on_event('startup')
@@ -135,14 +144,12 @@ async def index(request: Request):
     elif vote.state == VoteState.VOTING:
         return tmpl.TemplateResponse('voting.jinja2', {
             'request': request,
-            'vote': vote,
-            'get_image_url': get_image_url
+            'vote': vote
         })
     elif vote.state == VoteState.RESULTS:
         return tmpl.TemplateResponse('results.jinja2', {
             'request': request,
-            'vote': vote,
-            'get_image_url': get_image_url
+            'vote': vote
         })
 
     raise Exception('Not implemented vote state')
@@ -213,13 +220,9 @@ async def post_config(config: str = Form()):
     return RedirectResponse(app.url_path_for(index.__name__))
 
 
-def get_image_url(rank: str) -> str:
-    return app.url_path_for(image.__name__, rank=rank)
-
-
-@app.get('/img/{rank}')
-async def image(rank: str):
-    rank_image = next((r.image for r in vote.clip.ranks if r.text == rank), None)
+@app.get('/rank/{raw:path}')
+async def rank(raw: str):
+    rank_image = next((r.image for r in vote.clip.ranks if r.raw == raw), None)
 
     if rank_image is None:
         raise HTTPException(404)
@@ -239,6 +242,7 @@ async def websocket(ws: WebSocket):
     try:
         while True:
             await ws.send_json({'total': vote.total_users_votes()})
+            await sleep(0.2)
 
             await vote_event.wait()
             vote_event.clear()

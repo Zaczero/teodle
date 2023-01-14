@@ -23,11 +23,14 @@ class RankImage:
 
 
 class Rank:
+    raw: str
     text: str
     title: str
     image: RankImage
 
     def __init__(self, raw: str):
+        self.raw = raw
+
         if '/' in raw:
             parts = raw.split('/')
             assert len(parts) == 2, f'Invalid rank format: {raw}'

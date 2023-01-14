@@ -17,7 +17,7 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    {{ your_vote.new(vote.teo_vote, vote, get_image_url) }}
+                    {{ your_vote.new(vote.teo_rank, vote) }}
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
                     <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes() }}</b></p>
                 </div>
                 <div class="card-body">
-                    {{ your_vote.new(vote.users_vote(), vote, get_image_url) }}
+                    {{ your_vote.new(vote.users_rank, vote) }}
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
         </form>
     {% else %}
         <form class="text-start" action="/next_clip" method="post">
-            <input type="submit" class="btn btn-danger" value="Finish">
+            <input type="submit" class="btn btn-secondary" value="Finish">
         </form>
     {% endif %}
 
@@ -91,7 +91,7 @@
 
                 backgroundColor: [
                     {% for rank in vote.clip.ranks %}
-                        {% if rank.text == vote.clip.answer %}
+                        {% if rank.raw == vote.clip.answer.raw %}
                             "#CC730E",
                         {% else %}
                             "#036E99",
@@ -101,7 +101,7 @@
 
                 borderColor: [
                     {% for rank in vote.clip.ranks %}
-                        {% if rank.text == vote.clip.answer %}
+                        {% if rank.raw == vote.clip.answer.raw %}
                             "#D9A404",
                         {% else %}
                             "#1CACE5",
@@ -124,7 +124,7 @@
 
                         label: {
                             display: true,
-                            content: urlToImage('{{ get_image_url(rank.text) }}', {{ rank.image.width }}, {{ rank.image.height }}),
+                            content: urlToImage('/rank/{{ rank.raw }}', {{ rank.image.width }}, {{ rank.image.height }}),
                             width: '50%',
                             height: '50%',
                             padding: 2,
