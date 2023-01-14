@@ -1,0 +1,207 @@
+{% extends '_base.jinja2' %}
+{% import '_your_vote.jinja2' as your_vote %}
+{% block body %}
+
+    <div class="row mb-3">
+        <div class="col">
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <img src="{{ url_for('static', path='/img/teo.png') }}" height="48">
+                    <h3 class="mb-0 ms-3">
+                        Teo
+
+                        {% for _ in range(vote.current_teo_stars) %}
+                            🌟
+                        {% endfor %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {{ your_vote.new(vote.teo_vote, vote, get_image_url) }}
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <img src="{{ url_for('static', path='/img/chat.png') }}" height="48">
+                    <h3 class="mb-0 ms-3">
+                        Chat
+
+                        {% for _ in range(vote.current_users_stars) %}
+                            🌟
+                        {% endfor %}
+                    </h3>
+                    <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes() }}</b></p>
+                </div>
+                <div class="card-body">
+                    {{ your_vote.new(vote.users_vote(), vote, get_image_url) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="height: 600px">
+        <canvas id="chart" class="mb-4"></canvas>
+    </div>
+
+    {% if vote.has_next_clip %}
+        <form class="text-end" action="/next_clip" method="post">
+            <input type="submit" class="btn btn-primary" value="Next clip ▶️">
+        </form>
+    {% else %}
+        <form class="text-start" action="/next_clip" method="post">
+            <input type="submit" class="btn btn-danger" value="Finish">
+        </form>
+    {% endif %}
+
+
+{% endblock %}
+{% block script %}
+
+    <script>
+        const urlToImage = (url, width, height) => {
+            let image = new Image(width, height)
+            image.src = url
+            return image
+        }
+
+        const titleCase = text => {
+            return text.toLowerCase().replace(/(^|\s)\S/g, L => L.toUpperCase())
+        }
+
+        const ctx = document.getElementById('chart').getContext('2d')
+
+        const data = {
+            labels: [
+                {% for rank in vote.clip.ranks %}
+                    "{{ rank.title }}",
+                {% endfor %}
+            ],
+
+            datasets: [{
+                data: [
+                    {% for rank in vote.clip.ranks %}
+                        {{ vote.users_votes_percentage[rank.text] }},
+                    {% endfor %}
+                ],
+
+                backgroundColor: [
+                    {% for rank in vote.clip.ranks %}
+                        {% if rank.text == vote.clip.answer %}
+                            "#CC730E",
+                        {% else %}
+                            "#036E99",
+                        {% endif %}
+                    {% endfor %}
+                ],
+
+                borderColor: [
+                    {% for rank in vote.clip.ranks %}
+                        {% if rank.text == vote.clip.answer %}
+                            "#D9A404",
+                        {% else %}
+                            "#1CACE5",
+                        {% endif %}
+                    {% endfor %}
+                ],
+                borderWidth: 5
+            }]
+        }
+
+        const annotations = [
+            {% for rank in vote.clip.ranks %}
+                {% if rank.image.path.exists() %}
+                    {
+                        type: 'line',
+                        scaleID: 'x',
+                        value: '{{ rank.title }}',
+
+                        borderWidth: 0,
+
+                        label: {
+                            display: true,
+                            content: urlToImage('{{ get_image_url(rank.text) }}', {{ rank.image.width }}, {{ rank.image.height }}),
+                            width: '50%',
+                            height: '50%',
+                            padding: 2,
+                            position: '93%'
+                        }
+                    },
+                {% endif %}
+            {% endfor %}
+        ]
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                barPercentage: 0.75,
+
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+                            font: {
+                                size: 20
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+
+                        ticks: {
+                            font: {
+                                size: 18
+                            },
+
+                            callback: value => `${(value * 100).toFixed(0)}%`,
+                        }
+                    }
+                },
+
+                plugins: {
+                    annotation: {
+                        annotations: annotations
+                    },
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        padding: {
+                            x: 16,
+                            y: 8
+                        },
+                        displayColors: false,
+                        xAlign: 'center',
+
+                        titleAlign: 'center',
+                        titleFont: {
+                            size: 16
+                        },
+
+                        bodyAlign: 'center',
+                        bodyFont: {
+                            size: 18
+                        },
+
+                        callbacks: {
+                            label: ctx => `${(ctx.raw * 100).toFixed(0)}%`
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+
+{% endblock %}

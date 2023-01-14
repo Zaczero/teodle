@@ -1,0 +1,90 @@
+{% extends '_base.jinja2' %}
+{% block body %}
+
+    <div class="d-flex justify-content-center mb-3">
+        {% if vote.clip.embed %}
+            <div class="ratio ratio-16x9 w-75">
+                <iframe src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
+            </div>
+
+        {% else %}
+            <div class="px-5 py-4">
+                <a href="{{ vote.clip.url }}" target="_blank">{{ vote.clip.url }}</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <form action="/cast_vote" method="post">
+
+        <div class="row g-2 text-center mb-4">
+            {% for rank in vote.clip.ranks %}
+                <div class="col mb-2">
+                    <input id="option-{{ rank.text }}" type="radio" class="btn-check" name="rank"
+                           value="{{ rank.text }}"
+                           required>
+                    <label for="option-{{ rank.text }}" class="btn btn-light border">
+
+                        <span class="d-flex flex-column">
+
+                            <div class="d-flex align-items-center" style="width: 120px; height: 120px">
+                                <img class="img-fluid" src="{{ get_image_url(rank.text) }}">
+                            </div>
+
+                            <span>
+                                <span class="vote-mark">!</span>{{ rank.text }}
+                            </span>
+
+                        </span>
+
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="btn border rounded">
+                    <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
+                    <span class="ms-1">
+                        Total votes: <b id="total-votes">🛜</b>
+                    </span>
+                </div>
+
+                <div class="btn border rounded">
+                    Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Submit vote">
+        </div>
+    </form>
+
+{% endblock %}
+{% block script %}
+    <script>
+        const reconnect_interval = 5000
+        const total_votes = document.getElementById('total-votes')
+
+        let ws = new WebSocket(`${document.location.protocol === 'https:' ? 'wss' : 'ws'}://${document.location.host}/ws`)
+
+        ws.onopen = () => {
+            total_votes.textContent = '🔗'
+        }
+
+        ws.onmessage = e => {
+            const obj = JSON.parse(e.data)
+
+            total_votes.textContent = obj.total
+        }
+
+        ws.onclose = e => {
+            console.log(e)
+
+            total_votes.textContent = '⚠️'
+
+            setTimeout(() => {
+                ws = new WebSocket(ws.url)
+            }, reconnect_interval)
+        }
+    </script>
+{% endblock %}

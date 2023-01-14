@@ -1,0 +1,27 @@
+{% macro new(vote) %}
+    {% if vote.total_teo_stars or vote.total_users_stars %}
+
+        <div class="stars card mb-4">
+            <div class="card-body">
+
+                <h5>Teo</h5>
+                <p>
+                    (<b>{{ vote.total_teo_stars }}</b>)
+                    {% for _ in range(vote.total_teo_stars) %}
+                        ⭐️
+                    {% endfor %}
+                </p>
+
+                <h5>Chat</h5>
+                <p>
+                    (<b>{{ vote.total_users_stars }}</b>)
+                    {% for _ in range(vote.total_users_stars) %}
+                        ⭐️
+                    {% endfor %}
+                </p>
+
+            </div>
+        </div>
+
+    {% endif %}
+{% endmacro %}

@@ -1,0 +1,27 @@
+{% import '_stars.jinja2' as stars %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>teodle</title>
+
+    <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+</head>
+<body class="container my-4">
+
+<h3 class="mb-3 text-center">Teodle</h3>
+
+{{ stars.new(vote) }}
+
+{% block body %}{% endblock %}
+
+<script src="{{ url_for('static', path='/js/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', path='/js/chartjs-plugin-annotation.min.js') }}"></script>
+
+{% block script %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% macro new(your_vote, vote, get_image_url) %}
+
+    <div class="your-vote">
+
+        <div class="table-responsive">
+            <table class="table">
+
+                <tbody>
+                <tr>
+                    <td>You answered:</td>
+                    <td>
+                        <div class="row g-2">
+                            <div class="col-3">
+                                <img class="img-fluid" src="{{ get_image_url(your_vote) }}">
+                            </div>
+                            <div class="col">
+                                {{ your_vote.title() }}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Correct answer:</td>
+                    <td>
+                        <div class="row g-2">
+                            <div class="col-3">
+                                <img class="img-fluid" src="{{ get_image_url(vote.clip.answer) }}">
+                            </div>
+                            <div class="col">
+                                {{ vote.clip.answer.title() }}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+{% endmacro %}

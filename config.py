@@ -1,0 +1,1 @@
+RANK_FILE_DEFAULT_EXT = '.png'

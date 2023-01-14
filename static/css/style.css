@@ -1,0 +1,26 @@
+html, body {
+    font-size: 20px;
+}
+
+iframe {
+    border: 0;
+}
+
+.card-body {
+    padding-bottom: 0;
+}
+
+tr:last-child > td {
+    border-bottom: unset;
+}
+
+.vote-mark {
+    color: #9146ff;
+    font-size: 1.3em;
+    font-weight: bold;
+    font-style: italic;
+}
+
+div.btn {
+    cursor: unset;
+}

@@ -1,0 +1,16 @@
+embed https://www.youtube.com/embed/HoB_PqeZPNc
+* cs/silver
+cs/silverelite
+cs/nova
+cs/mg
+cs/mge
+cs/le
+cs/supreme
+cs/global
+
+https://example.com
+a
+* b
+c
+d
+e
