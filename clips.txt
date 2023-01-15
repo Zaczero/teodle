@@ -1,18 +1,56 @@
-embed https://www.youtube.com/embed/HoB_PqeZPNc
-someguy55
-* rl/bronze
-rl/gold
-rl/diamond
-cs/mg
-cs/mge
-
-embed https://www.youtube.com/embed/HoB_PqeZPNc
-someguy55
+embed https://www.youtube.com/embed/Qoi_R38rhhI
+mosyy
 cs/silver
 cs/silverelite
 cs/nova
 cs/mg
-* cs/mge
-cs/le
+cs/mge
+*cs/le
 cs/supreme
 cs/global
+
+embed https://www.youtube.com/embed/6hgZlksGTlQ
+tof__tof
+val/iron
+val/bronze
+val/silver
+val/gold
+*val/platinum
+val/diamond
+val/ascendant
+val/immortal
+val/radiant
+
+embed https://www.youtube.com/embed/KzhJ9LR7n18
+Kira_Yamato265
+cs/silver
+cs/silverelite
+cs/nova
+cs/mg
+cs/mge
+*cs/le
+cs/supreme
+cs/global
+
+embed https://www.youtube.com/embed/awGXWmZXc-s
+FalseJade
+ow/bronze
+*ow/silver
+ow/gold
+ow/platinum
+ow/diamond
+ow/master
+ow/grandmaster
+ow/top500
+
+embed https://www.youtube.com/embed/KVTEjaKDdhk
+matusbuck
+lol/iron
+lol/bronze
+*lol/silver
+lol/gold
+lol/platinum
+lol/diamond
+lol/master
+lol/grandmaster
+lol/challenger
