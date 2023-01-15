@@ -34,7 +34,7 @@
                             🌟
                         {% endfor %}
                     </h3>
-                    <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes() }}</b></p>
+                    <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes }}</b></p>
                 </div>
                 <div class="card-body">
                     {{ your_vote.new(vote.users_rank, vote) }}
@@ -50,10 +50,12 @@
 
     {% if vote.has_next_clip %}
         <form class="text-end" action="/next_clip" method="post">
+            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
             <input type="submit" class="btn btn-primary" value="Next clip ▶️">
         </form>
     {% else %}
         <form class="text-start" action="/next_clip" method="post">
+            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
             <input type="submit" class="btn btn-secondary" value="Finish">
         </form>
     {% endif %}
@@ -85,7 +87,7 @@
             datasets: [{
                 data: [
                     {% for rank in vote.clip.ranks %}
-                        {{ vote.users_votes_percentage[rank.text] }},
+                        {{ vote.users_rank_perc[rank] }},
                     {% endfor %}
                 ],
 

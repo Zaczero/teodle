@@ -1,6 +1,5 @@
 import base64
 import os
-import random
 import traceback
 from asyncio import create_task, sleep, Event, Lock
 from pathlib import Path
@@ -8,6 +7,7 @@ from typing import Optional
 
 import websockets
 from fastapi import FastAPI, Form
+from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, FileResponse, Response
@@ -72,13 +72,16 @@ async def ttv_connect():
 
     await ttv_disconnect()
 
+    timeout = 0.5
+
     while True:
         try:
             socket = await websockets.connect('wss://irc-ws.chat.twitch.tv:443')
             break
         except Exception:
             traceback.print_exc()
-            await sleep(5)
+            await sleep(timeout)
+            timeout = min(timeout * 2, 5)
 
     socket_event.set()
     print('[TTV] 🟢 Connected')
@@ -105,20 +108,24 @@ async def ttv_monitor():
                 raw = (await socket.recv()).strip()
                 parts = raw.split(' ')
 
-                assert len(parts) >= 2
+                assert len(parts) >= 2, f'Message contains no spaces: {raw}'
 
                 if parts[0] == 'PING':
                     nonce = ' '.join(parts[1:])
                     await socket.send(f'PONG {nonce}')
                 elif parts[1] == 'PRIVMSG' and parts[2] == f'#{TTV_CHANNEL}':
-                    username = parts[0].split('!')[0].lstrip(':')
-                    message = ' '.join(parts[3:]).lstrip(':')
+                    username = parts[0].split('!')[0].lstrip(':').lower()
+                    message = ' '.join(parts[3:]).lstrip(':').lower()
 
                     if message.startswith('!'):
-                        message = message.lstrip('!').strip().replace(' ', '').lower()
+                        message = message.lstrip('!').strip()
 
-                        if vote.cast_user_vote(username, message):
-                            vote_event.set()
+                        # try multiple formats for better compatibility
+                        for new_whitespace in ('', '_'):
+                            if vote.cast_user_vote(username, message.replace(' ', new_whitespace)):
+                                vote_event.set()
+                                break
+
                 elif parts[1] in {'JOIN', 'PART'}:
                     pass
                 else:
@@ -128,13 +135,12 @@ async def ttv_monitor():
             pass
         except Exception:
             traceback.print_exc()
-            await sleep(5)
+            await sleep(2)
 
         print('[TTV] Stopped monitoring')
 
 
 @app.get('/')
-@app.post('/')
 async def index(request: Request):
     if vote.state == VoteState.IDLE:
         return tmpl.TemplateResponse('idle.jinja2', {
@@ -155,37 +161,45 @@ async def index(request: Request):
     raise Exception('Not implemented vote state')
 
 
-@app.post('/cast_vote')
-async def cast_vote(rank: str = Form()):
-    vote.cast_teo_vote(rank)
-    vote.end_clip()
+INDEX_REDIRECT = RedirectResponse(app.url_path_for(index.__name__), status_code=status.HTTP_302_FOUND)
 
-    return RedirectResponse(app.url_path_for(index.__name__))
+
+@app.post('/cast_vote')
+async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
+    # ensure the client state
+    if vote.clip_idx == clip_idx:
+        vote.cast_teo_vote(rank)
+        vote.end_clip()
+
+    return INDEX_REDIRECT
 
 
 @app.post('/next_clip')
-async def next_clip():
+async def next_clip(clip_idx: int = Form()):
     global vote
 
-    if vote.has_next_clip:
-        async with socket_lock:
-            if not socket_event.is_set():
-                await ttv_connect()
+    # ensure the client state
+    if vote.clip_idx == clip_idx:
+        if vote.has_next_clip:
+            async with socket_lock:
+                if not socket_event.is_set():
+                    await ttv_connect()
 
-        vote.begin_next_clip()
-    else:
-        async with socket_lock:
-            await ttv_disconnect()
+            vote.begin_next_clip()
 
-        vote = Vote(clips_path)
+        else:
+            async with socket_lock:
+                await ttv_disconnect()
 
-    return RedirectResponse(app.url_path_for(index.__name__))
+            vote = Vote(clips_path)
+
+    return INDEX_REDIRECT
 
 
 @app.get('/config')
 async def get_config(request: Request):
     if vote.state != VoteState.IDLE:
-        return RedirectResponse(app.url_path_for(index.__name__))
+        return INDEX_REDIRECT
 
     with open(clips_path) as f:
         config = f.read()
@@ -202,7 +216,7 @@ async def post_config(config: str = Form()):
     global vote
 
     if vote.state != VoteState.IDLE:
-        return RedirectResponse(app.url_path_for(index.__name__))
+        raise HTTPException(500, 'Invalid state: voting in progress')
 
     try:
         new_vote = Vote(config)
@@ -217,7 +231,7 @@ async def post_config(config: str = Form()):
 
     vote = new_vote
 
-    return RedirectResponse(app.url_path_for(index.__name__))
+    return INDEX_REDIRECT
 
 
 @app.get('/rank/{raw:path}')
@@ -241,7 +255,7 @@ async def websocket(ws: WebSocket):
 
     try:
         while True:
-            await ws.send_json({'total': vote.total_users_votes()})
+            await ws.send_json({'total': vote.total_users_votes})
             await sleep(0.2)
 
             await vote_event.wait()

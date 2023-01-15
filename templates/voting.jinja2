@@ -18,7 +18,6 @@
 {% block body_nocontainer %}
 
     <form action="/cast_vote" method="post">
-
         <div class="row g-2 justify-content-center text-center mx-2 mb-4">
             {% for rank in vote.clip.ranks %}
                 <div class="col-auto mb-2">
@@ -67,6 +66,7 @@
                     </div>
                 </div>
 
+                <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
                 <input type="submit" class="btn btn-primary" value="Submit vote">
 
             </div>

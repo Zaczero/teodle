@@ -1,4 +1,5 @@
 import os
+import random
 import re
 from enum import Enum
 from pathlib import Path
@@ -8,7 +9,7 @@ from clip import Clip
 from rank import Rank
 
 MAX_STARS = 2
-VOTE_WHITELIST = set(os.getenv('VOTE_WHITELIST', '').lower().split(','))
+VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().split(','))
 
 
 class VoteState(Enum):
@@ -25,10 +26,8 @@ class Vote:
 
     teo_rank: Optional[Rank]
     users_rank: Optional[Rank]
-
-    users_voted: set[str]
-    users_votes: dict[str, int]
-    users_votes_percentage: dict[str, float]
+    users_rank_perc: dict[Rank, float]
+    users_ranks: dict[str, Rank]
 
     current_teo_stars: int = 0
     current_users_stars: int = 0
@@ -57,8 +56,9 @@ class Vote:
     def has_next_clip(self) -> bool:
         return self.clip_idx + 1 < len(self.clips)
 
+    @property
     def total_users_votes(self) -> int:
-        return sum(self.users_votes.values())
+        return len(self.users_ranks)
 
     def begin_next_clip(self) -> bool:
         assert self.state in {VoteState.IDLE, VoteState.RESULTS}, 'Invalid state'
@@ -74,9 +74,8 @@ class Vote:
 
         self.teo_rank = None
         self.users_rank = None
-        self.users_voted = set()
-        self.users_votes = {r.text: 0 for r in clip.ranks}
-        self.users_votes_percentage = {r.text: 0 for r in clip.ranks}
+        self.users_ranks = {}
+        self.users_rank_perc = {r: 0 for r in clip.ranks}
         self.current_teo_stars = 0
         self.current_users_stars = 0
         self.state = VoteState.VOTING
@@ -88,44 +87,47 @@ class Vote:
 
         self.state = VoteState.RESULTS
 
-        max_users_votes = max(self.users_votes.values())
-        users_vote = next(k for k, v in self.users_votes.items() if v == max_users_votes)
-        self.users_rank = next(r for r in self.clip.ranks if r.text == users_vote)
+        votes_per_rank = {r: 0 for r in self.clip.ranks}
 
-        total_users_votes = self.total_users_votes()
-        self.users_votes_percentage = {k: v / max(1, total_users_votes) for k, v in self.users_votes.items()}
+        for user_rank in self.users_ranks.values():
+            votes_per_rank[user_rank] += 1
+
+        self.users_rank = max(votes_per_rank.items(), key=lambda t: t[1])[0]
+        self.users_rank_perc = {k: v / max(1, self.total_users_votes) for k, v in votes_per_rank.items()}
 
         clip = self.clips[self.clip_idx]
-        indices = {r.text: i for i, r in enumerate(clip.ranks)}
+        indices = {r: i for i, r in enumerate(clip.ranks)}
 
-        self.current_teo_stars = MAX_STARS - min(abs(indices[self.teo_rank.text] - clip.answer_idx), MAX_STARS)
-        self.current_users_stars = MAX_STARS - min(abs(indices[self.users_rank.text] - clip.answer_idx), MAX_STARS)
+        self.current_teo_stars = MAX_STARS - min(abs(indices[self.teo_rank] - clip.answer_idx), MAX_STARS)
+        self.current_users_stars = MAX_STARS - min(abs(indices[self.users_rank] - clip.answer_idx), MAX_STARS)
 
         self.total_teo_stars += self.current_teo_stars
         self.total_users_stars += self.current_users_stars
 
-    def cast_teo_vote(self, text: str) -> None:
-        text = text.lower()
-
+    def cast_teo_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
-        assert text in self.users_votes, 'Invalid vote'
 
-        self.teo_rank = next(r for r in self.clip.ranks if r.text == text)
+        vote = vote.lower()
+        teo_rank = next((r for r in self.clip.ranks if r.text == vote), None)
 
-    def cast_user_vote(self, username: str, rank: str) -> bool:
-        username = username.lower()
-        
+        assert teo_rank is not None, f'Invalid vote: {vote}'
+
+        self.teo_rank = teo_rank
+
+    def cast_user_vote(self, username: str, vote: str) -> bool:
         if self.state != VoteState.VOTING:
             return False
 
-        if username in self.users_voted and username not in VOTE_WHITELIST:
+        username = username.lower()
+
+        if username in VOTE_WHITELIST:
+            username += str(random.random())
+
+        vote = vote.lower()
+        user_rank = next((r for r in self.clip.ranks if r.text == vote), None)
+
+        if user_rank is None:
             return False
 
-        rank = rank.lower()
-
-        if rank not in self.users_votes:
-            return False
-
-        self.users_voted.add(username)
-        self.users_votes[rank] += 1
+        self.users_ranks[username] = user_rank
         return True
