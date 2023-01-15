@@ -92,10 +92,6 @@ class Vote:
         for user_rank in self.users_ranks.values():
             votes_per_rank[user_rank] += 1
 
-        # ensure the correct answer is always visible
-        if votes_per_rank[self.clip.answer] == 0:
-            votes_per_rank[self.clip.answer] = 1
-
         self.users_rank = max(votes_per_rank.items(), key=lambda t: t[1])[0]
         self.users_rank_perc = {k: v / max(1, self.total_users_votes) for k, v in votes_per_rank.items()}
 
