@@ -99,7 +99,8 @@
         const makeGradient = color => {
             const grad = ctx.createLinearGradient(0, 0, 0, canvas.style.height.slice(0, -2))
             grad.addColorStop(0, shadeColor(color, 10))
-            grad.addColorStop(1, shadeColor(color, -25))
+            grad.addColorStop(0.4, color)
+            grad.addColorStop(1, shadeColor(color, -22))
 
             return grad
         }
@@ -114,16 +115,31 @@
             datasets: [{
                 data: [
                     {% for rank in vote.clip.ranks %}
-                        {{ vote.users_rank_perc[rank] }},
+                        {% if vote.users_rank_perc[rank] %}
+                            {{ vote.users_rank_perc[rank] }},
+                        {% else %}
+                            0.01,
+                        {% endif %}
                     {% endfor %}
                 ],
 
                 backgroundColor: [
                     {% for rank in vote.clip.ranks %}
                         {% if rank.raw == vote.clip.answer.raw %}
-                            makeGradient("#CC730E"),
+                            makeGradient("#60935D"),
                         {% else %}
                             makeGradient("#036E99"),
+                        {% endif %}
+                    {% endfor %}
+
+                ],
+
+                borderColor: [
+                    {% for rank in vote.clip.ranks %}
+                        {% if rank.raw == vote.clip.answer.raw %}
+                            "#E5D352",
+                        {% else %}
+                            "transparent",
                         {% endif %}
                     {% endfor %}
 
@@ -196,7 +212,8 @@
 
                 hoverBackgroundColor: data.datasets[0].backgroundColor,
 
-                barPercentage: 0.75,
+                barPercentage: 0.77,
+                borderWidth: 3,
                 borderRadius: {
                     topLeft: 6,
                     topRight: 6

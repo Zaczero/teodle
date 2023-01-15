@@ -3,14 +3,16 @@ someguy55
 * rl/bronze
 rl/gold
 rl/diamond
+cs/mg
+cs/mge
 
 embed https://www.youtube.com/embed/HoB_PqeZPNc
 someguy55
-* cs/silver
+cs/silver
 cs/silverelite
 cs/nova
 cs/mg
-cs/mge
+* cs/mge
 cs/le
 cs/supreme
 cs/global

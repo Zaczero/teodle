@@ -10,7 +10,7 @@ class RankImage:
     width: int = 0
     height: int = 0
 
-    def __init__(self, path: str):  # TODO: check usage
+    def __init__(self, path: str):
         self.path = Path(f'ranks/{path}')
 
         if not self.path.suffix:
