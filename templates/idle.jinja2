@@ -3,9 +3,12 @@
 
     <form class="text-center" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-        <input type="submit" class="btn btn-lg btn-primary" value="Start️">
 
-        <a class="ms-3" href="/config">Config</a>
+        <div class="mb-5">
+            <input type="submit" class="btn btn-lg btn-primary" value="Start️ game">
+        </div>
+
+        <a class="text-secondary" href="/config">Clip config</a>
     </form>
 
 {% endblock %}

@@ -126,7 +126,7 @@ async def ttv_monitor():
                                 vote_event.set()
                                 break
 
-                elif parts[1] in {'JOIN', 'PART'}:
+                elif parts[1] in {'JOIN', 'PART', '353'}:
                     pass
                 else:
                     print('[TTV]', raw)

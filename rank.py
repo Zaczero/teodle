@@ -30,14 +30,15 @@ class Rank:
 
     def __init__(self, raw: str):
         self.raw = raw
+        self.image = RankImage(raw)
 
         if '/' in raw:
             parts = raw.split('/')
             assert len(parts) == 2, f'Invalid rank format: {raw}'
-            rank = parts[1]
+            game, rank = parts
+            assert self.image.path.exists(), f'Rank image not found: {self.image.path}'
         else:
             rank = raw
 
         self.text = rank
         self.title = rank.title()
-        self.image = RankImage(raw)

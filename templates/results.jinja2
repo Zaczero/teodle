@@ -129,8 +129,9 @@
                             content: urlToImage('/rank/{{ rank.raw }}', {{ rank.image.width }}, {{ rank.image.height }}),
                             width: '50%',
                             height: '50%',
+                            backgroundColor: 'rgba(0,0,0,.6)',
                             padding: 2,
-                            position: '93%'
+                            position: '92.5%'
                         }
                     },
                 {% endif %}
@@ -143,7 +144,12 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+
                 barPercentage: 0.75,
+                borderRadius: {
+                    topLeft: 6,
+                    topRight: 6
+                },
 
                 scales: {
                     x: {

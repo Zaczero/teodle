@@ -1,22 +1,5 @@
 embed https://www.youtube.com/embed/HoB_PqeZPNc
 someguy55
-* cs/silver
-cs/silverelite
-c
-d
-e
-f
-cs/nova
-cs/mg
-cs/mge
-cs/le
-cs/supreme
-cs/global
-
-https://example.com
-anon34
-a
-* b
-c
-d
-e
+* rl/bronze
+rl/gold
+rl/diamond
