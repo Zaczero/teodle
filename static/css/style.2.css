@@ -22,11 +22,31 @@ tr:last-child > td {
 
 .vote-mark {
     color: #9146ff;
-    font-size: 1.3em;
+    font-size: 1.35em;
     font-weight: bold;
     font-style: italic;
 }
 
+.btn-check + .btn {
+    transition: transform 100ms;
+}
+
+.btn-check:checked + .btn {
+    transform: scale(1.05);
+}
+
 div.btn {
     cursor: unset;
+}
+
+.table .rank-image {
+    max-height: 1.4em;
+}
+
+td.shrink {
+    white-space: nowrap;
+}
+
+td.expand {
+    width: 99%;
 }

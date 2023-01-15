@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-    <link rel="manifest" href="/static/site.webmanifest">
+    <!-- <link rel="manifest" href="/static/site.webmanifest"> -->
     <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5">
     <link rel="shortcut icon" href="/static/favicon.ico">
     <meta name="msapplication-TileColor" content="#00a300">
@@ -18,7 +18,16 @@
     <meta name="theme-color" content="#ffffff">
 
     <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/style.2.css') }}" rel="stylesheet">
+
+    <script src="{{ url_for('static', path='/js/darkreader.min.js') }}"></script>
+    <script>
+        DarkReader.enable({
+            brightness: 100,
+            contrast: 100,
+            sepia: 10
+        })
+    </script>
 </head>
 <body>
 
@@ -38,15 +47,6 @@
 
     {% block body_nocontainer %}{% endblock %}
 </div>
-
-<script src="{{ url_for('static', path='/js/darkreader.min.js') }}"></script>
-<script>
-    DarkReader.enable({
-        brightness: 100,
-        contrast: 100,
-        sepia: 10
-    })
-</script>
 
 <script src="{{ url_for('static', path='/js/chart.umd.min.js') }}"></script>
 <script src="{{ url_for('static', path='/js/chartjs-plugin-annotation.min.js') }}"></script>

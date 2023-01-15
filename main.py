@@ -1,5 +1,6 @@
 import base64
 import os
+import random
 import traceback
 from asyncio import create_task, sleep, Event, Lock
 from pathlib import Path
@@ -38,11 +39,15 @@ socket_lock = Lock()
 
 
 # vote.begin_next_clip()
-# vote.cast_user_vote(str(random.random()), 'silver')
-# vote.cast_user_vote(str(random.random()), 'silver')
-# vote.cast_user_vote(str(random.random()), 'silver')
-# vote.cast_user_vote(str(random.random()), 'silverelite')
-# vote.cast_user_vote(str(random.random()), 'silverelite')
+# vote.cast_user_vote(str(random.random()), 'bronze')
+# vote.cast_user_vote(str(random.random()), 'bronze')
+# vote.cast_user_vote(str(random.random()), 'bronze')
+# vote.cast_user_vote(str(random.random()), 'gold')
+# vote.cast_user_vote(str(random.random()), 'gold')
+# vote.cast_user_vote(str(random.random()), 'diamond')
+# vote.cast_user_vote(str(random.random()), 'diamond')
+# vote.cast_user_vote(str(random.random()), 'diamond')
+# vote.cast_user_vote(str(random.random()), 'diamond')
 
 
 @app.on_event('startup')

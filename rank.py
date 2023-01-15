@@ -18,8 +18,8 @@ class RankImage:
 
         if self.path.exists():
             with Image.open(self.path) as im:
-                self.width = im.width
-                self.height = im.height
+                self.width = 80
+                self.height = int(im.height / (im.width / self.width))
 
 
 class Rank:
