@@ -1,11 +1,12 @@
 {% extends '_base.jinja2' %}
+{% import '_your_vote.jinja2' as your_vote %}
 {% block body %}
 
     <div class="row mb-3">
         <div class="col">
 
             <div class="card">
-                <div class="card-header border-bottom-0 d-flex align-items-center">
+                <div class="card-header d-flex align-items-center">
                     <img src="{{ url_for('static', path='/img/teo.png') }}" height="48">
                     <h3 class="mb-0 ms-3">
                         Teo
@@ -15,13 +16,16 @@
                         {% endfor %}
                     </h3>
                 </div>
+                <div class="card-body py-1">
+                    {{ your_vote.new(vote.teo_rank, vote) }}
+                </div>
             </div>
 
         </div>
         <div class="col">
 
             <div class="card">
-                <div class="card-header border-bottom-0 d-flex align-items-center">
+                <div class="card-header d-flex align-items-center">
                     <img src="{{ url_for('static', path='/img/chat.png') }}" height="48">
                     <h3 class="mb-0 ms-3">
                         Chat
@@ -31,6 +35,9 @@
                         {% endfor %}
                     </h3>
                     <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes }}</b></p>
+                </div>
+                <div class="card-body py-1">
+                    {{ your_vote.new(vote.users_rank, vote) }}
                 </div>
             </div>
 

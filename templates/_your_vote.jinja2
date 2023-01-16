@@ -1,0 +1,24 @@
+{% macro new(your_vote, vote) %}
+    <div class="your-vote">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <tbody>
+                <tr>
+                    <td class="shrink">You answered:</td>
+                    <td class="expand">
+                        <img class="me-1" src="/rank/{{ your_vote.raw }}" height="30">
+                        {{ your_vote.title }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="shrink">Correct answer:</td>
+                    <td class="expand">
+                        <img class="me-1" src="/rank/{{ vote.clip.answer.raw }}" height="30">
+                        {{ vote.clip.answer.title }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
