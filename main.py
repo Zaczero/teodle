@@ -172,7 +172,7 @@ INDEX_REDIRECT = RedirectResponse(app.url_path_for(index.__name__), status_code=
 @app.post('/cast_vote')
 async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
     # ensure the client state
-    if vote.clip_idx == clip_idx:
+    if vote.clip_idx == clip_idx and vote.state in {VoteState.VOTING}:
         vote.cast_teo_vote(rank)
         vote.end_clip()
 
@@ -184,7 +184,7 @@ async def next_clip(clip_idx: int = Form()):
     global vote
 
     # ensure the client state
-    if vote.clip_idx == clip_idx:
+    if vote.clip_idx == clip_idx and vote.state in {VoteState.IDLE, VoteState.RESULTS}:
         if vote.has_next_clip:
             async with socket_lock:
                 if not socket_event.is_set():
