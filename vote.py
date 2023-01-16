@@ -93,6 +93,11 @@ class Vote:
             votes_per_rank[user_rank] += 1
 
         self.users_rank = max(votes_per_rank.items(), key=lambda t: t[1])[0]
+
+        # switch to correct answer in case of the same amount of votes
+        if self.users_rank != self.clip.answer and votes_per_rank[self.users_rank] == votes_per_rank[self.clip.answer]:
+            self.users_rank = self.clip.answer
+
         self.users_rank_perc = {k: v / max(1, self.total_users_votes) for k, v in votes_per_rank.items()}
 
         clip = self.clips[self.clip_idx]
@@ -121,6 +126,7 @@ class Vote:
         username = username.lower()
 
         if username in VOTE_WHITELIST:
+            print(f'[INFO] Whitelisted vote by @{username}')
             username += str(random.random())
 
         vote = vote.lower()
