@@ -11,6 +11,20 @@ iframe {
     font-size: 0.75em;
 }
 
+/*noinspection CssOverwrittenProperties*/
+.border-rainbow {
+  border: double 2px transparent;
+  border-radius: 80px;
+  background-image: linear-gradient(white, white), linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.clip-credits {
+    font-size: 1.1em;
+    line-height: 1em;
+}
+
 .card-body {
     padding-bottom: 0;
 }
