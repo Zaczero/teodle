@@ -153,21 +153,19 @@ async def ttv_monitor():
 
 @app.get('/')
 async def index(request: Request):
+    css_mtime = int(os.stat('static/css/style.css').st_mtime)
+    params = {
+        'request': request,
+        'css_mtime': css_mtime,
+        'vote': vote
+    }
+
     if vote.state == VoteState.IDLE:
-        return tmpl.TemplateResponse('idle.jinja2', {
-            'request': request,
-            'vote': vote
-        })
+        return tmpl.TemplateResponse('idle.jinja2', params)
     elif vote.state == VoteState.VOTING:
-        return tmpl.TemplateResponse('voting.jinja2', {
-            'request': request,
-            'vote': vote
-        })
+        return tmpl.TemplateResponse('voting.jinja2', params)
     elif vote.state == VoteState.RESULTS:
-        return tmpl.TemplateResponse('results.jinja2', {
-            'request': request,
-            'vote': vote
-        })
+        return tmpl.TemplateResponse('results.jinja2', params)
 
     raise Exception('Not implemented vote state')
 

@@ -23,7 +23,7 @@ class UserVote:
     rank: Rank
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
+@dataclass(frozen=False, kw_only=True, slots=True)
 class UserScore:
     order: int
     stars: int

@@ -5,7 +5,8 @@ cs/silverelite
 cs/nova
 cs/mg
 cs/mge
-*cs/le
+cs/dmg
+*cs/lem
 cs/supreme
 cs/global
 
@@ -28,7 +29,8 @@ cs/silverelite
 cs/nova
 cs/mg
 cs/mge
-*cs/le
+*cs/dmg
+cs/lem
 cs/supreme
 cs/global
 
