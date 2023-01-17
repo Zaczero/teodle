@@ -7,7 +7,6 @@ iframe {
 }
 
 .credits {
-    color: #888;
     letter-spacing: .2px;
     font-size: 0.75em;
 }
@@ -49,4 +48,16 @@ td.shrink {
 
 td.expand {
     width: 99%;
+}
+
+.top-users {
+    font-size: 0.8em;
+}
+
+.top-users td {
+    padding: .3rem .5rem;
+}
+
+.first-img {
+    height: 1em;
 }

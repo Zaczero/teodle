@@ -7,11 +7,16 @@
 
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <img src="{{ url_for('static', path='/img/teo.png') }}" height="48">
+                    {% if vote.result.teo_stars == 0 and vote.result.users_stars >= 2 %}
+                        <img src="/static/img/laugh.png" height="48">
+                    {% else %}
+                        <img src="/static/img/teo.png" height="48">
+                    {% endif %}
+
                     <h3 class="mb-0 ms-3">
                         Teo
 
-                        {% for _ in range(vote.current_teo_stars) %}
+                        {% for _ in range(vote.result.teo_stars) %}
                             🌟
                         {% endfor %}
                     </h3>
@@ -30,14 +35,14 @@
                     <h3 class="mb-0 ms-3">
                         Chat
 
-                        {% for _ in range(vote.current_users_stars) %}
+                        {% for _ in range(vote.result.users_stars) %}
                             🌟
                         {% endfor %}
                     </h3>
                     <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes }}</b></p>
                 </div>
                 <div class="card-body py-1">
-                    {{ your_vote.new(vote.users_rank, vote) }}
+                    {{ your_vote.new(vote.result.users_rank, vote) }}
                 </div>
             </div>
 
@@ -122,8 +127,8 @@
             datasets: [{
                 data: [
                     {% for rank in vote.clip.ranks %}
-                        {% if vote.users_rank_perc[rank] %}
-                            {{ vote.users_rank_perc[rank] }},
+                        {% if vote.result.users_rank_percentages[rank] %}
+                            {{ vote.result.users_rank_percentages[rank] }},
                         {% else %}
                             0.01,
                         {% endif %}
@@ -194,7 +199,7 @@
             {
                 type: 'line',
                 scaleID: 'x',
-                value: '{{ vote.users_rank.title }}',
+                value: '{{ vote.result.users_rank.title }}',
 
                 borderWidth: 0,
 

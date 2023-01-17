@@ -1,0 +1,34 @@
+{% macro new(result) %}
+    <div class="top-users card">
+        <div class="card-body py-0">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <tbody>
+
+                    {% for top_user in result.top_users %}
+                        <tr>
+                        <td class="shrink">
+                            {% if top_user[0] == 1 %}
+                                <img class="first-img" src="/static/img/jam.gif">
+                            {% else %}
+                                {{ top_user[0] }}.
+                            {% endif %}
+                        </td>
+                        <td class="shrink">
+                            {{ top_user[1] }}
+                        </td>
+                        <td class="expand">
+                            {{ top_user[2].stars }} ✕ ⭐️
+                        </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="text-uppercase text-end fst-italic text-muted" style="font-size: .65em">
+        Sort by stars, then by answer time
+    </div>
+{% endmacro %}

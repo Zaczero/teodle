@@ -41,3 +41,6 @@ class Clip:
     @property
     def answer(self) -> Rank:
         return self.ranks[self.answer_idx]
+
+    def indices(self) -> dict[Rank, int]:
+        return {r: i for i, r in enumerate(self.ranks)}

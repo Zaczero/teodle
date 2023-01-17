@@ -1,4 +1,5 @@
 {% import '_stars.jinja2' as stars %}
+{% import '_top_users.jinja2' as top_users %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,16 +32,39 @@
 </head>
 <body>
 
-<div class="credits text-end mx-1">
-    <span class="small">website by</span> Kamil Monicz
+<div class="credits text-muted text-end position-absolute mx-1" style="top: 0; right: 0">
+    <div>
+        <span class="small">website by</span> Kamil Monicz
+    </div>
 </div>
-<div class="mt-2 mb-4">
+<div class="my-4">
     <div class="container">
 
-        <h3 class="mb-3 text-center">Teodle</h3>
+        {% if vote.result %}
 
-        {{ stars.new(vote) }}
+            <div class="row mb-2">
+                <div class="col">
+                    <div class="d-flex align-items-center">
+                        <div class="w-100">
 
+                            <h3 class="mb-3 text-center">Teodle</h3>
+                            {{ stars.new(vote) }}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+
+                    {{ top_users.new(vote.result) }}
+
+                </div>
+            </div>
+
+        {% else %}
+
+            <h3 class="mb-3 text-center">Teodle</h3>
+
+        {% endif %}
         {% block body %}{% endblock %}
 
     </div>

@@ -1,6 +1,5 @@
 import base64
 import os
-import random
 import traceback
 from asyncio import create_task, sleep, Event, Lock
 from pathlib import Path
@@ -18,11 +17,8 @@ from starlette.websockets import WebSocket, WebSocketDisconnect
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
+from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME, TTV_CHANNEL
 from vote import Vote, VoteState
-
-TTV_TOKEN = os.environ['TTV_TOKEN']
-TTV_USERNAME = os.environ['TTV_USERNAME']
-TTV_CHANNEL = os.environ['TTV_CHANNEL']
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -55,7 +51,11 @@ async def startup():
     create_task(ttv_monitor())
 
 
+# TODO: ttv class
 async def ttv_disconnect():
+    if NO_MONITOR:
+        return
+
     global socket
 
     if socket is None:
@@ -73,6 +73,9 @@ async def ttv_disconnect():
 
 
 async def ttv_connect():
+    if NO_MONITOR:
+        return
+
     global socket
 
     await ttv_disconnect()
@@ -93,6 +96,9 @@ async def ttv_connect():
 
 
 async def ttv_monitor():
+    if NO_MONITOR:
+        return
+
     while True:
         # reset connection if connected
         async with socket_lock:
