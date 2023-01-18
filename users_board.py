@@ -55,6 +55,9 @@ class UsersBoard:
 
         if user_rank is None:
             return False
+        
+        if username in self.state[clip] and self.state[clip][username].rank == user_rank:
+            return False
 
         self.state[clip][username] = UserVote(time(), user_rank)
         return True
