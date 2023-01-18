@@ -2,9 +2,11 @@ import base64
 import os
 import traceback
 from asyncio import create_task, sleep, Event, Lock
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+import timeago
 import websockets
 from fastapi import FastAPI, Form
 from starlette import status
@@ -151,21 +153,29 @@ async def ttv_monitor():
         print('[TTV] Stopped monitoring')
 
 
-@app.get('/')
-async def index(request: Request):
-    css_mtime = int(os.stat('static/css/style.css').st_mtime)
-    params = {
+def default_context(request: Request) -> dict:
+    return {
         'request': request,
-        'css_mtime': css_mtime,
+        'css_mtime': int(os.stat('static/css/style.css').st_mtime),
         'vote': vote
     }
 
+
+def clips_mtime() -> str:
+    return timeago.format(datetime.fromtimestamp(clips_path.stat().st_mtime),
+                          datetime.now())
+
+
+@app.get('/')
+async def index(request: Request):
     if vote.state == VoteState.IDLE:
-        return tmpl.TemplateResponse('idle.jinja2', params)
+        return tmpl.TemplateResponse('idle.jinja2', default_context(request) | {
+            'config_mtime': clips_mtime()
+        })
     elif vote.state == VoteState.VOTING:
-        return tmpl.TemplateResponse('voting.jinja2', params)
+        return tmpl.TemplateResponse('voting.jinja2', default_context(request))
     elif vote.state == VoteState.RESULTS:
-        return tmpl.TemplateResponse('results.jinja2', params)
+        return tmpl.TemplateResponse('results.jinja2', default_context(request))
 
     raise Exception('Not implemented vote state')
 
@@ -213,9 +223,7 @@ async def get_config(request: Request):
     with open(clips_path) as f:
         config = f.read()
 
-    return tmpl.TemplateResponse('config.jinja2', {
-        'request': request,
-        'vote': vote,
+    return tmpl.TemplateResponse('config.jinja2', default_context(request) | {
         'config': config
     })
 
@@ -227,16 +235,22 @@ async def post_config(config: str = Form()):
     if vote.state != VoteState.IDLE:
         raise HTTPException(500, 'Invalid state: voting in progress')
 
+    config = config.strip()
+
     try:
         new_vote = Vote(config)
-
         assert len(new_vote.clips), 'No clips were loaded'
-
-        with open(clips_path, 'w') as f:
-            f.write(config)
-
     except Exception as e:
         raise HTTPException(500, str(e))
+
+    with open(clips_path, 'r+') as f:
+        current_config = f.read().strip()
+
+        if current_config.replace('\r', '') != config.replace('\r', ''):
+            print('[INFO] Saving new configuration')
+            f.seek(0)
+            f.write(config)
+            f.truncate()
 
     vote = new_vote
 

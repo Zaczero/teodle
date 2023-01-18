@@ -39,7 +39,7 @@ class Vote:
         self.clips = [Clip(t) for t in text.split('\n\n') if t]
         self.board = UsersBoard(self.clips)
 
-        print(f'Loaded {len(self.clips)} clips')
+        print(f'[INFO] Loaded {len(self.clips)} clips')
 
     @property
     def clip(self) -> Clip:

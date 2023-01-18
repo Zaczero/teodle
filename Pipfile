@@ -12,6 +12,7 @@ jinja2 = "*"
 python-multipart = "*"
 werkzeug = "*"
 pillow = "*"
+timeago = "*"
 
 [dev-packages]
 
