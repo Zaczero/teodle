@@ -24,7 +24,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Screenshots
 
-<img width="50%" src="https://github.com/Zaczero/teodle/blob/main/resources/thumbnail2.png?raw=true">
+<img width="60%" src="https://github.com/Zaczero/teodle/blob/main/resources/thumbnail2.png?raw=true">
 
 ### Twitch VODs
 
