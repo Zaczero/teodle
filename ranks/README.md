@@ -1,0 +1,1 @@
+Please note that the files found in this directory are not subject to the repository's LICENSE. These files may be subject to copyright and should be used accordingly. It is important to check the individual copyright and license terms before using or distributing any of the files in this directory.
