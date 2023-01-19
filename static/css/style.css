@@ -5,12 +5,14 @@ html, body {
 @media screen and (min-width: calc(1920px * 1.1)) {
     html, body {
         zoom: 1.075;
+        /*zoom: 1.0675;*/
     }
 }
 
 @media screen and (min-width: calc(1920px * 1.2)) {
     html, body {
         zoom: 1.15;
+        /*zoom: 1.135;*/
     }
 }
 
@@ -25,11 +27,11 @@ iframe {
 
 /*noinspection CssOverwrittenProperties*/
 .border-rainbow {
-  border: double 2px transparent;
-  border-radius: 80px;
-  background-image: linear-gradient(white, white), linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+    border: double 2px transparent;
+    border-radius: 80px;
+    background-image: linear-gradient(white, white), linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
 }
 
 .board-2 {
