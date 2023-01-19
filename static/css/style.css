@@ -2,6 +2,18 @@ html, body {
     font-size: 20px;
 }
 
+@media screen and (min-width: calc(1920px * 1.1)) {
+    html, body {
+        zoom: 1.075;
+    }
+}
+
+@media screen and (min-width: calc(1920px * 1.2)) {
+    html, body {
+        zoom: 1.15;
+    }
+}
+
 iframe {
     border: 0;
 }
@@ -18,6 +30,16 @@ iframe {
   background-image: linear-gradient(white, white), linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
   background-origin: border-box;
   background-clip: padding-box, border-box;
+}
+
+.board-2 {
+    color: silver;
+    font-weight: bold;
+}
+
+.board-3 {
+    color: saddlebrown;
+    font-weight: bold;
 }
 
 .clip-credits {

@@ -3,8 +3,8 @@
 
     <div class="d-flex justify-content-center mb-3">
         {% if vote.clip.embed %}
-            <div class="ratio ratio-16x9 w-75">
-                <iframe src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
+            <div class="ratio ratio-16x9">
+                <iframe class="rounded" src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
             </div>
 
         {% else %}

@@ -49,15 +49,27 @@ class UsersBoard:
             username += str(random())
             print(f'[INFO] Whitelisted vote: @{username}')
 
-        vote = vote.lower()
         clip = self.clips[clip_idx]
+
+        # count only first vote
+        if username in self.state[clip]:
+            return False
+
+        vote = vote.lower()
         user_rank = next((r for r in clip.ranks if r.text == vote), None)
+
+        # use vote as a prefix match for the rank
+        if user_rank is None and len(vote) >= 3:
+            matched_ranks = list(r for r in clip.ranks if r.text.startswith(vote))
+
+            if len(matched_ranks) == 1:
+                user_rank = matched_ranks[0]
 
         if user_rank is None:
             return False
-        
-        if username in self.state[clip] and self.state[clip][username].rank == user_rank:
-            return False
+
+        # if username in self.state[clip] and self.state[clip][username].rank == user_rank:
+        #     return False
 
         self.state[clip][username] = UserVote(time(), user_rank)
         return True
