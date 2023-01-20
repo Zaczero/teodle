@@ -53,17 +53,38 @@
         <canvas id="chart" style="height: 550px"></canvas>
     </div>
 
-    {% if vote.has_next_clip %}
-        <form class="text-end" action="/next_clip" method="post">
-            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-            <input type="submit" class="btn btn-primary" value="Next clip ▶️">
-        </form>
-    {% else %}
-        <form class="text-start" action="/next_clip" method="post">
-            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-            <input type="submit" class="btn btn-secondary" value="Finish">
-        </form>
-    {% endif %}
+    <div class="row g-2">
+        <div class="col-auto">
+            <a class="btn border rounded btn-link text-decoration-none"
+               href="{{ vote.clip.url }}"
+               target="_blank"
+               referrerpolicy="no-referrer">
+                Clip link
+            </a>
+
+            <div class="btn border rounded">
+                Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
+            </div>
+
+            <div class="btn border-rainbow rounded">
+                by <b class="clip-credits">{{ vote.clip.credits }}</b>
+            </div>
+        </div>
+
+        <div class="col">
+            {% if vote.has_next_clip %}
+                <form class="text-end" action="/next_clip" method="post">
+                    <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+                    <input type="submit" class="btn btn-primary" value="Next clip ▶️">
+                </form>
+            {% else %}
+                <form class="text-start" action="/next_clip" method="post">
+                    <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+                    <input type="submit" class="btn btn-secondary" value="Finish">
+                </form>
+            {% endif %}
+        </div>
+    </div>
 
 
 {% endblock %}
