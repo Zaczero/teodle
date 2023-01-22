@@ -47,7 +47,8 @@
                     <div class="d-flex align-items-center h-100">
                         <div class="w-100">
 
-                            <h3 class="mb-3 text-center">Teodle</h3>
+                            <h3 class="text-center mb-0">Teodle</h3>
+                            <p class="text-center text-muted mb-2">Submit your clips <span class="vote-mark">!</span><span class="text-dark fw-bold">rankdle</span></p>
                             {{ stars.new(vote) }}
 
                         </div>
@@ -62,7 +63,8 @@
 
         {% else %}
 
-            <h3 class="mb-3 text-center">Teodle</h3>
+            <h3 class="text-center mb-0">Teodle</h3>
+            <p class="text-center text-muted mb-3">Submit your clips <span class="vote-mark">!</span><span class="text-dark fw-bold">rankdle</span></p>
 
         {% endif %}
         {% block body %}{% endblock %}

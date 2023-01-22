@@ -19,7 +19,11 @@
                                 {% endif %}
                             </td>
                             <td class="shrink">
-                                {{ top_user[1] }}
+                                {% if top_user[0] == 1 %}
+                                    <span class="fw-bold">{{ top_user[1] }}</span>
+                                {% else %}
+                                    {{ top_user[1] }}
+                                {% endif %}
                             </td>
                             <td class="expand">
                                 {{ top_user[2].stars }} ✕ ⭐️
