@@ -28,10 +28,16 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-* https://www.twitch.tv/videos/1714133387?t=00h26m40s (newest)
+* https://www.twitch.tv/videos/1715086976?t=00h22m27s (newest)
+* https://www.twitch.tv/videos/1714133387?t=00h26m40s
 * https://www.twitch.tv/videos/1712305474?t=00h14m05s
+
+<details>
+<summary>Show more</summary>
+
 * https://www.twitch.tv/videos/1711228781?t=00h23m25s
 * https://www.twitch.tv/videos/1709156468?t=00h13m20s
+</details>
 
 ## Footer
 
