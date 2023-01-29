@@ -10,7 +10,7 @@
                     {% if vote.result.teo_stars == 0 and vote.result.users_stars >= 2 %}
                         <img src="/static/img/laugh.png" height="48">
                     {% elif vote.result.teo_stars >= 2 and vote.result.users_stars == 0 %}
-                        <img src="/static/img/teo-gold.png" height="48">
+                        <img src="/static/img/teo-gold.png" height="48" style="transform: scale(1.75)">
                     {% else %}
                         <img src="/static/img/teo.png" height="48">
                     {% endif %}
@@ -238,6 +238,16 @@
             },
         ]
 
+        const rankUsers = {
+            {% for rank in vote.clip.ranks %}
+                '{{ rank.title }}': [
+                {% for username in vote.result.users_rank_users[rank] %}
+                    '{{ username }}',
+                {% endfor %}
+                ],
+            {% endfor %}
+        }
+
         const chart = new Chart(ctx, {
             type: 'bar',
             data: data,
@@ -307,12 +317,42 @@
                         },
 
                         callbacks: {
-                            label: ctx => `${(ctx.raw * 100).toFixed(0)}%`
+                            title: ctxs => {
+                                if (ctxs.length !== 1)
+                                    return
+
+                                const ctx = ctxs[0]
+
+                                return `${ctx.label}: ${(ctx.raw * 100).toFixed(0)}%`
+                            },
+
+                            label: () => '',
+
+                            afterBody: ctxs => {
+                                if (ctxs.length !== 1)
+                                    return
+
+                                const ctx = ctxs[0]
+                                const users = rankUsers[ctx.label]
+
+                                if (users.length === 0)
+                                    return
+
+                                const renderSize = 5
+                                const render = users.slice(0, renderSize)
+                                const restSize = users.length - renderSize
+
+                                if (restSize > 0)
+                                    render.push(`…and ${restSize} more`)
+
+                                return render.join('\n')
+                            }
                         }
                     }
                 }
             }
         })
+
     </script>
 
 {% endblock %}

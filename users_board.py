@@ -14,6 +14,7 @@ class ClipResult:
     users_stars: int
     users_rank: Rank
     users_rank_percentages: dict[Rank, float]
+    users_rank_users: dict[Rank, list[str]]
     top_users: list[[int, str, int]]
 
 
@@ -81,9 +82,11 @@ class UsersBoard:
     def calculate_clip_result(self, clip_idx: int, teo_rank: Rank, n_top_users: int = 5) -> ClipResult:
         clip = self.clips[clip_idx]
         votes_per_rank = {r: 0 for r in clip.ranks}
+        users_rank_users = {r: [] for r in clip.ranks}
 
-        for user_vote in self.state[clip].values():
+        for username, user_vote in self.state[clip].items():
             votes_per_rank[user_vote.rank] += 1
+            users_rank_users[user_vote.rank].append(username)
 
         users_rank = max(votes_per_rank.items(), key=lambda t: t[1])[0]
 
@@ -130,5 +133,6 @@ class UsersBoard:
             users_stars=users_stars,
             users_rank=users_rank,
             users_rank_percentages=users_rank_percentages,
+            users_rank_users=users_rank_users,
             top_users=top_users
         )
