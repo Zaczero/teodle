@@ -21,7 +21,7 @@ iframe {
 }
 
 .credits {
-    letter-spacing: .2px;
+    letter-spacing: 0.2px;
     font-size: 0.75em;
 }
 
@@ -67,7 +67,7 @@ tr:last-child > td {
 
 .btn-check + .btn {
     border: 2px solid rgba(255, 255, 255, .3);
-    transition: transform 100ms;
+    transition: background 0.1s ease-in, transform 0.1s ease-in;
 }
 
 .btn-check + .btn:hover {
@@ -83,7 +83,7 @@ tr:last-child > td {
 }
 
 .btn-check:checked + .btn:after {
-    animation: shine 0.4s ease-in-out;
+    animation: shine 0.38s linear;
     animation-fill-mode: forwards;
     content: "";
     position: absolute;
@@ -97,27 +97,28 @@ tr:last-child > td {
     background: linear-gradient(
             to right,
             transparent 0%,
-            rgba(130, 130, 130, 0.2) 77%,
-            rgba(130, 130, 130, 0.8) 92%,
+            transparent 45%,
+            rgba(130, 130, 130, 0.25) 70%,
+            rgba(130, 130, 130, 0.70) 90%,
             transparent 100%
     );
 }
 
-@keyframes shine{
-  80% {
-    opacity: 1;
-    top: -30%;
-    left: -30%;
-    transition-property: left, top, opacity;
-    transition-duration: 0.7s, 0.7s, 0.15s;
-    transition-timing-function: ease;
-  }
-  100% {
-    opacity: 0;
-    top: -30%;
-    left: -30%;
-    transition-property: left, top, opacity;
-  }
+@keyframes shine {
+    50% {
+        opacity: 1;
+        top: -30%;
+        left: -30%;
+        transition-property: left, top, opacity;
+        transition-duration: 0.7s, 0.7s, 0.15s;
+        transition-timing-function: ease;
+    }
+    100% {
+        opacity: 0;
+        top: -30%;
+        left: -30%;
+        transition-property: left, top, opacity;
+    }
 }
 
 div.btn {
