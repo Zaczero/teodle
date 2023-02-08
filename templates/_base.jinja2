@@ -32,9 +32,10 @@
 </head>
 <body>
 
-<div class="credits text-muted text-end position-absolute mx-1" style="top: 0; right: 0">
-    <div>
-        <span class="small">website by</span> Kamil Monicz
+<div class="credits text-muted text-center position-absolute mx-1" style="top: 0; right: 0">
+    <div style="padding-bottom: .35em; border-bottom: 1px dotted rgba(0,0,0,.35)">
+        <span class="small">developed by</span> Kamil Monicz (Zaczero)<br>
+        <span class="small">managed by</span> MvrkZS
     </div>
 </div>
 <div class="my-4">
@@ -48,7 +49,7 @@
                         <div class="w-100">
 
                             <h3 class="text-center mb-0">Teodle</h3>
-                            <p class="text-center text-muted mb-2">Submit your clips <span class="vote-mark">!</span><span class="text-dark fw-bold">rankdle</span></p>
+                            <p class="text-center text-muted mb-2">Submit your clips <span class="vote-mark ms-1">!</span><span class="text-dark fw-bold">rankdle</span></p>
                             {{ stars.new(vote) }}
 
                         </div>
@@ -64,7 +65,7 @@
         {% else %}
 
             <h3 class="text-center mb-0">Teodle</h3>
-            <p class="text-center text-muted mb-3">Submit your clips <span class="vote-mark">!</span><span class="text-dark fw-bold">rankdle</span></p>
+            <p class="text-center text-muted mb-3">Submit your clips <span class="vote-mark ms-1">!</span><span class="text-dark fw-bold">rankdle</span></p>
 
         {% endif %}
         {% block body %}{% endblock %}

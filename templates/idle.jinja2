@@ -4,22 +4,11 @@
     <form class="text-center" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
 
-        <div class="alert alert-info mb-3">
+        <div class="alert alert-info mt-4 mb-3">
             <h5 class="alert-heading">Update: 29<sup>th</sup> January</h5>
             <div>
                 Display the viewers who voted for a given rank.<br>
                 🌈 #viewershaming
-            </div>
-        </div>
-
-        <div class="alert alert-info mb-5" style="opacity: 0.4; scale: 0.9">
-            <h5 class="alert-heading">Update: 22<sup>nd</sup> January</h5>
-            <div>
-                Added "submit your clips !rankdle" text.<br><br>
-                Hide clip credits during voting to reduce bias.<br>
-                Credits to @teosgame for the idea.<br><br>
-                This website's code is publicly available at <a class="text-decoration-none" href="https://github.com/Zaczero/teodle" target="_blank">github.com/Zaczero/teodle</a>.<br>
-                Learn and contribute — it's Python 🐍!
             </div>
         </div>
 
@@ -29,6 +18,17 @@
 
         <div class="text-secondary small">
             <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }}
+        </div>
+
+        <hr style="margin: 3.5em 0 2.5em">
+
+        <div class="text-secondary">
+            <small>
+                This website's code is publicly available at
+                <a class="text-decoration-none" href="https://github.com/Zaczero/teodle" target="_blank">github.com/Zaczero/teodle</a>
+                <br>
+            </small>
+            Learn and contribute — it's Python 🐍!
         </div>
 
     </form>
