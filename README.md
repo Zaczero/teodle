@@ -46,7 +46,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 ### YouTube Series
 
 * Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08 (newest)
-* Ep4 https://www.youtube.com/watch?v=cELkMah_xTM (newest)
+* Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
 * Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
 
 <details>
