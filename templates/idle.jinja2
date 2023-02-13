@@ -7,6 +7,9 @@
         <div class="alert alert-info mt-4 mb-3">
             <h5 class="alert-heading">Update: 13<sup>th</sup> February</h5>
             <div>
+                Automatically download clips and serve them directly.<br>
+                <b>#</b>best_quality <b>#</b>no_annoyances <b>#</b>privacy
+                <hr>
                 Display Teodle summary after the last clip.<br>
                 Credits to @andrew103 at GitHub.
             </div>
@@ -25,7 +28,12 @@
         </div>
 
         <div class="text-secondary small">
-            <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }}
+            <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }} •
+            {% if downloader.processing < 1 %}
+                Downloading {{ '{:.0%}'.format(downloader.processing) }}
+            {% else %}
+                Downloaded
+            {% endif %}
         </div>
 
         <hr style="margin: 3.5em 0 2.5em">

@@ -19,18 +19,23 @@ from starlette.websockets import WebSocket, WebSocketDisconnect
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
-from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME, TTV_CHANNEL
+from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME, TTV_CHANNEL, DOWNLOAD_DIR
+from downloader import Downloader
 from summary import update_summary, get_summary
 from vote import Vote, VoteState
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount('/static', StaticFiles(directory='static'), name='static')
+app.mount(f'/{DOWNLOAD_DIR}', StaticFiles(directory=DOWNLOAD_DIR), name='download')
 
-tmpl = Jinja2Templates(directory="templates")
+tmpl = Jinja2Templates(directory='templates')
 
 clips_path = Path('clips.txt')
 vote = Vote(clips_path)
 vote_event = Event()
+
+downloader = Downloader()
+downloader.load(vote)
 
 socket: Optional[WebSocketClientProtocol] = None
 socket_event = Event()
@@ -51,6 +56,7 @@ socket_lock = Lock()
 
 @app.on_event('startup')
 async def startup():
+    create_task(downloader.loop())
     create_task(ttv_monitor())
 
 
@@ -173,7 +179,8 @@ async def index(request: Request):
 
     if vote.state == VoteState.IDLE:
         return tmpl.TemplateResponse('idle.jinja2', ctx | {
-            'config_mtime': clips_mtime()
+            'config_mtime': clips_mtime(),
+            'downloader': downloader
         })
 
     elif vote.state == VoteState.VOTING:
@@ -221,6 +228,7 @@ async def next_clip(clip_idx: int = Form()):
                 await ttv_disconnect()
 
             vote = Vote(clips_path)
+            downloader.load(vote)
 
     return INDEX_REDIRECT
 
@@ -263,6 +271,7 @@ async def post_config(config: str = Form()):
             f.truncate()
 
     vote = new_vote
+    downloader.load(vote)
 
     return INDEX_REDIRECT
 

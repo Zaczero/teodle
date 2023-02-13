@@ -2,10 +2,15 @@ FROM python:3.10.8-slim
 
 ENV PYTHONUNBUFFERED=1
 
+RUN apt update && \
+    apt install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN pip install \
     --no-cache-dir \
     --disable-pip-version-check \
-    pipenv
+    pipenv \
+    yt-dlp
 
 WORKDIR /app
 
@@ -25,5 +30,6 @@ COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/
 RUN python -m compileall .
 
+VOLUME ["/app/download"]
 ENTRYPOINT ["pipenv", "run", "uvicorn", "main:app"]
 CMD ["--host", "0.0.0.0"]

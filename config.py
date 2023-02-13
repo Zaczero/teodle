@@ -19,3 +19,6 @@ SUMMARY_PATH = Path('summary.json')
 # ensure proper file permissions
 with open(SUMMARY_PATH, 'a+') as f:
     pass
+
+DOWNLOAD_DIR = Path('download')
+DOWNLOAD_DIR.mkdir(exist_ok=True)

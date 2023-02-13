@@ -1,11 +1,15 @@
+from pathlib import Path
+
 from rank import Rank
 
 
 class Clip:
     embed: bool
     url: str
+    url_raw: str
     credits: str
     ranks: list[Rank]
+    local: bool = False
     answer_idx: int = -1
 
     def __init__(self, text: str):
@@ -21,6 +25,7 @@ class Clip:
 
         assert self.url.startswith('http'), f'Invalid URL: {self.url}'
 
+        self.url_raw = self.url
         self.credits = lines[1]
         self.ranks = []
 
@@ -44,3 +49,8 @@ class Clip:
 
     def indices(self) -> dict[Rank, int]:
         return {r: i for i, r in enumerate(self.ranks)}
+
+    def use_local_file(self, path: Path) -> None:
+        self.embed = False
+        self.url = f'/{path}'
+        self.local = True

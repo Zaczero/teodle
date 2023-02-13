@@ -153,3 +153,8 @@ td.expand {
     font-weight: bold;
     color: #20c997;
 }
+
+.broken-video {
+    font-size: .65em;
+    opacity: 0.8;
+}

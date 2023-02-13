@@ -1,15 +1,22 @@
 {% extends '_base.jinja2' %}
 {% block body %}
 
-    <div class="d-flex justify-content-center mb-3">
-        {% if vote.clip.embed %}
+    <div class="mb-3">
+        {% if vote.clip.local %}
+            <div class="ratio ratio-16x9">
+                <video class="rounded" controls>
+                    <source src="{{ vote.clip.url }}">
+                </video>
+            </div>
+        {% elif vote.clip.embed %}
             <div class="ratio ratio-16x9">
                 <iframe class="rounded" src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
             </div>
-
         {% else %}
-            <div class="px-5 py-4">
-                <a href="{{ vote.clip.url }}" target="_blank">{{ vote.clip.url }}</a>
+            <div class="d-flex justify-content-center">
+                <div class="px-5 py-4">
+                    <a href="{{ vote.clip.url }}" target="_blank">{{ vote.clip.url }}</a>
+                </div>
             </div>
         {% endif %}
     </div>
@@ -53,13 +60,22 @@
                     <div class="btn border rounded">
                         <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
                         <span class="ms-1">
-                        Total votes: <b id="total-votes">🛜</b>
+                        Total votes: <b id="total-votes">···</b>
                     </span>
                     </div>
 
                     <div class="btn border rounded">
                         Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
                     </div>
+
+                    {% if vote.clip.local %}
+                        <a class="broken-video rounded text-decoration-none ms-3"
+                           href="{{ vote.clip.url_raw }}"
+                           target="_blank"
+                           referrerpolicy="no-referrer">
+                            Video broken? Click here
+                        </a>
+                    {% endif %}
                 </div>
 
                 <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
