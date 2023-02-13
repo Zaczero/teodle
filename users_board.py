@@ -8,16 +8,6 @@ from rank import Rank
 from utils import calculate_stars
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
-class ClipResult:
-    teo_stars: int
-    users_stars: int
-    users_rank: Rank
-    users_rank_percentages: dict[Rank, float]
-    users_rank_users: dict[Rank, list[str]]
-    top_users: list[[int, str, int]]
-
-
 @dataclass(frozen=True, kw_only=False, slots=True)
 class UserVote:
     time: float
@@ -28,6 +18,16 @@ class UserVote:
 class UserScore:
     order: int
     stars: int
+
+
+@dataclass(frozen=True, kw_only=True, slots=True)
+class ClipResult:
+    teo_stars: int
+    users_stars: int
+    users_rank: Rank
+    users_rank_percentages: dict[Rank, float]
+    users_rank_users: dict[Rank, list[str]]
+    top_users: list[tuple[int, str, UserScore]]
 
 
 class UsersBoard:

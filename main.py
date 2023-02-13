@@ -20,6 +20,7 @@ from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
 from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME, TTV_CHANNEL
+from summary import update_summary, get_summary
 from vote import Vote, VoteState
 
 app = FastAPI()
@@ -168,14 +169,20 @@ def clips_mtime() -> str:
 
 @app.get('/')
 async def index(request: Request):
+    ctx = default_context(request)
+
     if vote.state == VoteState.IDLE:
-        return tmpl.TemplateResponse('idle.jinja2', default_context(request) | {
+        return tmpl.TemplateResponse('idle.jinja2', ctx | {
             'config_mtime': clips_mtime()
         })
+
     elif vote.state == VoteState.VOTING:
-        return tmpl.TemplateResponse('voting.jinja2', default_context(request))
+        return tmpl.TemplateResponse('voting.jinja2', ctx)
+
     elif vote.state == VoteState.RESULTS:
-        return tmpl.TemplateResponse('results.jinja2', default_context(request))
+        return tmpl.TemplateResponse('results.jinja2', ctx | {
+            'summary': get_summary() if not vote.has_next_clip else None
+        })
 
     raise Exception('Not implemented vote state')
 
@@ -189,6 +196,9 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
     if vote.clip_idx == clip_idx and vote.state in {VoteState.VOTING}:
         vote.cast_teo_vote(rank)
         vote.end_clip()
+
+        if not vote.has_next_clip:
+            update_summary(vote)
 
     return INDEX_REDIRECT
 

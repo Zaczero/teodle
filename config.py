@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 MAX_STARS = 2
 
@@ -11,3 +12,10 @@ TTV_CHANNEL = os.environ['TTV_CHANNEL']
 VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().split(','))
 NO_MONITOR = os.getenv('NO_MONITOR') == '1'
 DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
+
+SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '10'))
+SUMMARY_PATH = Path('summary.json')
+
+# ensure proper file permissions
+with open(SUMMARY_PATH, 'a+') as f:
+    pass

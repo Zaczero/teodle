@@ -55,6 +55,50 @@
         <canvas id="chart" style="height: 550px"></canvas>
     </div>
 
+    {% if summary %}
+        <div class="summary card mb-4">
+            <div class="card-body py-1">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th class="text-center"><img class="me-1" src="/static/img/teo.png" height="24">Teo</th>
+                            <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">Chat</th>
+                            <th class="text-end pe-5"><img class="me-1" src="/static/img/chad.webp" height="24">Leader
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entry in summary %}
+                            <tr>
+                                <td>{{ entry.date }}</td>
+                                <td class="text-center">
+                                    {{ entry.teo_stars }}
+
+                                    {% if entry.teo_stars > entry.users_stars %}
+                                        (<span class="winner">Winner</span>)
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {{ entry.users_stars }}
+
+                                    {% if entry.teo_stars < entry.users_stars %}
+                                        (<span class="winner">Winner</span>)
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <span class="me-3">{{ entry.top_user_name }}</span>
+                                    {{ entry.top_user_stars }} ✕ ⭐️
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row g-2">
         <div class="col-auto">
             <a class="btn border rounded btn-link text-decoration-none"
@@ -241,9 +285,9 @@
         const rankUsers = {
             {% for rank in vote.clip.ranks %}
                 '{{ rank.title }}': [
-                {% for username in vote.result.users_rank_users[rank] %}
-                    '{{ username }}',
-                {% endfor %}
+                    {% for username in vote.result.users_rank_users[rank] %}
+                        '{{ username }}',
+                    {% endfor %}
                 ],
             {% endfor %}
         }

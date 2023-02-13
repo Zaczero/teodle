@@ -148,3 +148,8 @@ td.expand {
 .first-img {
     height: 1em;
 }
+
+.winner {
+    font-weight: bold;
+    color: #20c997;
+}

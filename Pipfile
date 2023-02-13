@@ -13,6 +13,7 @@ python-multipart = "*"
 werkzeug = "*"
 pillow = "*"
 timeago = "*"
+dataclasses-json = "*"
 
 [dev-packages]
 
