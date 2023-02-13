@@ -13,7 +13,7 @@ VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().
 NO_MONITOR = os.getenv('NO_MONITOR') == '1'
 DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
 
-SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '10'))
+SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '5'))
 SUMMARY_PATH = Path('summary.json')
 
 # ensure proper file permissions
