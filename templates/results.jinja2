@@ -87,8 +87,10 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-end">
-                                    <span class="me-3">{{ entry.top_user_name }}</span>
-                                    {{ entry.top_user_stars }} ✕ ⭐️
+                                    {% if entry.top_user_stars > 0 %}
+                                        <span class="me-3">{{ entry.top_user_name }}</span>
+                                        {{ entry.top_user_stars }} ✕ ⭐️
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
