@@ -1,4 +1,3 @@
-import base64
 import os
 import traceback
 from asyncio import create_task, sleep, Event, Lock
@@ -12,7 +11,7 @@ from fastapi import FastAPI, Form
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import RedirectResponse, FileResponse, Response
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from starlette.websockets import WebSocket, WebSocketDisconnect
@@ -26,6 +25,7 @@ from vote import Vote, VoteState
 
 app = FastAPI()
 app.mount('/static', StaticFiles(directory='static'), name='static')
+app.mount('/ranks', StaticFiles(directory='ranks'), name='ranks')
 app.mount(f'/{DOWNLOAD_DIR}', StaticFiles(directory=DOWNLOAD_DIR), name='download')
 
 tmpl = Jinja2Templates(directory='templates')
@@ -274,21 +274,6 @@ async def post_config(config: str = Form()):
     downloader.load(vote)
 
     return INDEX_REDIRECT
-
-
-@app.get('/rank/{raw:path}')
-async def rank(raw: str):
-    rank_image = next((r.image for r in vote.clip.ranks if r.raw == raw), None)
-
-    if rank_image is None:
-        raise HTTPException(404)
-
-    if not rank_image.path.exists():
-        # https://stackoverflow.com/questions/6018611/smallest-data-uri-image-possible-for-a-transparent-image
-        return Response(base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
-                        media_type='image/gif')
-
-    return FileResponse(rank_image.path)
 
 
 @app.websocket('/ws')

@@ -6,14 +6,14 @@
                 <tr>
                     <td class="shrink">You answered:</td>
                     <td class="expand">
-                        <img class="me-1" src="/rank/{{ your_vote.raw }}" height="30">
+                        <img class="me-1" src="/{{ your_vote.image.path }}" alt="" height="30">
                         {{ your_vote.title }}
                     </td>
                 </tr>
                 <tr>
                     <td class="shrink">Correct answer:</td>
                     <td class="expand">
-                        <img class="me-1" src="/rank/{{ vote.clip.answer.raw }}" height="30">
+                        <img class="me-1" src="/{{ vote.clip.answer.image.path }}" alt="" height="30">
                         {{ vote.clip.answer.title }}
                     </td>
                 </tr>
