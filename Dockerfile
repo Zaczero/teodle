@@ -2,11 +2,10 @@ FROM python:3.10.8-slim
 
 ENV PYTHONUNBUFFERED=1
 
-RUN apt update && \
-    apt install -y ffmpeg && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN pip install \
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install \
     --no-cache-dir \
     --disable-pip-version-check \
     pipenv \
