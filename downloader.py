@@ -14,10 +14,17 @@ def find_file(url: str) -> tuple[Path, Path | None]:
     prefix = DOWNLOAD_DIR / Path(secure_filename(url))
 
     for match in prefix.parent.glob(prefix.name + '.*'):
-        if match.suffix not in {'.ytdl', '.part'}:
+        if match.suffix in {'.mp4'}:
             return prefix, match
 
     return prefix, None
+
+
+def cleanup(whitelist_files: set[Path]) -> None:
+    for match in DOWNLOAD_DIR.glob('*.*'):
+        if match not in whitelist_files:
+            print(f'[DL] Cleanup file: {match}')
+            match.unlink()
 
 
 class Downloader:
@@ -37,6 +44,7 @@ class Downloader:
             self.processing = 0
 
             i_max = len(self._vote.clips)
+            clip_paths: set[Path] = set()
 
             for i, clip in enumerate(self._vote.clips):
                 self.processing = i / i_max
@@ -45,7 +53,7 @@ class Downloader:
                     clip_prefix, clip_path = find_file(clip.url)
 
                     if clip_path is None:
-                        print(f'[DL] Downloading clip {clip.url} …')
+                        print(f'[DL] Downloading clip: {clip.url} …')
 
                         proc = await asyncio.create_subprocess_exec(
                             'yt-dlp',
@@ -66,8 +74,11 @@ class Downloader:
 
                     if clip_path is not None:
                         clip.use_local_file(clip_path)
+                        clip_paths.add(clip_path)
 
                 except Exception:
                     traceback.print_exc()
+
+            cleanup(clip_paths)
 
             self.processing = 1

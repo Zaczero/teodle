@@ -51,6 +51,6 @@ class Clip:
         return {r: i for i, r in enumerate(self.ranks)}
 
     def use_local_file(self, path: Path) -> None:
-        self.embed = False
+        self.embed = True
         self.url = f'/{path}'
         self.local = True

@@ -28,12 +28,12 @@
         </div>
 
         <div class="text-secondary small">
-            <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }} •
             {% if downloader.processing < 1 %}
-                Downloading {{ '{:.0%}'.format(downloader.processing) }}
+                Downloading {{ '{:.0%}'.format(downloader.processing) }} •
             {% else %}
-                Downloaded
+                ✓
             {% endif %}
+            <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }}
         </div>
 
         <hr style="margin: 3.5em 0 2.5em">
