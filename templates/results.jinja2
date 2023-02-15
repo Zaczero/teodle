@@ -1,5 +1,6 @@
 {% extends '_base.jinja2' %}
 {% import '_your_vote.jinja2' as your_vote %}
+{% import '_summary_table.jinja2' as summary_table %}
 {% block body %}
 
     <div class="row mb-3">
@@ -56,48 +57,8 @@
     </div>
 
     {% if summary %}
-        <div class="summary card mb-4">
-            <div class="card-body py-1">
-                <div class="table-responsive">
-                    <table class="table mb-0">
-                        <thead>
-                        <tr>
-                            <th>Played on</th>
-                            <th class="text-center"><img class="me-1" src="/static/img/teo.png" height="24">Teo</th>
-                            <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">Chat</th>
-                            <th class="text-end pe-5"><img class="me-1" src="/static/img/chad.webp" height="24">MVP
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for entry in summary %}
-                            <tr>
-                                <td>{{ entry.date }}</td>
-                                <td class="text-center">
-                                    {{ entry.teo_stars }}
-
-                                    {% if entry.teo_stars > entry.users_stars %}
-                                        (<span class="winner">Winner</span>)
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    {{ entry.users_stars }}
-
-                                    {% if entry.teo_stars < entry.users_stars %}
-                                        (<span class="winner">Winner</span>)
-                                    {% endif %}
-                                </td>
-                                <td class="text-end">
-                                    {% if entry.top_user_stars > 0 %}
-                                        <span class="me-3">{{ entry.top_user_name }}</span>
-                                        {{ entry.top_user_stars }} ✕ ⭐️
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="mb-4">
+            {{ summary_table.new(summary) }}
         </div>
     {% endif %}
 
