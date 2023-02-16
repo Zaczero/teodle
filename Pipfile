@@ -4,16 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "*"
-uvicorn = {extras = ["standard"], version = "*"}
-asyncio = "*"
-starlette = "*"
-jinja2 = "*"
-python-multipart = "*"
-werkzeug = "*"
-pillow = "*"
-timeago = "*"
 dataclasses-json = "*"
+fastapi = "*"
+jinja2 = "*"
+pillow = "*"
+python-multipart = "*"
+six = "*"
+starlette = "*"
+timeago = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+werkzeug = "*"
 
 [dev-packages]
 
