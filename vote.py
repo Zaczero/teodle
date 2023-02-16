@@ -1,3 +1,4 @@
+from asyncio import Event
 import re
 from enum import Enum
 from pathlib import Path
@@ -27,7 +28,9 @@ class Vote:
     total_teo_stars: int = 0
     total_users_stars: int = 0
 
-    def __init__(self, path_or_text: Path | str):
+    _cast_user_vote_event = Event()
+
+    def __init__(self, path_or_text: Path | str) -> None:
         if isinstance(path_or_text, str):
             text = path_or_text
         else:
@@ -95,4 +98,12 @@ class Vote:
         if self.state != VoteState.VOTING:
             return False
 
-        return self.board.vote(username, vote, self.clip_idx)
+        if self.board.vote(username, vote, self.clip_idx):
+            self._cast_user_vote_event.set()
+            return True
+
+        return False
+
+    async def wait_user_vote(self) -> None:
+        await self._cast_user_vote_event.wait()
+        self._cast_user_vote_event.clear()

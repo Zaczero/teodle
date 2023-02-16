@@ -1,12 +1,9 @@
 import os
-import traceback
-from asyncio import create_task, sleep, Event, Lock
+from asyncio import create_task, sleep
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import timeago
-import websockets
 from fastapi import FastAPI, Form
 from starlette import status
 from starlette.exceptions import HTTPException
@@ -15,149 +12,43 @@ from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from starlette.websockets import WebSocket, WebSocketDisconnect
-from websockets.exceptions import ConnectionClosedOK
-from websockets.legacy.client import WebSocketClientProtocol
 
-from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME, TTV_CHANNEL, DOWNLOAD_DIR
+from config import DOWNLOAD_DIR
 from downloader import Downloader
-from summary import update_summary, get_summary
+from summary import get_summary, update_summary
+from twitch_monitor import TwitchMonitor
 from vote import Vote, VoteState
 
 app = FastAPI()
 app.mount('/static', StaticFiles(directory='static'), name='static')
 app.mount('/ranks', StaticFiles(directory='ranks'), name='ranks')
-app.mount(f'/{DOWNLOAD_DIR}', StaticFiles(directory=DOWNLOAD_DIR), name='download')
+app.mount(f'/{DOWNLOAD_DIR}',
+          StaticFiles(directory=DOWNLOAD_DIR), name='download')
 
 tmpl = Jinja2Templates(directory='templates')
 
+
 clips_path = Path('clips.txt')
-vote = Vote(clips_path)
-vote_event = Event()
+vote: Vote
 
+twitch_monitor = TwitchMonitor()
 downloader = Downloader()
-downloader.load(vote)
-
-socket: Optional[WebSocketClientProtocol] = None
-socket_event = Event()
-socket_lock = Lock()
 
 
-# vote.begin_next_clip()
-# vote.cast_user_vote(str(random.random()), 'bronze')
-# vote.cast_user_vote(str(random.random()), 'bronze')
-# vote.cast_user_vote(str(random.random()), 'bronze')
-# vote.cast_user_vote(str(random.random()), 'gold')
-# vote.cast_user_vote(str(random.random()), 'gold')
-# vote.cast_user_vote(str(random.random()), 'diamond')
-# vote.cast_user_vote(str(random.random()), 'diamond')
-# vote.cast_user_vote(str(random.random()), 'diamond')
-# vote.cast_user_vote(str(random.random()), 'diamond')
+def set_vote(vote_: Vote) -> None:
+    global vote
+    vote = vote_
+    twitch_monitor.load(vote)
+    downloader.load(vote)
+
+
+set_vote(Vote(clips_path))
 
 
 @app.on_event('startup')
-async def startup():
+async def startup() -> None:
     create_task(downloader.loop())
-    create_task(ttv_monitor())
-
-
-# TODO: ttv class
-async def ttv_disconnect():
-    if NO_MONITOR:
-        return
-
-    global socket
-
-    if socket is None:
-        return
-
-    socket_event.clear()
-
-    try:
-        await socket.close()
-    except Exception:
-        pass
-
-    socket = None
-    print('[TTV] 🔴 Disconnected')
-
-
-async def ttv_connect():
-    if NO_MONITOR:
-        return
-
-    global socket
-
-    await ttv_disconnect()
-
-    timeout = 0.5
-
-    while True:
-        try:
-            socket = await websockets.connect('wss://irc-ws.chat.twitch.tv:443')
-            break
-        except Exception:
-            traceback.print_exc()
-            await sleep(timeout)
-            timeout = min(timeout * 2, 5)
-
-    socket_event.set()
-    print('[TTV] 🟢 Connected')
-
-
-async def ttv_monitor():
-    if NO_MONITOR:
-        return
-
-    while True:
-        # reset connection if connected
-        async with socket_lock:
-            if socket_event.is_set():
-                await ttv_connect()
-
-        await socket_event.wait()
-
-        print('[TTV] Started monitoring')
-
-        try:
-            await socket.send(f'CAP REQ :twitch.tv/membership')
-            await socket.send(f'PASS oauth:{TTV_TOKEN}')
-            await socket.send(f'NICK {TTV_USERNAME}')
-            await socket.send(f'JOIN #{TTV_CHANNEL}')
-
-            while True:
-                raw = (await socket.recv()).strip()
-                parts = raw.split(' ')
-
-                assert len(parts) >= 2, f'Message contains no spaces: {raw}'
-
-                if parts[0] == 'PING':
-                    nonce = ' '.join(parts[1:])
-                    await socket.send(f'PONG {nonce}')
-                elif parts[1] == 'PRIVMSG' and parts[2] == f'#{TTV_CHANNEL}':
-                    username = parts[0].split('!')[0].lstrip(':').lower()
-                    message = ' '.join(parts[3:]).lstrip(':').lower()
-
-                    if message.startswith('!'):
-                        message = message.lstrip('!').strip()
-
-                        # try multiple formats for better compatibility
-                        for new_whitespace in ('', '_'):
-                            if vote.cast_user_vote(username, message.replace(' ', new_whitespace)):
-                                vote_event.set()
-                                break
-
-                elif parts[1] in {'JOIN', 'PART', '353'}:
-                    pass
-                else:
-                    print('[TTV]', raw)
-
-        except ConnectionClosedOK:
-            pass
-        except Exception:
-            traceback.print_exc()
-            await sleep(2)
-
-        print('[TTV] Stopped monitoring')
+    create_task(twitch_monitor.loop())
 
 
 def default_context(request: Request) -> dict:
@@ -194,7 +85,7 @@ async def index(request: Request):
     raise Exception('Not implemented vote state')
 
 
-INDEX_REDIRECT = RedirectResponse(app.url_path_for(index.__name__), status_code=status.HTTP_302_FOUND)
+INDEX_REDIRECT = RedirectResponse('/', status_code=status.HTTP_302_FOUND)
 
 
 @app.post('/cast_vote')
@@ -217,18 +108,17 @@ async def next_clip(clip_idx: int = Form()):
     # ensure the client state
     if vote.clip_idx == clip_idx and vote.state in {VoteState.IDLE, VoteState.RESULTS}:
         if vote.has_next_clip:
-            async with socket_lock:
-                if not socket_event.is_set():
-                    await ttv_connect()
+            async with twitch_monitor.lock:
+                if not twitch_monitor.run_loop.is_set():
+                    await twitch_monitor.connect()
 
             vote.begin_next_clip()
 
         else:
-            async with socket_lock:
-                await ttv_disconnect()
+            async with twitch_monitor.lock:
+                await twitch_monitor.disconnect()
 
-            vote = Vote(clips_path)
-            downloader.load(vote)
+            set_vote(Vote(clips_path))
 
     return INDEX_REDIRECT
 
@@ -270,23 +160,20 @@ async def post_config(config: str = Form()):
             f.write(config)
             f.truncate()
 
-    vote = new_vote
-    downloader.load(vote)
+    set_vote(new_vote)
 
     return INDEX_REDIRECT
 
 
 @app.websocket('/ws')
-async def websocket(ws: WebSocket):
+async def websocket(ws: WebSocket) -> None:
     await ws.accept()
 
     try:
         while True:
             await ws.send_json({'total': vote.total_users_votes})
             await sleep(0.2)
-
-            await vote_event.wait()
-            vote_event.clear()
+            await vote.wait_user_vote()
 
     except WebSocketDisconnect:
         pass
