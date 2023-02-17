@@ -35,5 +35,5 @@ DOWNLOAD_DIR = Path('download')
 DOWNLOAD_DIR.mkdir(exist_ok=True)
 
 # ensure proper directory permissions
-for dir in [RANKS_DIR, DOWNLOAD_DIR]:
+for dir in [DOWNLOAD_DIR]:
     assert os.access(dir, os.W_OK | os.X_OK), f'Permission denied: {dir}'
