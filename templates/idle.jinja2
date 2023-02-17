@@ -1,52 +1,38 @@
 {% extends '_base.jinja2' %}
 {% block body %}
 
-    <form class="text-center" action="/next_clip" method="post">
-        <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+<form class="text-center" action="/next_clip" method="post">
+    <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
 
-        <div class="alert alert-info mt-4 mb-3">
-            <h5 class="alert-heading">Update: 13<sup>th</sup> February</h5>
-            <div>
-                Automatically download clips and serve them directly.<br>
-                <b>#</b>best_quality <b>#</b>no_annoyances <b>#</b>privacy
-                <hr>
-                Display Teodle summary after the last clip.<br>
-                Credits to @andrew103 at GitHub.
-            </div>
+    <div class="alert alert-info mt-4 mb-3">
+        <h5 class="alert-heading">Update: 17<sup>th</sup> February</h5>
+        <div>
+            Just behind the scenes changes.<br>
+            Anyway, good luck everybody! 🍀
         </div>
+    </div>
 
-        <div class="alert alert-info mt-4 mb-3">
-            <h5 class="alert-heading">Update: 29<sup>th</sup> January</h5>
-            <div>
-                Display the viewers who voted for a given rank.<br>
-                🌈 <b>#</b>viewershaming
-            </div>
-        </div>
+    <div class="mt-5 mb-4">
+        <input type="submit" class="btn btn-lg btn-primary" value="Start️ game">
+    </div>
 
-        <div class="mt-5 mb-4">
-            <input type="submit" class="btn btn-lg btn-primary" value="Start️ game">
-        </div>
+    <div class="text-secondary small">
+        {% if downloader.processing < 1 %} Downloading {{ '{:.0%}' .format(downloader.processing) }} • {% else %} ✓ {%
+            endif %} <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }}
+    </div>
 
-        <div class="text-secondary small">
-            {% if downloader.processing < 1 %}
-                Downloading {{ '{:.0%}'.format(downloader.processing) }} •
-            {% else %}
-                ✓
-            {% endif %}
-            <a class="text-secondary" href="/config">Clip config</a> • Last modified: {{ config_mtime }}
-        </div>
+    <hr style="margin: 3.5em 0 2.5em">
 
-        <hr style="margin: 3.5em 0 2.5em">
+    <div class="text-secondary">
+        <small>
+            This website's code is publicly available at
+            <a class="text-decoration-none" href="https://github.com/Zaczero/teodle"
+                target="_blank">github.com/Zaczero/teodle</a>
+            <br>
+        </small>
+        Learn and contribute — it's Python 🐍!
+    </div>
 
-        <div class="text-secondary">
-            <small>
-                This website's code is publicly available at
-                <a class="text-decoration-none" href="https://github.com/Zaczero/teodle" target="_blank">github.com/Zaczero/teodle</a>
-                <br>
-            </small>
-            Learn and contribute — it's Python 🐍!
-        </div>
-
-    </form>
+</form>
 
 {% endblock %}
