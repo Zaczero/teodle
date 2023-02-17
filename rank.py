@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from config import RANK_FILE_DEFAULT_EXT
+from config import RANK_FILE_DEFAULT_EXT, RANKS_DIR
 
 
 class RankImage:
@@ -11,7 +11,7 @@ class RankImage:
     height: int = 0
 
     def __init__(self, path: str):
-        self.path = Path(f'ranks/{path}')
+        self.path = Path(f'{RANKS_DIR}/{path}')
 
         if not self.path.suffix:
             self.path = self.path.with_suffix(RANK_FILE_DEFAULT_EXT)

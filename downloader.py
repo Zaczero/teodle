@@ -55,14 +55,28 @@ class Downloader:
                     if clip_path is None:
                         print(f'[DL] Downloading clip: {clip.url} …')
 
+                        extra_args = []
+                        ffmpeg_args = []
+
+                        if 'mute' in clip.modifiers:
+                            ffmpeg_args.append('-an')
+
+                        if ffmpeg_args:
+                            extra_args += [
+                                '--postprocessor-args',
+                                f'ffmpeg: {" ".join(ffmpeg_args)}'
+                            ]
+
                         proc = await asyncio.create_subprocess_exec(
                             'yt-dlp',
                             '--verbose',
                             '--prefer-free-formats',
                             '--output',
                             f'{clip_prefix}.%(ext)s',
+                            '--prefer-ffmpeg',
                             '--recode-video',
                             'mp4',  # Teo uses Firefox (no matroska)
+                            *extra_args,
                             clip.url,
                             stdout=sys.stdout,
                             stderr=sys.stderr

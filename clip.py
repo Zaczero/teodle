@@ -5,6 +5,7 @@ from rank import Rank
 
 class Clip:
     embed: bool
+    modifiers: set[str]
     url: str
     url_raw: str
     credits: str
@@ -19,8 +20,15 @@ class Clip:
         self.embed = lines[0].startswith('embed')
 
         if self.embed:
-            self.url = lines[0][len('embed'):].strip()
+            lines[0] = lines[0][len('embed'):].strip()
+
+        parts = lines[0].split(' ')
+
+        if len(parts) > 1:
+            self.modifiers = set(m.strip() for m in parts[0].split(','))
+            self.url = ' '.join(parts[1:]).strip()
         else:
+            self.modifiers = set()
             self.url = lines[0]
 
         assert self.url.startswith('http'), f'Invalid URL: {self.url}'

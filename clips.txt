@@ -1,4 +1,4 @@
-embed https://www.youtube.com/embed/Qoi_R38rhhI
+embed mute https://www.youtube.com/embed/Qoi_R38rhhI
 mosyy
 cs/silver
 cs/silverelite

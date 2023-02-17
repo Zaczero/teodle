@@ -4,6 +4,7 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     python311
     pipenv
+    ffmpeg_5-full
   ];
 
   shellHook = ''
