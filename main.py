@@ -13,7 +13,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from config import DOWNLOAD_DIR
+from config import CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
 from downloader import Downloader
 from summary import get_summary, update_summary
 from twitch_monitor import TwitchMonitor
@@ -21,14 +21,12 @@ from vote import Vote, VoteState
 
 app = FastAPI()
 app.mount('/static', StaticFiles(directory='static'), name='static')
-app.mount('/ranks', StaticFiles(directory='ranks'), name='ranks')
-app.mount(f'/{DOWNLOAD_DIR}',
-          StaticFiles(directory=DOWNLOAD_DIR), name='download')
+app.mount(f'/{RANKS_DIR}', StaticFiles(directory=RANKS_DIR), name='ranks')
+app.mount(f'/{DOWNLOAD_DIR}', StaticFiles(directory=DOWNLOAD_DIR), name='download')
 
 tmpl = Jinja2Templates(directory='templates')
 
 
-clips_path = Path('clips.txt')
 vote: Vote
 
 twitch_monitor = TwitchMonitor()
@@ -42,7 +40,7 @@ def set_vote(vote_: Vote) -> None:
     downloader.load(vote)
 
 
-set_vote(Vote(clips_path))
+set_vote(Vote(CLIPS_PATH))
 
 
 @app.on_event('startup')
@@ -60,7 +58,7 @@ def default_context(request: Request) -> dict:
 
 
 def clips_mtime() -> str:
-    return timeago.format(datetime.fromtimestamp(clips_path.stat().st_mtime),
+    return timeago.format(datetime.fromtimestamp(CLIPS_PATH.stat().st_mtime),
                           datetime.now())
 
 
@@ -118,7 +116,7 @@ async def next_clip(clip_idx: int = Form()):
             async with twitch_monitor.lock:
                 await twitch_monitor.disconnect()
 
-            set_vote(Vote(clips_path))
+            set_vote(Vote(CLIPS_PATH))
 
     return INDEX_REDIRECT
 
@@ -128,7 +126,7 @@ async def get_config(request: Request):
     if vote.state != VoteState.IDLE:
         return INDEX_REDIRECT
 
-    with open(clips_path) as f:
+    with open(CLIPS_PATH) as f:
         config = f.read()
 
     return tmpl.TemplateResponse('config.jinja2', default_context(request) | {
@@ -151,7 +149,7 @@ async def post_config(config: str = Form()):
     except Exception as e:
         raise HTTPException(500, str(e))
 
-    with open(clips_path, 'r+') as f:
+    with open(CLIPS_PATH, 'r+') as f:
         current_config = f.read().strip()
 
         if current_config.replace('\r', '') != config.replace('\r', ''):
