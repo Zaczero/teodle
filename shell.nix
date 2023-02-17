@@ -4,7 +4,6 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     python311
     pipenv
-    yt-dlp
   ];
 
   shellHook = ''
