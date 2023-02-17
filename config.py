@@ -1,6 +1,11 @@
 import os
 from pathlib import Path
 
+for require in ['yt-dlp']:
+    assert any(os.path.exists(os.path.join(p, require))
+               for p in os.environ['PATH'].split(os.pathsep)), \
+        'You are missing the required dependency: ' + require
+
 MAX_STARS = 2
 
 RANK_FILE_DEFAULT_EXT = '.png'
