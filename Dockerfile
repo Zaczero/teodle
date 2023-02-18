@@ -34,7 +34,8 @@ ENV PIPENV_VENV_IN_PROJECT=1
 
 COPY --chown=1000:1000 Pipfile* ./
 
-RUN pipenv install --deploy --ignore-pipfile --keep-outdated --clear
+RUN pipenv install --deploy --ignore-pipfile --keep-outdated && \
+    pipenv --clear
 
 ENV PATH="/app/.venv/bin:$PATH"
 
