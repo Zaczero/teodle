@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-for require in ['yt-dlp']:
+for require in ['yt-dlp', 'ffmpeg']:
     assert any(os.path.exists(os.path.join(p, require))
                for p in os.environ['PATH'].split(os.pathsep)), \
         'You are missing the required dependency: ' + require
