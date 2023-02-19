@@ -39,7 +39,7 @@ RUN pipenv install --deploy --ignore-pipfile --keep-outdated && \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-COPY --chown=1000:1000 *.py ./
+COPY --chown=1000:1000 LICENSE *.py ./
 COPY --chown=1000:1000 ranks ./ranks/
 COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/

@@ -1,15 +1,28 @@
 {% extends '_base.jinja2' %}
 {% block body %}
 
-    <form action="/config" method="post">
+<form action="/config" method="post">
 
-        <textarea class="form-control mb-4" name="config" rows="20" required>{{ config }}</textarea>
-
-        <div class="d-flex justify-content-between">
-            <a class="btn btn-secondary" href="/">Cancel</a>
-            <input type="submit" class="btn btn-primary" value="Save">
+    <div class="row mb-4">
+        <div class="col-9">
+            <div>
+                <label class="form-label">Clips</label>
+                <textarea class="form-control" name="config" rows="20" required>{{ config }}</textarea>
+            </div>
         </div>
+        <div class="col-3">
+            <div>
+                <label class="form-label">User blacklist</label>
+                <textarea class="form-control" name="blacklist" rows="20">{{ blacklist }}</textarea>
+            </div>
+        </div>
+    </div>
 
-    </form>
+    <div class="d-flex justify-content-between">
+        <a class="btn btn-secondary" href="/">Cancel</a>
+        <input type="submit" class="btn btn-primary" value="Save">
+    </div>
+
+</form>
 
 {% endblock %}

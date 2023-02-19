@@ -19,12 +19,13 @@ NO_MONITOR = os.getenv('NO_MONITOR') == '1'
 DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
 
 CLIPS_PATH = Path('clips.txt')
+BLACKLIST_PATH = Path('blacklist.txt')
 
 SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '5'))
 SUMMARY_PATH = Path('summary.json')
 
 # ensure proper file permissions
-for file in [CLIPS_PATH, SUMMARY_PATH]:
+for file in [CLIPS_PATH, BLACKLIST_PATH, SUMMARY_PATH]:
     with open(file, 'a+') as f:
         pass
 

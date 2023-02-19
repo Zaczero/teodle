@@ -1,13 +1,14 @@
-from asyncio import Event
 import re
+from asyncio import Event
 from enum import Enum
 from pathlib import Path
-from random import random, choice
+from random import choice, random
 
+from blacklist import Blacklist
 from clip import Clip
-from config import DUMMY_VOTES
+from config import BLACKLIST_PATH, DUMMY_VOTES
 from rank import Rank
-from users_board import UsersBoard, ClipResult
+from users_board import ClipResult, UsersBoard
 
 
 class VoteState(Enum):
@@ -30,19 +31,25 @@ class Vote:
 
     _cast_user_vote_event = Event()
 
-    def __init__(self, path_or_text: Path | str) -> None:
+    def __init__(self, path_or_text: Path | str, blacklist: Blacklist | None = None) -> None:
         if isinstance(path_or_text, str):
             text = path_or_text
         else:
             with open(path_or_text) as f:
                 text = f.read()
 
+        if blacklist is None:
+            blacklist = Blacklist(BLACKLIST_PATH)
+
         text = re.sub(r'[\t\r]', '', text)
 
         self.clips = [Clip(t) for t in text.split('\n\n') if t]
         self.board = UsersBoard(self.clips)
 
-        print(f'[INFO] Loaded {len(self.clips)} clips')
+        for clip in self.clips:
+            assert not blacklist.is_blacklisted(clip.credits), f'Blacklisted user found: {clip.credits}'
+
+        print(f'[VOTE] Loaded {len(self.clips)} clips')
 
     @property
     def clip(self) -> Clip:

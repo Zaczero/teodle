@@ -20,6 +20,12 @@ iframe {
     border: 0;
 }
 
+textarea {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: scroll;
+}
+
 .credits {
     letter-spacing: 0.2px;
     font-size: 0.75em;

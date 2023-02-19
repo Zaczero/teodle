@@ -13,7 +13,8 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from config import CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
+from blacklist import Blacklist
+from config import BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
 from downloader import Downloader
 from summary import get_summary, update_summary
 from twitch_monitor import TwitchMonitor
@@ -129,34 +130,44 @@ async def get_config(request: Request):
     with open(CLIPS_PATH) as f:
         config = f.read()
 
+    with open(BLACKLIST_PATH) as f:
+        blacklist = f.read()
+
     return tmpl.TemplateResponse('config.jinja2', default_context(request) | {
-        'config': config
+        'config': config,
+        'blacklist': blacklist,
     })
 
 
 @app.post('/config')
-async def post_config(config: str = Form()):
+async def post_config(config: str = Form(), blacklist: str = Form()):
     global vote
 
     if vote.state != VoteState.IDLE:
         raise HTTPException(500, 'Invalid state: voting in progress')
 
     config = config.strip()
+    blacklist = blacklist.strip()
 
     try:
-        new_vote = Vote(config)
-        assert len(new_vote.clips), 'No clips were loaded'
+        # parse the configs to ensure they are valid
+        new_blacklist = Blacklist(blacklist)
+        new_vote = Vote(config, blacklist=new_blacklist)
+
+        assert len(new_vote.clips), 'No clips found'
     except Exception as e:
         raise HTTPException(500, str(e))
 
-    with open(CLIPS_PATH, 'r+') as f:
-        current_config = f.read().strip()
+    for path, content in [(CLIPS_PATH, config), (BLACKLIST_PATH, blacklist)]:
+        with open(path, 'r+') as f:
+            current = f.read().strip()
 
-        if current_config.replace('\r', '') != config.replace('\r', ''):
-            print('[INFO] Saving new configuration')
-            f.seek(0)
-            f.write(config)
-            f.truncate()
+            # only update the file if the content has changed
+            if current.replace('\r', '') != content.replace('\r', ''):
+                print(f'[INFO] Saving config: {path}')
+                f.seek(0)
+                f.write(content)
+                f.truncate()
 
     set_vote(new_vote)
 
