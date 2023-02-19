@@ -140,7 +140,7 @@ async def get_config(request: Request):
 
 
 @app.post('/config')
-async def post_config(config: str = Form(), blacklist: str = Form()):
+async def post_config(config: str = Form(), blacklist: str = Form(default='')):
     global vote
 
     if vote.state != VoteState.IDLE:
