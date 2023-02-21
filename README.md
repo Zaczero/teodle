@@ -50,11 +50,11 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 * Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M (newest)
 * Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 * Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
-* Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
 
 <details>
 <summary>Show more</summary>
 
+* Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
 * Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
 * Ep2 https://www.youtube.com/watch?v=noQXO2jvAcw
 </details>
