@@ -3,7 +3,7 @@ from datetime import datetime
 
 from dataclasses_json import dataclass_json
 
-from config import SUMMARY_PATH, SUMMARY_MIN_VOTES
+from config import MAX_STARS, SUMMARY_MIN_VOTES, SUMMARY_PATH
 from vote import Vote, VoteState
 
 
@@ -15,6 +15,7 @@ class SummaryEntry:
     users_stars: int
     top_user_name: str
     top_user_stars: int
+    max_stars: int
 
 
 def update_summary(vote: Vote) -> None:
@@ -31,7 +32,8 @@ def update_summary(vote: Vote) -> None:
         teo_stars=vote.total_teo_stars,
         users_stars=vote.total_users_stars,
         top_user_name=top_user[1],
-        top_user_stars=top_user[2].stars
+        top_user_stars=top_user[2].stars,
+        max_stars=len(vote.clips) * MAX_STARS
     ))
 
     json = SummaryEntry.schema().dumps(summary, many=True, indent=2)

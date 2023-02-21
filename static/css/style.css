@@ -158,6 +158,13 @@ td.expand {
 .winner {
     font-weight: bold;
     color: #20c997;
+    opacity: 0.9;
+
+    text-transform: uppercase;
+
+    position: relative;
+    font-size: .7em;
+    top: -0.15em;
 }
 
 .broken-video {
