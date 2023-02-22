@@ -5,6 +5,10 @@ pkgs.mkShell {
     python311
     pipenv
     ffmpeg_5-full
+
+    # just to be safe (ffmpeg libs):
+    x264 # H.264 video
+    libopus # Opus audio
   ];
 
   shellHook = ''

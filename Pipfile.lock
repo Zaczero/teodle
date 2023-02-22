@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c404438d7c6dfd692694e7c0894af6519a1404de812f77b57ea40c0f2b539618"
+            "sha256": "a6c49cda6c29de6cc1a43eaedf0ff9560f6888401defb71b2a3a786c25d375d9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -128,6 +128,22 @@
             "markers": "python_version >= '3.7'",
             "version": "==8.1.3"
         },
+        "colorama": {
+            "hashes": [
+                "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
+                "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'",
+            "version": "==0.4.6"
+        },
+        "colorlog": {
+            "hashes": [
+                "sha256:0d33ca236784a1ba3ff9c532d4964126d8a2c44f1f0cb1d2b0728196f512f662",
+                "sha256:bd94bd21c1e13fac7bd3153f4bc3a7dc0eb0974b8bc2fdf1a989e474f6e582e5"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==6.7.0"
+        },
         "dataclasses-json": {
             "hashes": [
                 "sha256:bc285b5f892094c3a53d558858a88553dd6a61a11ab1a8128a0e554385dcc5dd",
@@ -143,6 +159,22 @@
             ],
             "index": "pypi",
             "version": "==0.92.0"
+        },
+        "ffmpeg-normalize": {
+            "hashes": [
+                "sha256:6e22a6cc035a2cbed5a58b66cc992c236d570d3f5055cfe9b8430cd4fcd89c33",
+                "sha256:e10c21a9d0aeaa34b83d64facb0f5f78d41db2f605288db59d90443b78dbc033"
+            ],
+            "index": "pypi",
+            "version": "==1.26.4"
+        },
+        "ffmpeg-progress-yield": {
+            "hashes": [
+                "sha256:aedf908351fdb793c2e1cca2b3dc6ec9ff26c9fc562e44eadda0fcdfe3b8aa60",
+                "sha256:f8fe0bc342cbe443e18b68ccb3e3067f5211ead0331cbfd7adbb50a7a9f00d57"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==0.7.0"
         },
         "h11": {
             "hashes": [
@@ -562,6 +594,14 @@
             ],
             "index": "pypi",
             "version": "==1.0.16"
+        },
+        "tqdm": {
+            "hashes": [
+                "sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4",
+                "sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==4.64.1"
         },
         "typing-extensions": {
             "hashes": [

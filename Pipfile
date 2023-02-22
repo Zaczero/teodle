@@ -1,11 +1,12 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
 
 [packages]
 dataclasses-json = "*"
 fastapi = "*"
+ffmpeg-normalize = "*"
 jinja2 = "*"
 pillow = "*"
 python-multipart = "*"
