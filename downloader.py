@@ -20,6 +20,10 @@ def find_file(clip: Clip, variant: str | None = None) -> tuple[Path, Path | None
     ).replace('.', '_'))
 
     for match in prefix.parent.glob(prefix.name + '.*'):
+        # skip if file is empty (possibly corrupted)
+        if match.stat().st_size == 0:
+            continue
+
         if variant is not None:
             if len(match.suffixes) == 2 and match.suffixes[0] == variant:
                 return prefix, match
@@ -141,7 +145,9 @@ class Downloader:
                             '-crf',
                             '18',
                             '-vf',
-                            'deblock,hqdn3d,unsharp=5:5:0.2',
+                            'deblock,hqdn3d,'
+                            "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2,setsar=1,"
+                            'unsharp=5:5:0.2',
                             *ffmpeg_o_args,
 
                             # optimize for streaming
