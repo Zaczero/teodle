@@ -30,19 +30,19 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-* https://www.twitch.tv/videos/1743812126?t=00h11m50s (newest)
-* https://www.twitch.tv/videos/1737987350?t=00h52m29s
-* https://www.twitch.tv/videos/1729233989?t=00h00m25s
+* Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s (newest)
+* Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
+* Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
 
 <details>
 <summary>Show more</summary>
 
-* https://www.twitch.tv/videos/1721001903?t=00h37m58s
-* https://www.twitch.tv/videos/1715086976?t=00h22m27s
-* https://www.twitch.tv/videos/1714133387?t=00h26m40s
+* Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
+* Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
+* Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
 * https://www.twitch.tv/videos/1712305474?t=00h14m05s
-* https://www.twitch.tv/videos/1711228781?t=00h23m25s
-* https://www.twitch.tv/videos/1709156468?t=00h13m20s
+* Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
+* Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
 </details>
 
 ### YouTube Series
