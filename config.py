@@ -6,7 +6,7 @@ for require in ['yt-dlp', 'ffmpeg']:
                for p in os.environ['PATH'].split(os.pathsep)), \
         'You are missing the required dependency: ' + require
 
-MAX_STARS = 2
+MAX_STARS = 3
 
 RANK_FILE_DEFAULT_EXT = '.png'
 
