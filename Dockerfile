@@ -44,10 +44,15 @@ COPY --chown=1000:1000 ranks ./ranks/
 COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/
 
+RUN mkdir download && \
+    touch blacklist.txt clips.txt summary.json
+
 RUN python -m compileall .
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+
+EXPOSE 8000
 
 ENTRYPOINT ["uvicorn", "main:app"]
 CMD ["--host", "0.0.0.0"]

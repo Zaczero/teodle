@@ -14,9 +14,9 @@ The ranking system in Teodle is primarily based on stars, the more stars, the hi
 
 The rules are simple:
 
-* If you guess the exact rank of a game clip, you get 2 stars.
-* If you are 1 rank off, you get 1 star.
-* Otherwise, you get no stars.
+- If you guess the exact rank of a game clip, you get 2 stars.
+- If you are 1 rank off, you get 1 star.
+- Otherwise, you get no stars.
 
 ## Live Participation
 
@@ -30,42 +30,81 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-* Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s (newest)
-* Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
-* Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
+- Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s (newest)
+- Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
+- Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
 
 <details>
 <summary>Show more</summary>
 
-* Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
-* Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
-* Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
-* https://www.twitch.tv/videos/1712305474?t=00h14m05s
-* Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
-* Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
+- Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
+- Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
+- Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
+- https://www.twitch.tv/videos/1712305474?t=00h14m05s
+- Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
+- Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
 </details>
 
 ### YouTube Series
 
-* Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ (newest)
-* Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
-* Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
+- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ (newest)
+- Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
+- Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 
 <details>
 <summary>Show more</summary>
 
-* Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
-* Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
-* Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
-* Ep2 https://www.youtube.com/watch?v=noQXO2jvAcw
+- Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
+- Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
+- Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
+- Ep2 https://www.youtube.com/watch?v=noQXO2jvAcw
 </details>
+
+## Deployment
+
+We recommend using Docker for the best experience.
+
+### Docker
+
+1. Install [Docker](https://docs.docker.com/get-docker/)
+2. Clone and enter the repository
+
+```sh
+git clone https://github.com/Zaczero/teodle && cd teodle
+```
+
+3. Rename `.env.example` to `.env` and configure the environment variables
+
+   1. `TTV_TOKEN`: Twitch chat access token, get one [here](https://twitchapps.com/tmi/).
+   2. `TTV_USERNAME`: Twitch account's username for the token.
+   3. `TTV_CHANNEL`: Twitch channel to listen the chat on.
+
+4. Build the image
+
+```sh
+docker build . -t teodle
+```
+
+5. Start the container
+
+```docker
+docker run --rm --env-file .env -p 8000:8000 \
+    -v $(pwd)/download:/app/download \
+    -v $(pwd)/ranks:/app/ranks \
+    -v $(pwd)/blacklist.txt:/app/blacklist.txt \
+    -v $(pwd)/clips.txt:/app/clips.txt \
+    -v $(pwd)/summary.json:/app/summary.json \
+    teodle
+```
+
+6. You can now access the website at [http://localhost:8000](http://localhost:8000)
 
 ## Footer
 
 ### Contact
 
-* Email: [kamil@monicz.pl](mailto:kamil@monicz.pl)
-* LinkedIn: [linkedin.com/in/kamil-monicz](https://www.linkedin.com/in/kamil-monicz/)
+- Email: [kamil@monicz.pl](mailto:kamil@monicz.pl)
+- LinkedIn: [linkedin.com/in/kamil-monicz](https://www.linkedin.com/in/kamil-monicz/)
 
 ### License
 
