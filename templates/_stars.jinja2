@@ -1,33 +1,63 @@
 {% macro new(vote) %}
-    <div class="stars card">
-        <div class="card-body">
+<div class="stars card">
+    <div class="card-body py-0">
 
-            <div class="row">
-                <div class="col">
+        <div class="row">
+            <div class="col my-3">
+                <div class="d-flex align-items-center h-100">
+                    <div>
 
-                    <h5>Teo</h5>
-                    <p>
-                        (<b>{{ vote.total_teo_stars }}</b>)
-                        {% for _ in range(vote.total_teo_stars) %}
-                            ⭐️
-                        {% endfor %}
-                    </p>
+                        <h5>Teo</h5>
 
-                </div>
-                <div class="col text-end">
+                        <div class="row g-2">
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center h-100">
+                                    <span class="total-stars">{{ vote.total_teo_stars }}</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="d-flex align-items-center justify-content-end h-100">
+                                    {% for _ in range(vote.total_teo_stars) %}
+                                    ⭐️
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
 
-                    <h5>Chat</h5>
-                    <p>
-                        {% for _ in range(vote.total_users_stars) %}
-                            ⭐️
-                        {% endfor %}
-                        (<b>{{ vote.total_users_stars }}</b>)
-                    </p>
-
+                    </div>
                 </div>
             </div>
+            <div class="col-auto">
+                <div class="d-flex align-items-center h-100">
+                    <img src="/static/img/vs.png" width="110" style="opacity: 0.7">
+                </div>
+            </div>
+            <div class="col my-3 text-end">
+                <div class="d-flex align-items-center justify-content-end h-100">
+                    <div>
 
+                        <h5>Chat</h5>
+
+                        <div class="row g-2">
+                            <div class="col">
+                                <div class="d-flex align-items-center justify-content-end h-100">
+                                    {% for _ in range(vote.total_users_stars) %}
+                                    ⭐️
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center justify-content-end h-100">
+                                    <span class="total-stars">{{ vote.total_users_stars }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-        <img class="position-absolute" src="/static/img/vs.png" width="110" style="left: calc(50% - 55px); opacity: 0.7">
+
     </div>
+</div>
 {% endmacro %}

@@ -7,6 +7,8 @@ for require in ['yt-dlp', 'ffmpeg']:
         'You are missing the required dependency: ' + require
 
 MAX_STARS = 3
+# (if applicable)
+# don't forget to adjust the easter egg values in results.jinja2
 
 RANK_FILE_DEFAULT_EXT = '.png'
 

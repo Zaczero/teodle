@@ -171,3 +171,9 @@ td.expand {
     font-size: .65em;
     opacity: 0.8;
 }
+
+.total-stars {
+    font-size: 1.1em;
+    font-weight: bold;
+    opacity: 0.85;
+}
