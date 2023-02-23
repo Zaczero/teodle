@@ -97,7 +97,7 @@ docker run --rm --env-file .env -p 8000:8000 \
     teodle
 ```
 
-6. You can now access the website at [http://localhost:8000](http://localhost:8000)
+6. Access the website at [http://localhost:8000](http://localhost:8000)
 
 ## Footer
 
