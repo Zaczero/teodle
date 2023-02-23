@@ -1,17 +1,18 @@
 import os
-from asyncio import create_task, sleep
+import traceback
+from asyncio import CancelledError, Task, create_task, sleep
 from datetime import datetime
-from pathlib import Path
 
 import timeago
 from fastapi import FastAPI, Form
 from starlette import status
+from starlette.endpoints import WebSocketEndpoint
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-from starlette.websockets import WebSocket, WebSocketDisconnect
+from starlette.websockets import WebSocket, WebSocketDisconnect, WebSocketState
 
 from blacklist import Blacklist
 from config import BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
@@ -174,17 +175,41 @@ async def post_config(config: str = Form(), blacklist: str = Form(default='')):
     return INDEX_REDIRECT
 
 
-@app.websocket('/ws')
-async def websocket(ws: WebSocket) -> None:
-    await ws.accept()
+@app.websocket_route('/ws')
+class WS(WebSocketEndpoint):
+    tasks: dict[int, Task] = {}
 
-    try:
-        while True:
-            await ws.send_json({'total': vote.total_users_votes})
-            await sleep(0.2)
-            await vote.wait_user_vote()
+    async def on_connect(self, ws: WebSocket) -> None:
+        await ws.accept()
 
-    except WebSocketDisconnect:
-        pass
-    except Exception as e:
-        await ws.close(1011, str(e))
+        self.tasks[id(ws)] = create_task(self.loop(ws))
+
+        print(f'[WS] Connected: {id(ws)}')
+
+    async def on_disconnect(self, ws: WebSocket, close_code: int) -> None:
+        task = self.tasks.pop(id(ws), None)
+
+        if task is None:
+            return
+
+        if task.cancel():
+            await task
+
+        print(f'[WS] Disconnected: {id(ws)}')
+
+    async def loop(self, ws: WebSocket) -> None:
+        while ws.client_state == WebSocketState.CONNECTED:
+            try:
+                await ws.send_json({'total': vote.total_users_votes})
+                await sleep(0.2)
+                await vote.wait_user_vote()
+
+            except (WebSocketDisconnect, CancelledError):
+                pass
+            except Exception as e:
+                traceback.print_exc()
+
+                if ws.client_state == WebSocketState.CONNECTED:
+                    await ws.close(1011, str(e))
+
+        print(f'[WS] Loop ended: {id(ws)}')

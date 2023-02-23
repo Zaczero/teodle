@@ -1,116 +1,116 @@
 {% extends '_base.jinja2' %}
 {% block body %}
 
-    <div class="mb-3">
-        {% if vote.clip.local %}
-            <div class="ratio ratio-16x9">
-                <video class="rounded" controls>
-                    <source src="{{ vote.clip.url }}">
-                </video>
-            </div>
-        {% elif vote.clip.embed %}
-            <div class="ratio ratio-16x9">
-                <iframe class="rounded" src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
-            </div>
-        {% else %}
-            <div class="d-flex justify-content-center">
-                <div class="px-5 py-4">
-                    <a href="{{ vote.clip.url }}" target="_blank">{{ vote.clip.url }}</a>
-                </div>
-            </div>
-        {% endif %}
+<div class="mb-3">
+    {% if vote.clip.local %}
+    <div class="ratio ratio-16x9">
+        <video class="rounded" controls>
+            <source src="{{ vote.clip.url }}">
+        </video>
     </div>
+    {% elif vote.clip.embed %}
+    <div class="ratio ratio-16x9">
+        <iframe class="rounded" src="{{ vote.clip.url }}" referrerpolicy="no-referrer" allowfullscreen></iframe>
+    </div>
+    {% else %}
+    <div class="d-flex justify-content-center">
+        <div class="px-5 py-4">
+            <a href="{{ vote.clip.url }}" target="_blank">{{ vote.clip.url }}</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
 
 {% endblock %}
 {% block body_nocontainer %}
 
-    <form action="/cast_vote" method="post">
-        <div class="row g-2 justify-content-center text-center mx-2 mb-3">
-            {% for rank in vote.clip.ranks %}
-                <div class="col-auto mb-1">
-                    <input id="option-{{ rank.text }}"
-                           type="radio"
-                           class="btn-check"
-                           name="rank"
-                           value="{{ rank.text }}"
-                           required>
-                    <label for="option-{{ rank.text }}" class="btn btn-light">
+<form action="/cast_vote" method="post">
+    <div class="row g-2 justify-content-center text-center mx-2 mb-3">
+        {% for rank in vote.clip.ranks %}
+        <div class="col-auto mb-1">
+            <input id="option-{{ rank.text }}" type="radio" class="btn-check" name="rank" value="{{ rank.text }}"
+                required>
+            <label for="option-{{ rank.text }}" class="btn btn-light">
 
-                        <span class="d-flex flex-column align-items-center">
+                <span class="d-flex flex-column align-items-center">
 
-                            <div class="d-flex align-items-center" style="width: 96px; height: 96px">
-                                <img class="img-fluid" src="/{{ rank.image.path }}" alt="" draggable="false">
-                            </div>
+                    <div class="d-flex align-items-center" style="width: 96px; height: 96px">
+                        <img class="img-fluid" src="/{{ rank.image.path }}" alt="" draggable="false">
+                    </div>
 
-                            <span>
-                                <span class="vote-mark">!</span>{{ rank.text }}
-                            </span>
+                    <span>
+                        <span class="vote-mark">!</span>{{ rank.text }}
+                    </span>
 
-                        </span>
+                </span>
 
-                    </label>
-                </div>
-            {% endfor %}
+            </label>
         </div>
+        {% endfor %}
+    </div>
 
-        <div class="container">
-            <div class="d-flex justify-content-between">
+    <div class="container">
+        <div class="d-flex justify-content-between">
 
-                <div>
-                    <div class="btn border rounded">
-                        <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
-                        <span class="ms-1">
+            <div>
+                <div class="btn border rounded">
+                    <img src="{{ url_for('static', path='/img/twitch.png') }}" height="24">
+                    <span class="ms-1">
                         Total votes: <b id="total-votes">···</b>
                     </span>
-                    </div>
-
-                    <div class="btn border rounded">
-                        Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
-                    </div>
-
-                    {% if vote.clip.local %}
-                        <a class="broken-video rounded text-decoration-none ms-3"
-                           href="{{ vote.clip.url_raw }}"
-                           target="_blank"
-                           referrerpolicy="no-referrer">
-                            Video broken? Click here
-                        </a>
-                    {% endif %}
                 </div>
 
-                <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-                <input type="submit" class="btn btn-primary" value="Submit vote">
+                <div class="btn border rounded">
+                    Clip {{ vote.clip_idx + 1 }} of {{ vote.clips.__len__() }}
+                </div>
 
+                {% if vote.clip.local %}
+                <a class="broken-video rounded text-decoration-none ms-3" href="{{ vote.clip.url_raw }}" target="_blank"
+                    referrerpolicy="no-referrer">
+                    Video broken? Click here
+                </a>
+                {% endif %}
             </div>
+
+            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+            <input type="submit" class="btn btn-primary" value="Submit vote">
+
         </div>
-    </form>
+    </div>
+</form>
 
 {% endblock %}
 {% block script %}
-    <script>
-        const reconnect_interval = 5000
-        const total_votes = document.getElementById('total-votes')
+<script>
+    const reconnect_interval = 2000
+    const total_votes = document.getElementById('total-votes')
 
-        let ws = new WebSocket(`${document.location.protocol === 'https:' ? 'wss' : 'ws'}://${document.location.host}/ws`)
+    const onopen = () => {
+        total_votes.textContent = '🔗'
+    }
 
-        ws.onopen = () => {
-            total_votes.textContent = '🔗'
-        }
+    const onmessage = e => {
+        const obj = JSON.parse(e.data)
 
-        ws.onmessage = e => {
-            const obj = JSON.parse(e.data)
+        total_votes.textContent = obj.total
+    }
 
-            total_votes.textContent = obj.total
-        }
+    const onclose = e => {
+        console.log(e)
 
-        ws.onclose = e => {
-            console.log(e)
+        total_votes.textContent = '⚠️'
 
-            total_votes.textContent = '⚠️'
+        setTimeout(() => {
+            ws = new WebSocket(ws.url)
+            ws.onopen = onopen
+            ws.onmessage = onmessage
+            ws.onclose = onclose
+        }, reconnect_interval)
+    }
 
-            setTimeout(() => {
-                ws = new WebSocket(ws.url)
-            }, reconnect_interval)
-        }
-    </script>
+    let ws = new WebSocket(`${document.location.protocol === 'https:' ? 'wss' : 'ws'}://${document.location.host}/ws`)
+    ws.onopen = onopen
+    ws.onmessage = onmessage
+    ws.onclose = onclose
+</script>
 {% endblock %}
