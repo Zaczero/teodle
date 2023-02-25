@@ -31,8 +31,8 @@ def update_summary(vote: Vote) -> None:
         date=datetime.utcnow().strftime('%d %b %Y'),
         teo_stars=vote.total_teo_stars,
         users_stars=vote.total_users_stars,
-        top_user_name=top_user[1],
-        top_user_stars=top_user[2].stars,
+        top_user_name=top_user[1].username,
+        top_user_stars=top_user[1].stars,
         max_stars=len(vote.clips) * MAX_STARS
     ))
 

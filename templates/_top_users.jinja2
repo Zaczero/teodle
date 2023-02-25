@@ -1,46 +1,46 @@
 {% macro new(result) %}
-    <div class="top-users card">
-        <div class="card-body py-0">
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <tbody>
+<div class="top-users card">
+    <div class="card-body py-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <tbody>
 
                     {% for top_user in result.top_users %}
-                        <tr>
-                            <td class="shrink text-center">
-                                {% if top_user[0] == 1 %}
-                                    <img class="first-img" src="/static/img/jam.gif">
-                                {% elif top_user[0] == 2 %}
-                                    <span class="board-2">{{ top_user[0] }}<sup>nd</sup></span>
-                                {% elif top_user[0] == 3 %}
-                                    <span class="board-3">{{ top_user[0] }}<sup>rd</sup></span>
-                                {% else %}
-                                    <span class="board text-muted">{{ top_user[0] }}<sup>th</sup></span>
-                                {% endif %}
-                            </td>
-                            <td class="shrink">
-                                {% if top_user[0] == 1 %}
-                                    <span class="fw-bold">{{ top_user[1] }}</span>
-                                {% else %}
-                                    {{ top_user[1] }}
-                                {% endif %}
-                            </td>
-                            <td class="expand">
-                                {{ top_user[2].stars }} ✕ ⭐️
-                            </td>
-                        </tr>
+                    <tr>
+                        <td class="shrink text-center">
+                            {% if top_user[0] == 1 %}
+                            <img class="first-img" src="/static/img/jam.gif">
+                            {% elif top_user[0] == 2 %}
+                            <span class="board-2">{{ top_user[0] }}<sup>nd</sup></span>
+                            {% elif top_user[0] == 3 %}
+                            <span class="board-3">{{ top_user[0] }}<sup>rd</sup></span>
+                            {% else %}
+                            <span class="board text-muted">{{ top_user[0] }}<sup>th</sup></span>
+                            {% endif %}
+                        </td>
+                        <td class="shrink">
+                            {% if top_user[0] == 1 %}
+                            <span class="fw-bold">{{ top_user[1].username }}</span>
+                            {% else %}
+                            {{ top_user[1].username }}
+                            {% endif %}
+                        </td>
+                        <td class="expand">
+                            {{ top_user[1].stars }} ✕ ⭐️
+                        </td>
+                    </tr>
                     {% endfor %}
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="card-footer py-1">
-
-            <div class="text-uppercase text-end fst-italic text-muted" style="font-size: .7em">
-                Sort by stars, <b>then</b> by answer time
-            </div>
-
+                </tbody>
+            </table>
         </div>
     </div>
+    <div class="card-footer py-1">
+
+        <div class="text-uppercase text-end fst-italic text-muted" style="font-size: .7em">
+            Sort by stars, <b>then</b> by answer time
+        </div>
+
+    </div>
+</div>
 {% endmacro %}

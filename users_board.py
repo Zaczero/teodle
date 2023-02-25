@@ -1,6 +1,8 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from random import random
 from time import time
+from typing import NamedTuple
 
 from clip import Clip
 from config import VOTE_WHITELIST
@@ -8,16 +10,24 @@ from rank import Rank
 from utils import calculate_stars
 
 
-@dataclass(frozen=True, kw_only=False, slots=True)
-class UserVote:
+class UserVote(NamedTuple):
     time: float
     rank: Rank
 
 
-@dataclass(frozen=False, kw_only=True, slots=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class UserScore:
+    username: str
     order: int
     stars: int
+
+    @classmethod
+    def dummy(cls) -> 'UserScore':
+        return cls(
+            username='<none>',
+            order=0,
+            stars=0
+        )
 
 
 @dataclass(frozen=True, kw_only=True, slots=True)
@@ -27,32 +37,34 @@ class ClipResult:
     users_rank: Rank
     users_rank_percentages: dict[Rank, float]
     users_rank_users: dict[Rank, list[str]]
-    top_users: list[tuple[int, str, UserScore]]
+    top_users: list[tuple[int, UserScore]]
 
 
 class UsersBoard:
     clips: list[Clip]
     state: dict[Clip, dict[str, UserVote]]
+    scores: dict[Clip, list[UserScore]]
 
     _max_known_clip_idx: int = 0
 
     def __init__(self, clips: list[Clip]):
         self.clips = clips
         self.state = {c: {} for c in clips}
+        self.scores = {}
 
     def vote(self, username: str, vote: str, clip_idx: int) -> bool:
         assert self._max_known_clip_idx <= clip_idx, f'Invalid clip: {clip_idx}, last is: {self._max_known_clip_idx}'
+
         self._max_known_clip_idx = clip_idx
 
-        username = username.lower()
-
+        # whitelisted users get a random suffix
         if username in VOTE_WHITELIST:
             username += str(random())
-            print(f'[INFO] Whitelisted vote: @{username}')
+            print(f'[BOARD] Whitelisted vote: @{username}')
 
         clip = self.clips[clip_idx]
 
-        # count only first vote
+        # count only the first vote
         if username in self.state[clip]:
             return False
 
@@ -63,21 +75,43 @@ class UsersBoard:
         if user_rank is None and len(vote) >= 3:
             matched_ranks = list(r for r in clip.ranks if r.text.startswith(vote))
 
+            # if there is only one match, use it
             if len(matched_ranks) == 1:
                 user_rank = matched_ranks[0]
 
         if user_rank is None:
             return False
 
-        # if username in self.state[clip] and self.state[clip][username].rank == user_rank:
-        #     return False
-
+        # register the vote
         self.state[clip][username] = UserVote(time(), user_rank)
+
         return True
 
     def total_votes(self, clip_idx: int) -> int:
         clip = self.clips[clip_idx]
         return len(self.state[clip])
+
+    def _calculate_clip_scores(self, clip_idx: int) -> None:
+        clip = self.clips[clip_idx]
+
+        assert clip not in self.scores, f'Clip {clip_idx} has already been scored'
+
+        state = self.state[clip]
+        indices = clip.indices()
+        clip_scores = []
+
+        for user_order, (username, user_vote) in enumerate(sorted(state.items(), key=lambda t: t[1].time)):
+            user_stars = calculate_stars(indices[user_vote.rank], clip.answer_idx)
+
+            clip_scores.append(UserScore(
+                username=username,
+                order=user_order,
+                stars=user_stars
+            ))
+
+        self.scores[clip] = clip_scores
+
+        print(f'[BOARD] Calculated scores for clip {clip_idx}')
 
     def calculate_clip_result(self, clip_idx: int, teo_rank: Rank, n_top_users: int = 5) -> ClipResult:
         clip = self.clips[clip_idx]
@@ -101,32 +135,40 @@ class UsersBoard:
         teo_stars = calculate_stars(indices[teo_rank], clip.answer_idx)
         users_stars = calculate_stars(indices[users_rank], clip.answer_idx)
 
-        users_scores = {}
+        # calculate scores for the current clip
+        self._calculate_clip_scores(clip_idx)
 
-        for i in range(clip_idx + 1):
-            i_clip = self.clips[i]
-            i_state = self.state[i_clip]
-            i_indices = i_clip.indices()
+        # group all scores into: username -> list of the user scores
+        grouped = defaultdict(list)
 
-            for user_order, (username, user_vote) in enumerate(sorted(i_state.items(), key=lambda t: t[1].time)):
-                assert isinstance(username, str)
-                assert isinstance(user_vote, UserVote)
+        for clip_scores in self.scores.values():
+            for user_score in clip_scores:
+                grouped[user_score.username].append(user_score)
 
-                user_stars = calculate_stars(i_indices[user_vote.rank], i_clip.answer_idx)
+        # calculate the total score for each user
+        users_scores = [
+            UserScore(
+                username=username,
+                order=sum(s.order for s in scores),
+                stars=sum(s.stars for s in scores)
+            )
+            for username, scores in grouped.items()
+        ]
 
-                if username not in users_scores:
-                    users_scores[username] = UserScore(order=user_order, stars=user_stars)
-                else:
-                    users_scores[username].order += user_order
-                    users_scores[username].stars += user_stars
+        # find the max order (we are doing an inverse sort)
+        max_order = max((v.order for v in users_scores), default=0)
 
-        max_order = max((v.order for v in users_scores.values()), default=0)
-        sl = list(sorted(users_scores.items(),
-                         key=lambda t: (t[1].stars, max_order - t[1].order),
+        # sort by stars and then by order (~ vote time)
+        sl = list(sorted(users_scores,
+                         key=lambda s: (s.stars, max_order - s.order),
                          reverse=True)[:n_top_users])
-        sl += [('<none>', UserScore(order=0, stars=0)) for _ in range(max(n_top_users - len(sl), 0))]
 
-        top_users = [(i + 1, *t) for i, t in enumerate(sl)]
+        # fill up with dummy users
+        sl.extend(UserScore.dummy() for _ in range(max(n_top_users - len(sl), 0)))
+
+        # add the rank (#1, #2, #3, etc.)
+        # TODO: namedtuple
+        top_users = [(i + 1, s) for i, s in enumerate(sl)]
 
         return ClipResult(
             teo_stars=teo_stars,
