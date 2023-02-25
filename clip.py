@@ -60,5 +60,5 @@ class Clip:
 
     def use_local_file(self, path: Path) -> None:
         self.embed = True
-        self.url = f'/{path}'
+        self.url = f'/download/{path.name}'
         self.local = True

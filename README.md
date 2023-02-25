@@ -88,13 +88,7 @@ docker build . -t teodle
 5. Start the container
 
 ```docker
-docker run --rm --env-file .env -p 8000:8000 \
-    -v $(pwd)/download:/app/download \
-    -v $(pwd)/ranks:/app/ranks \
-    -v $(pwd)/blacklist.txt:/app/blacklist.txt \
-    -v $(pwd)/clips.txt:/app/clips.txt \
-    -v $(pwd)/summary.json:/app/summary.json \
-    teodle
+docker run --rm --env-file .env -p 8000:8000 -v $(pwd)/data:/app/data teodle
 ```
 
 6. Access the website at [http://localhost:8000](http://localhost:8000)

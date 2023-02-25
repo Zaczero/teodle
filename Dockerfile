@@ -40,12 +40,13 @@ RUN pipenv install --deploy --ignore-pipfile --keep-outdated && \
 ENV PATH="/app/.venv/bin:$PATH"
 
 COPY --chown=1000:1000 LICENSE *.py ./
-COPY --chown=1000:1000 ranks ./ranks/
 COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/
 
-RUN mkdir download && \
-    touch blacklist.txt clips.txt summary.json
+COPY --chown=1000:1000 data/ranks ./data/ranks/
+
+RUN mkdir data/download && \
+    touch data/blacklist.txt data/clips.txt data/summary.json
 
 RUN python -m compileall .
 
@@ -54,5 +55,6 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 EXPOSE 8000
 
+VOLUME [ "/app/data" ]
 ENTRYPOINT ["uvicorn", "main:app"]
 CMD ["--host", "0.0.0.0"]

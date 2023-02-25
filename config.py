@@ -20,21 +20,24 @@ VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().
 NO_MONITOR = os.getenv('NO_MONITOR') == '1'
 DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
 
-CLIPS_PATH = Path('clips.txt')
-BLACKLIST_PATH = Path('blacklist.txt')
+DATA_DIR = Path('data')
+DATA_DIR.mkdir(exist_ok=True)
+
+CLIPS_PATH = DATA_DIR / Path('clips.txt')
+BLACKLIST_PATH = DATA_DIR / Path('blacklist.txt')
 
 SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '5'))
-SUMMARY_PATH = Path('summary.json')
+SUMMARY_PATH = DATA_DIR / Path('summary.json')
 
 # ensure proper file permissions
 for file in [CLIPS_PATH, BLACKLIST_PATH, SUMMARY_PATH]:
     with open(file, 'a+') as f:
         pass
 
-RANKS_DIR = Path('ranks')
+RANKS_DIR = DATA_DIR / Path('ranks')
 RANKS_DIR.mkdir(exist_ok=True)
 
-DOWNLOAD_DIR = Path('download')
+DOWNLOAD_DIR = DATA_DIR / Path('download')
 DOWNLOAD_DIR.mkdir(exist_ok=True)
 
 # ensure proper directory permissions

@@ -6,15 +6,17 @@ from config import RANK_FILE_DEFAULT_EXT, RANKS_DIR
 
 
 class RankImage:
+    name: str
     path: Path
     width: int = 0
     height: int = 0
 
-    def __init__(self, path: str):
-        self.path = Path(f'{RANKS_DIR}/{path}')
+    def __init__(self, name: str):
+        if '.' not in name:
+            name += RANK_FILE_DEFAULT_EXT
 
-        if not self.path.suffix:
-            self.path = self.path.with_suffix(RANK_FILE_DEFAULT_EXT)
+        self.name = name
+        self.path = Path(f'{RANKS_DIR}/{name}')
 
         if self.path.exists():
             with Image.open(self.path) as im:
