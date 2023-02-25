@@ -39,14 +39,14 @@ RUN pipenv install --deploy --ignore-pipfile --keep-outdated && \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
+RUN mkdir -p data/download && \
+    touch data/blacklist.txt data/clips.txt data/summary.json
+
 COPY --chown=1000:1000 LICENSE *.py ./
 COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/
 
 COPY --chown=1000:1000 data/ranks ./data/ranks/
-
-RUN mkdir data/download && \
-    touch data/blacklist.txt data/clips.txt data/summary.json
 
 RUN python -m compileall .
 
