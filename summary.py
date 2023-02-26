@@ -1,13 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from dataclasses_json import dataclass_json
+import orjson
 
 from config import MAX_STARS, SUMMARY_MIN_VOTES, SUMMARY_PATH
 from vote import Vote, VoteState
 
 
-@dataclass_json
 @dataclass(frozen=True, kw_only=True, slots=True)
 class SummaryEntry:
     date: str
@@ -36,17 +35,17 @@ def update_summary(vote: Vote) -> None:
         max_stars=len(vote.clips) * MAX_STARS
     ))
 
-    json = SummaryEntry.schema().dumps(summary, many=True, indent=2)
+    json = orjson.dumps(summary, option=orjson.OPT_INDENT_2)
 
-    with open(SUMMARY_PATH, 'w') as f:
+    with open(SUMMARY_PATH, 'wb') as f:
         f.write(json)
 
 
 def get_summary() -> list[SummaryEntry]:
-    with open(SUMMARY_PATH, 'r') as f:
+    with open(SUMMARY_PATH, 'rb') as f:
         json = f.read()
 
     try:
-        return SummaryEntry.schema().loads(json, many=True)
+        return [SummaryEntry(**d) for d in orjson.loads(json)]
     except Exception:
         return []
