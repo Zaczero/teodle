@@ -6,6 +6,7 @@ from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
 from config import NO_MONITOR, TTV_CHANNEL, TTV_TOKEN, TTV_USERNAME
+from utils import normalize_username
 from vote import Vote
 
 
@@ -89,7 +90,7 @@ class TwitchMonitor:
                         await self._socket.send(f'PONG {nonce}')  # 🏓
 
                     elif parts[1] == 'PRIVMSG' and parts[2] == f'#{TTV_CHANNEL}':
-                        username = parts[0].split('!')[0].lstrip(':').lower()
+                        username = normalize_username(parts[0].split('!')[0].lstrip(':'))
                         message = ' '.join(parts[3:]).lstrip(':').lower()
 
                         if message.startswith('!'):

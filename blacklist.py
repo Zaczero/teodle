@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 
-def _normalize_username(username: str) -> str:
+def _blacklist_normalize_username(username: str) -> str:
     return re.sub(r'[^a-z0-9]', '', username.lower())
 
 
@@ -19,7 +19,7 @@ class Blacklist:
         text = re.sub(r'[\t\r]', '', text)
 
         self._blacklist = set(
-            _normalize_username(t.strip())
+            _blacklist_normalize_username(t.strip())
             for t in text.splitlines()
             if t.strip()
             and t.strip()[0] != '#'
@@ -28,4 +28,4 @@ class Blacklist:
         print(f'[BLACKLIST] Loaded {len(self._blacklist)} entries')
 
     def is_blacklisted(self, username: str) -> bool:
-        return _normalize_username(username) in self._blacklist
+        return _blacklist_normalize_username(username) in self._blacklist

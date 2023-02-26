@@ -10,6 +10,9 @@ MAX_STARS = 3
 # (if applicable)
 # don't forget to adjust the easter egg values in results.jinja2
 
+# maximum number of concurrent connections per userscript user
+MAX_USERSCRIPT_SLOTS = 3
+
 RANK_FILE_DEFAULT_EXT = '.png'
 
 TTV_TOKEN = os.environ['TTV_TOKEN']
