@@ -305,3 +305,4 @@ poetry.toml
 .ionide
 
 data/download/*
+data/users/*

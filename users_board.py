@@ -4,20 +4,23 @@ from random import random
 from time import time
 from typing import NamedTuple
 
+import orjson
+
 from clip import Clip
-from config import VOTE_WHITELIST
+from config import SUMMARY_MIN_VOTES, USERS_DIR, VOTE_WHITELIST
 from rank import Rank
 from utils import calculate_stars
 
 
 class UserVote(NamedTuple):
-    time: float
+    delay: float
     rank: Rank
 
 
 @dataclass(frozen=True, kw_only=True, slots=True)
 class UserScore:
     username: str
+    delay: float
     order: int
     stars: int
 
@@ -25,6 +28,7 @@ class UserScore:
     def dummy(cls) -> 'UserScore':
         return cls(
             username='<none>',
+            delay=0,
             order=0,
             stars=0
         )
@@ -52,7 +56,7 @@ class UsersBoard:
         self.state = {c: {} for c in clips}
         self.scores = {}
 
-    def vote(self, username: str, vote: str, clip_idx: int) -> bool:
+    def vote(self, username: str, vote: str, clip_idx: int, clip_time: float) -> bool:
         assert self._max_known_clip_idx <= clip_idx, f'Invalid clip: {clip_idx}, last is: {self._max_known_clip_idx}'
 
         self._max_known_clip_idx = clip_idx
@@ -69,6 +73,7 @@ class UsersBoard:
             return False
 
         vote = vote.lower()
+        vote_delay = time() - clip_time
         user_rank = next((r for r in clip.ranks if r.text == vote), None)
 
         # use vote as a prefix match for the rank
@@ -83,35 +88,16 @@ class UsersBoard:
             return False
 
         # register the vote
-        self.state[clip][username] = UserVote(time(), user_rank)
+        self.state[clip][username] = UserVote(
+            delay=vote_delay,
+            rank=user_rank
+        )
 
         return True
 
     def total_votes(self, clip_idx: int) -> int:
         clip = self.clips[clip_idx]
         return len(self.state[clip])
-
-    def _calculate_clip_scores(self, clip_idx: int) -> None:
-        clip = self.clips[clip_idx]
-
-        assert clip not in self.scores, f'Clip {clip_idx} has already been scored'
-
-        state = self.state[clip]
-        indices = clip.indices()
-        clip_scores = []
-
-        for user_order, (username, user_vote) in enumerate(sorted(state.items(), key=lambda t: t[1].time)):
-            user_stars = calculate_stars(indices[user_vote.rank], clip.answer_idx)
-
-            clip_scores.append(UserScore(
-                username=username,
-                order=user_order,
-                stars=user_stars
-            ))
-
-        self.scores[clip] = clip_scores
-
-        print(f'[BOARD] Calculated scores for clip {clip_idx}')
 
     def calculate_clip_result(self, clip_idx: int, teo_rank: Rank, n_top_users: int = 5) -> ClipResult:
         clip = self.clips[clip_idx]
@@ -138,6 +124,9 @@ class UsersBoard:
         # calculate scores for the current clip
         self._calculate_clip_scores(clip_idx)
 
+        # save the scores
+        self._save(clip_idx)
+
         # group all scores into: username -> list of the user scores
         grouped = defaultdict(list)
 
@@ -149,6 +138,7 @@ class UsersBoard:
         users_scores = [
             UserScore(
                 username=username,
+                delay=sum(s.delay for s in scores),
                 order=sum(s.order for s in scores),
                 stars=sum(s.stars for s in scores)
             )
@@ -178,3 +168,44 @@ class UsersBoard:
             users_rank_users=users_rank_users,
             top_users=top_users
         )
+
+    def _calculate_clip_scores(self, clip_idx: int) -> None:
+        clip = self.clips[clip_idx]
+
+        assert clip not in self.scores, f'Clip {clip_idx} has already been scored'
+
+        state = self.state[clip]
+        indices = clip.indices()
+        clip_scores = []
+
+        for user_order, (username, user_vote) in enumerate(sorted(state.items(), key=lambda t: t[1].delay)):
+            user_stars = calculate_stars(indices[user_vote.rank], clip.answer_idx)
+
+            clip_scores.append(UserScore(
+                username=username,
+                delay=user_vote.delay,
+                order=user_order,
+                stars=user_stars
+            ))
+
+        self.scores[clip] = clip_scores
+
+        print(f'[BOARD] Calculated scores for clip {clip_idx}')
+
+    def _save(self, clip_idx: int) -> None:
+        timestamp = int(time())
+
+        clip = self.clips[clip_idx]
+        clip_scores = self.scores[clip]
+
+        # skip save if there are not enough votes (just testing)
+        if len(clip_scores) < SUMMARY_MIN_VOTES:
+            return
+
+        path = USERS_DIR / f'{timestamp}-{clip_idx}.json'
+        json = orjson.dumps(clip_scores, option=orjson.OPT_INDENT_2)
+
+        with open(path, 'xb') as f:
+            f.write(json)
+
+        print(f'[BOARD] Saved scores for clip {clip_idx} to {path}')

@@ -3,6 +3,7 @@ from asyncio import Event
 from enum import Enum
 from pathlib import Path
 from random import choice, random
+from time import time
 
 from blacklist import Blacklist
 from clip import Clip
@@ -23,6 +24,7 @@ class Vote:
 
     state: VoteState = VoteState.IDLE
     clip_idx: int = -1
+    clip_time: float = 0
     result: ClipResult | None = None
     teo_rank: Rank | None = None
 
@@ -67,6 +69,7 @@ class Vote:
         assert self.state in {VoteState.IDLE, VoteState.RESULTS}, 'Invalid state'
 
         self.clip_idx += 1
+        self.clip_time = time()
 
         if self.clip_idx >= len(self.clips):
             self.clip_idx = -1
@@ -105,7 +108,7 @@ class Vote:
         if self.state != VoteState.VOTING:
             return False
 
-        if self.board.vote(username, vote, self.clip_idx):
+        if self.board.vote(username, vote, self.clip_idx, self.clip_time):
             self._cast_user_vote_event.set()
             return True
 
