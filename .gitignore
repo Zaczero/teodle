@@ -304,5 +304,5 @@ poetry.toml
 .history
 .ionide
 
+data/boards/*
 data/download/*
-data/users/*

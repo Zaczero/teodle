@@ -7,7 +7,7 @@ from typing import NamedTuple
 import orjson
 
 from clip import Clip
-from config import SUMMARY_MIN_VOTES, USERS_DIR, VOTE_WHITELIST
+from config import BOARDS_DIR, SUMMARY_MIN_VOTES, VOTE_WHITELIST
 from rank import Rank
 from utils import calculate_stars
 
@@ -202,7 +202,7 @@ class UsersBoard:
         if len(clip_scores) < SUMMARY_MIN_VOTES:
             return
 
-        path = USERS_DIR / f'{timestamp}-{clip_idx}.json'
+        path = BOARDS_DIR / f'{timestamp}-{clip_idx}.json'
         json = orjson.dumps(clip_scores, option=orjson.OPT_INDENT_2)
 
         with open(path, 'xb') as f:
