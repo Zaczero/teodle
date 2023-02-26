@@ -125,7 +125,7 @@ class UsersBoard:
         self._calculate_clip_scores(clip_idx)
 
         # save the scores
-        self._save(clip_idx)
+        self._save_clip_scores(clip_idx)
 
         # group all scores into: username -> list of the user scores
         grouped = defaultdict(list)
@@ -192,7 +192,7 @@ class UsersBoard:
 
         print(f'[BOARD] Calculated scores for clip {clip_idx}')
 
-    def _save(self, clip_idx: int) -> None:
+    def _save_clip_scores(self, clip_idx: int) -> None:
         timestamp = int(time())
 
         clip = self.clips[clip_idx]

@@ -4,7 +4,7 @@
 <div class="mb-3">
     {% if vote.clip.local %}
     <div class="ratio ratio-16x9">
-        <video class="rounded" controls>
+        <video id="player" class="rounded" controls>
             <source src="{{ vote.clip.url }}">
         </video>
     </div>
@@ -112,5 +112,29 @@
     ws.onopen = onopen
     ws.onmessage = onmessage
     ws.onclose = onclose
+
+    const player = document.getElementById('player')
+
+    if (player) {
+        let lastVolume = parseFloat(localStorage.getItem('player-volume'))
+
+        // default to 100% if nan
+        if (isNaN(lastVolume))
+            lastVolume = 1
+
+        // set lower bound to 0.1
+        if (lastVolume < 0.1)
+            lastVolume = 0.1
+
+        player.onvolumechange = () => {
+            if (lastVolume !== player.volume) {
+                lastVolume = player.volume
+                localStorage.setItem('player-volume', player.volume)
+                console.log('Player volume changed to', player.volume)
+            }
+        }
+
+        player.volume = lastVolume
+    }
 </script>
 {% endblock %}
