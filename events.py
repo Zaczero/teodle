@@ -30,6 +30,12 @@ def publish(type: EventType, args: Any = None) -> None:
         subscription.notify(args)
 
 
+def empty_user_state() -> None:
+    for event_type in _publish_cache.keys():
+        if event_type.startswith('USER_'):
+            publish(event_type, None)
+
+
 class Subscription:
     type: EventType
     _event: Event

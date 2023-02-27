@@ -7,7 +7,7 @@ from blacklist import Blacklist
 from clip import Clip
 from clip_state import ClipState
 from config import BLACKLIST_PATH, DUMMY_VOTES
-from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, publish
+from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, empty_user_state, publish
 from rank import Rank
 from users_board import ClipResult, UsersBoard
 from vote_state import VoteState
@@ -67,6 +67,7 @@ class Vote:
         if self.clip_idx >= len(self.clips):
             self.clip_idx = -1
             self.state = VoteState.IDLE
+            empty_user_state()
         else:
             self.teo_rank = None
             self.state = VoteState.VOTING
