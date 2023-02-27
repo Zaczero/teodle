@@ -45,6 +45,7 @@ class Vote:
             assert not blacklist.is_blacklisted(clip.credits), f'Blacklisted user found: {clip.credits}'
 
         print(f'[VOTE] Loaded {len(self.clips)} clips')
+        empty_user_state()
 
     @property
     def clip(self) -> Clip:
@@ -67,7 +68,6 @@ class Vote:
         if self.clip_idx >= len(self.clips):
             self.clip_idx = -1
             self.state = VoteState.IDLE
-            empty_user_state()
         else:
             self.teo_rank = None
             self.state = VoteState.VOTING

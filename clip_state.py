@@ -1,10 +1,11 @@
 from vote_state import VoteState
 
 
-class ClipState:
+class ClipState(object):
     vote_state: VoteState
     clip_idx: int
     clip_ranks: list[tuple[str, str]]
+    clip_answer: str | None
     clip_last: bool
 
     def __init__(self, vote):
@@ -17,4 +18,5 @@ class ClipState:
             (r.text, r.image.name)
             for r in vote.clip.ranks
         ]
+        self.clip_answer = vote.clip.answer.text if self.vote_state == VoteState.RESULTS else None
         self.clip_last = not vote.has_next_clip

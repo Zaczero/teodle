@@ -31,9 +31,12 @@ def publish(type: EventType, args: Any = None) -> None:
 
 
 def empty_user_state() -> None:
-    for event_type in _publish_cache.keys():
-        if event_type.startswith('USER_'):
-            publish(event_type, None)
+    target = [e for e in _publish_cache.keys() if e.startswith('USER_')]
+
+    for event_type in target:
+        publish(event_type, None)
+
+    print(f'[EVENTS] Cleared {len(target)} user states')
 
 
 class Subscription:

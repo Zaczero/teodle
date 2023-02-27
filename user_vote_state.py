@@ -1,4 +1,4 @@
-class UserVoteState:
+class UserVoteState(object):
     vote: str
     clip_idx: int
 

@@ -1,4 +1,4 @@
-from asyncio import FIRST_COMPLETED, sleep, wait
+from asyncio import FIRST_COMPLETED, create_task, sleep, wait
 from collections import defaultdict
 from typing import Callable
 
@@ -77,6 +77,8 @@ class WS(WSLoopTaskRoute):
             func()
 
     async def loop(self) -> None:
+        await self.ws.send_text('ok')
+
         with \
                 Subscription(TYPE_CLIP_STATE) as s_clip, \
                 Subscription(TYPE_USER_VOTE_STATE(self.username)) as s_vote, \
@@ -86,29 +88,29 @@ class WS(WSLoopTaskRoute):
             vote: UserVoteState | None = None
             score: int | None = None
 
-            s_clip_wait = s_clip.wait()
-            s_vote_wait = s_vote.wait()
-            s_score_wait = s_score.wait()
+            s_clip_wait = create_task(s_clip.wait())
+            s_vote_wait = create_task(s_vote.wait())
+            s_score_wait = create_task(s_score.wait())
 
             while self.connected:
                 done, _ = await wait((s_clip_wait, s_vote_wait, s_score_wait), return_when=FIRST_COMPLETED)
 
                 if s_clip_wait in done:
-                    clip = await s_clip_wait
-                    s_clip_wait = s_clip.wait()
+                    clip = s_clip_wait.result()
+                    s_clip_wait = create_task(s_clip.wait())
 
                 if s_vote_wait in done:
-                    vote = await s_vote_wait
-                    s_vote_wait = s_vote.wait()
+                    vote = s_vote_wait.result()
+                    s_vote_wait = create_task(s_vote.wait())
 
                 if s_score_wait in done:
-                    score = await s_score_wait
-                    s_score_wait = s_score.wait()
+                    score = s_score_wait.result()
+                    s_score_wait = create_task(s_score.wait())
 
                 if clip is not None:
                     json = orjson.dumps({
-                        'clip': clip,
-                        'vote': vote,
+                        'clip': vars(clip) if clip else None,
+                        'vote': vars(vote) if vote else None,
                         'score': score
                     })
 
