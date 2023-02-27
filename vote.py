@@ -1,21 +1,16 @@
 import re
-from asyncio import Event
-from enum import Enum
 from pathlib import Path
 from random import choice, random
 from time import time
 
 from blacklist import Blacklist
 from clip import Clip
+from clip_state import ClipState
 from config import BLACKLIST_PATH, DUMMY_VOTES
+from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, publish
 from rank import Rank
 from users_board import ClipResult, UsersBoard
-
-
-class VoteState(Enum):
-    IDLE = 0
-    VOTING = 1
-    RESULTS = 2
+from vote_state import VoteState
 
 
 class Vote:
@@ -30,8 +25,6 @@ class Vote:
 
     total_teo_stars: int = 0
     total_users_stars: int = 0
-
-    _cast_user_vote_event = Event()
 
     def __init__(self, path_or_text: Path | str, blacklist: Blacklist | None = None) -> None:
         if isinstance(path_or_text, str):
@@ -74,11 +67,13 @@ class Vote:
         if self.clip_idx >= len(self.clips):
             self.clip_idx = -1
             self.state = VoteState.IDLE
-            return False
+        else:
+            self.teo_rank = None
+            self.state = VoteState.VOTING
 
-        self.teo_rank = None
-        self.state = VoteState.VOTING
-        return True
+        publish(TYPE_TOTAL_VOTES, 0)
+        publish(TYPE_CLIP_STATE, ClipState(self))
+        return self.clip_idx >= 0
 
     def end_clip(self) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
@@ -93,6 +88,7 @@ class Vote:
 
         self.total_teo_stars += self.result.teo_stars
         self.total_users_stars += self.result.users_stars
+        publish(TYPE_CLIP_STATE, ClipState(self))
 
     def cast_teo_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
@@ -108,12 +104,8 @@ class Vote:
         if self.state != VoteState.VOTING:
             return False
 
-        if self.board.vote(username, vote, self.clip_idx, self.clip_time):
-            self._cast_user_vote_event.set()
-            return True
+        if not self.board.vote(username, vote, self.clip_idx, self.clip_time):
+            return False
 
-        return False
-
-    async def wait_user_vote(self) -> None:
-        await self._cast_user_vote_event.wait()
-        self._cast_user_vote_event.clear()
+        publish(TYPE_TOTAL_VOTES, self.total_users_votes)
+        return True

@@ -94,8 +94,7 @@ class WSLoopTaskRoute(WSTaskRoute):
 
         with suppress(Exception, CancelledError):
             try:
-                while self.connected:
-                    await self.loop()
+                await self.loop()
             except WebSocketDisconnect:
                 pass
             except Exception:

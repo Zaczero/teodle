@@ -15,6 +15,7 @@ import twitch_userscript
 from blacklist import Blacklist
 from config import BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
 from downloader import Downloader
+from events import TYPE_TOTAL_VOTES, Subscription
 from summary import get_summary, update_summary
 from twitch_monitor import TwitchMonitor
 from vote import Vote, VoteState
@@ -181,6 +182,8 @@ class WS(WSLoopTaskRoute):
         await self.start()
 
     async def loop(self) -> None:
-        await self.ws.send_json({'total': vote.total_users_votes})
-        await sleep(0.2)
-        await vote.wait_user_vote()
+        with Subscription(TYPE_TOTAL_VOTES) as s_total:
+            while self.connected:
+                total: int = await s_total.wait()
+                await self.ws.send_json({'total': total})
+                await sleep(0.2)

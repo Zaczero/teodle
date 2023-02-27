@@ -8,7 +8,9 @@ import orjson
 
 from clip import Clip
 from config import BOARDS_DIR, SUMMARY_MIN_VOTES, VOTE_WHITELIST
+from events import TYPE_USER_SCORE, TYPE_USER_VOTE_STATE, publish
 from rank import Rank
+from user_vote_state import UserVoteState
 from utils import calculate_stars
 
 
@@ -82,6 +84,7 @@ class UsersBoard:
 
             # if there is only one match, use it
             if len(matched_ranks) == 1:
+                vote = matched_ranks[0].text
                 user_rank = matched_ranks[0]
 
         if user_rank is None:
@@ -93,6 +96,7 @@ class UsersBoard:
             rank=user_rank
         )
 
+        publish(TYPE_USER_VOTE_STATE(username), UserVoteState(vote=vote, clip_idx=clip_idx))
         return True
 
     def total_votes(self, clip_idx: int) -> int:
@@ -159,6 +163,10 @@ class UsersBoard:
         # add the rank (#1, #2, #3, etc.)
         # TODO: namedtuple
         top_users = [(i + 1, s) for i, s in enumerate(sl)]
+
+        # publish the user scores
+        for user_score in users_scores:
+            publish(TYPE_USER_SCORE(user_score.username), user_score.stars)
 
         return ClipResult(
             teo_stars=teo_stars,
