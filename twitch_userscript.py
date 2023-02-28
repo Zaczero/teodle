@@ -3,7 +3,7 @@ from collections import defaultdict
 from typing import Callable
 
 import orjson
-from fastapi import APIRouter
+from fastapi import APIRouter, WebSocket
 
 from clip_state import ClipState
 from config import MAX_USERSCRIPT_SLOTS
@@ -37,8 +37,11 @@ addr_slots: dict[str, Counter] = defaultdict(Counter)
 @router.websocket('/ws')
 class WS(WSLoopTaskRoute):
     username: str = ''
+    func_on_disconnect: list[Callable]
 
-    func_on_disconnect: list[Callable] = []
+    def __init__(self, ws: WebSocket):
+        super().__init__(ws)
+        self.func_on_disconnect = []
 
     @property
     def identifier(self) -> str:

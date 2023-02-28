@@ -46,6 +46,8 @@ class Vote:
 
         print(f'[VOTE] Loaded {len(self.clips)} clips')
         empty_user_state()
+        publish(TYPE_TOTAL_VOTES, 0)
+        publish(TYPE_CLIP_STATE, ClipState(self))
 
     @property
     def clip(self) -> Clip:

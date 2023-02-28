@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Teodle for Twitch</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Teodle for Twitch</h1>
+</header>
+<style>
+header {
+    margin-bottom: 1.5em;
+}
+</style>
+<script src="./static/darkreader.min.js"></script>
+<script>
+    DarkReader.enable({
+        brightness: 100,
+        contrast: 100,
+        sepia: 10
+    })
+</script>
+<center>
+<p>A handy userscript for Twitch.tv which adds some more Teodle
+integration.</p>
+<p><img src="./static/2023-02-28_10-10-36.png" /></p>
+</center>
+<h2 id="features">Features 💫</h2>
+<ul>
+<li>Tracks your personal score ⭐️</li>
+<li>Lists current clip ranks</li>
+<li>Indicates your vote (yellow dot)</li>
+<li>Indicates the correct answer (yellow border)</li>
+<li>Very lightweight with realtime updates</li>
+</ul>
+<h2 id="how-to-install">How to install 💾</h2>
+<ol type="1">
+<li>Install a userscript manager, for example:</li>
+</ol>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 65%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Link</th>
+<th style="text-align: center;">Chrome</th>
+<th style="text-align: center;">Firefox</th>
+<th style="text-align: center;">OpenSource</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Violentmonkey</td>
+<td style="text-align: center;"><a
+href="https://violentmonkey.github.io/get-it/">Link</a></td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Greasemonkey</td>
+<td style="text-align: center;"><a
+href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">Link</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Tampermonkey</td>
+<td style="text-align: center;"><a
+href="https://tampermonkey.net/">Link</a></td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<ol start="2" type="1">
+<li>Open the script and click <code>Install</code>:<br> <a
+href="https://teodle.monicz.dev/teodle.user.js">https://teodle.monicz.dev/teodle.user.js</a></li>
+</ol>
+<center>
+<img src="./static/2023-02-28_10-57-05.png" />
+</center>
+<ol start="3" type="1">
+<li>Done, don’t forget to refresh the Twitch website</li>
+</ol>
+<h2 id="how-to-uninstall">How to uninstall 🗑️</h2>
+<ol type="1">
+<li>Open the userscript manager</li>
+<li>Find the “Teodle for Twitch” and click <code>Remove</code></li>
+</ol>
+<center>
+<img src="./static/2023-02-28_10-45-27.png" />
+</center>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-it-safe">Is it safe?</h3>
+<p>The script is open source and is <a
+href="https://github.com/Zaczero/teodle/blob/main/userscript/teodle.user.js">publicly
+available</a>. Everyone can audit its functionality and verify that it
+does not contain any malicious code. Only basic JavaScript knowledge is
+required to do so.</p>
+<h3 id="does-it-track-me">Does it track me?</h3>
+<p>No.</p>
+<h3 id="does-it-collect-any-data">Does it collect any data?</h3>
+<p>It only collects your Twitch username for the purpose of score
+keeping.</p>
+<h3 id="how-to-update-the-script">How to update the script?</h3>
+<p>Whenever there is a new version available, the userscript manager
+will notify you about it. You will have to simply confirm the update
+with a single click.</p>
+<h3 id="how-to-report-a-bug">How to report a bug?</h3>
+<p>Please use the <a
+href="https://github.com/Zaczero/teodle/issues">GitHub issue tracker</a>
+or contact me directly (email below). Don’t forget to describe the
+problem and include the steps to reproduce it. It would be helpful if
+you could also attach the console output from the browser
+(<kbd>F12</kbd>).</p>
+<center>
+<img src="./static/2023-02-28_11-06-27.png" />
+</center>
+<h2 id="extra-resources">Extra resources 📚</h2>
+<ul>
+<li><p>Email: <a
+href="mailto:kamil@monicz.pl">kamil@monicz.pl</a></p></li>
+<li><p>Source code on GitHub: <a
+href="https://github.com/Zaczero/teodle">Zaczero/teodle</a></p></li>
+<li><p>License: <a
+href="https://github.com/Zaczero/teodle/blob/main/LICENSE">AGPL-3.0</a></p></li>
+</ul>
+</body>
+</html>
