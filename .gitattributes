@@ -4,4 +4,4 @@
 # https://stackoverflow.com/a/26948938
 ranks/** linguist-vendored
 static/** linguist-vendored
-userscrpt/static/** linguist-vendored
+userscript/static/** linguist-vendored
