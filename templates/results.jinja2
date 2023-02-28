@@ -87,9 +87,9 @@
                     <input type="submit" class="btn btn-primary" value="Next clip ▶️">
                 </form>
             {% else %}
-                <form class="text-start" action="/next_clip" method="post">
+                <form class="text-end" action="/next_clip" method="post">
                     <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-                    <input id="finish" type="submit" class="btn btn-secondary" value="Finish">
+                    <input id="finish" type="submit" class="btn btn-info fw-bold" value="Finish">
                 </form>
             {% endif %}
         </div>

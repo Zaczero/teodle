@@ -195,6 +195,9 @@ class WSFinish(WSRoute):
         super().__init__(ws)
         self.clip_idx = vote.clip_idx
 
+    async def on_connect(self) -> None:
+        print('[WSFinish] Connection established')
+
     async def on_disconnect(self) -> None:
         print('[WSFinish] Finishing the game')
         await next_clip(self.clip_idx)
