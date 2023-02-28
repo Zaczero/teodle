@@ -6,7 +6,7 @@ for require in ['yt-dlp', 'ffmpeg']:
                for p in os.environ['PATH'].split(os.pathsep)), \
         'You are missing the required dependency: ' + require
 
-MAX_STARS = 3
+MAX_STARS = 2
 # (if applicable)
 # don't forget to adjust the easter egg values in results.jinja2
 
