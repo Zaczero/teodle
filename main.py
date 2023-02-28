@@ -3,7 +3,7 @@ from asyncio import create_task, sleep
 from datetime import datetime
 
 import timeago
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form, WebSocket
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
@@ -19,7 +19,7 @@ from events import TYPE_TOTAL_VOTES, Subscription
 from summary import get_summary, update_summary
 from twitch_monitor import TwitchMonitor
 from vote import Vote, VoteState
-from ws_route import WSLoopTaskRoute
+from ws_route import WSLoopTaskRoute, WSRoute
 
 app = FastAPI()
 app.include_router(twitch_userscript.router)
@@ -187,3 +187,14 @@ class WS(WSLoopTaskRoute):
                 total: int = await s_total.wait()
                 await self.ws.send_json({'total': total})
                 await sleep(0.2)
+
+
+@app.websocket('/ws/finish')
+class WSFinish(WSRoute):
+    def __init__(self, ws: WebSocket):
+        super().__init__(ws)
+        self.clip_idx = vote.clip_idx
+
+    async def on_disconnect(self) -> None:
+        print('[WSFinish] Finishing the game')
+        await next_clip(self.clip_idx)

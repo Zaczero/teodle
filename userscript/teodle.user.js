@@ -172,9 +172,9 @@
         return div.firstChild
     }
 
-    // query .chat-room and inject the root element
+    // query .chat-room__content and inject the root element
     const inject = node => {
-        const chatRoom = node.querySelector('.chat-room')
+        const chatRoom = node.querySelector('.chat-room__content')
 
         if (!chatRoom)
             return false
@@ -345,7 +345,7 @@
             // VOTING
             rootElement.classList.remove('teodle-hidden')
 
-            if (obj.vote && obj.vote.vote)
+            if (obj.vote && obj.vote.clip_idx === obj.clip.clip_idx)
                 ranksElement.classList.add('teodle-ranks-locked')
             else
                 ranksElement.classList.remove('teodle-ranks-locked')
