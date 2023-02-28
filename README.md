@@ -42,7 +42,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 - Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
 - Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
 - Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
-- https://www.twitch.tv/videos/1712305474?t=00h14m05s
+- Ep3.5 https://www.twitch.tv/videos/1712305474?t=00h14m05s
 - Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
 - Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
 </details>
@@ -58,6 +58,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 - Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
 - Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
+- Ep3.5 https://www.youtube.com/watch?v=0MjMAeJJ67Q
 - Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
 - Ep2 https://www.youtube.com/watch?v=noQXO2jvAcw
 </details>
