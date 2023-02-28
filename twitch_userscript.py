@@ -1,4 +1,4 @@
-from asyncio import FIRST_COMPLETED, create_task, sleep, wait
+from asyncio import FIRST_COMPLETED, CancelledError, create_task, sleep, wait
 from collections import defaultdict
 from typing import Callable
 
@@ -96,7 +96,13 @@ class WS(WSLoopTaskRoute):
             s_score_wait = create_task(s_score.wait())
 
             while self.connected:
-                done, _ = await wait((s_clip_wait, s_vote_wait, s_score_wait), return_when=FIRST_COMPLETED)
+                try:
+                    done, _ = await wait((s_clip_wait, s_vote_wait, s_score_wait), return_when=FIRST_COMPLETED)
+                except CancelledError as e:
+                    s_clip_wait.cancel()
+                    s_vote_wait.cancel()
+                    s_score_wait.cancel()
+                    raise e
 
                 if s_clip_wait in done:
                     clip = s_clip_wait.result()

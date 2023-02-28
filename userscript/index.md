@@ -83,7 +83,7 @@ It would be helpful if you could also attach the console output from the browser
 
 <center>![](./static/2023-02-28_11-06-27.png)</center>
 
-## Extra resources 📚
+## Additional resources ⚓
 
 - Email: [kamil@monicz.pl](mailto:kamil@monicz.pl)
 
