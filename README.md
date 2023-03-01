@@ -14,9 +14,8 @@ The ranking system in Teodle is primarily based on stars, the more stars, the hi
 
 The rules are simple:
 
-- If you guess the exact rank of a game clip, you get 3 stars.
-- If you are 1 rank off, you get 2 stars.
-- If you are 2 ranks off, you get 1 star.
+- If you guess the exact rank of a game clip, you get 2 stars.
+- If you are 1 rank off, you get 1 star.
 - Otherwise, you get no stars.
 
 ## Live Participation
