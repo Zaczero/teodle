@@ -194,6 +194,7 @@ class WSFinish(WSRoute):
     def __init__(self, ws: WebSocket):
         super().__init__(ws)
         self.clip_idx = vote.clip_idx
+        self.reject = vote.has_next_clip
 
     async def on_connect(self) -> None:
         print('[WSFinish] Connection established')

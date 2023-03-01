@@ -362,7 +362,7 @@
     {% if not vote.has_next_clip %}
         /* automatically finish game on website close */
         const onopen = () => {
-            document.getElementById('finish').value += ' (🤖)'
+            document.getElementById('finish').value += ' (auto)'
         }
 
         const ws = new WebSocket(`${document.location.protocol === 'https:' ? 'wss' : 'ws'}://${document.location.host}/ws/finish`)

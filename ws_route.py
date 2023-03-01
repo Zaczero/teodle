@@ -9,6 +9,7 @@ from starlette.websockets import WebSocket, WebSocketDisconnect, WebSocketState
 
 
 class WSRoute:
+    reject: bool = False
 
     def __init__(self, ws: WebSocket):
         self.ws = ws
@@ -21,6 +22,9 @@ class WSRoute:
         return self.ws.client_state == WebSocketState.CONNECTED
 
     async def dispatch(self) -> None:
+        if self.reject:
+            return
+
         await self.ws.accept()
 
         with suppress(Exception):
