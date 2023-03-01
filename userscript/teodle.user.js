@@ -1,14 +1,16 @@
 // ==UserScript==
 // @name        Teodle for Twitch
+// @description A handy userscript for Twitch.tv which adds some more Teodle integration
+// @author      Zaczero
+// @version     1.0.2
+// @license     GNU Affero General Public License v3.0
 // @namespace   Violentmonkey Scripts
 // @match       https://www.twitch.tv/*
 // @grant       none
-// @version     1.0.1
-// @license     GNU Affero General Public License v3.0
-// @author      Zaczero
-// @description 2/25/2023, 2:02:17 PM
+// @icon        https://teodle.monicz.dev/hash/teo.eb4e117a.webp
 // @updateURL   https://teodle.monicz.dev/teodle.user.js
 // @downloadURL https://teodle.monicz.dev/teodle.user.js
+// @homepageURL https://teodle.monicz.dev/
 // ==/UserScript==
 
 (() => {
@@ -45,7 +47,7 @@
                 Teodle <span>for Twitch</span>
             </div>
             <div class="teodle-right">
-                <img src="https://teodle.monicz.dev/static/teo.eb4e117a.webp" alt="">
+                <img src="https://teodle.monicz.dev/hash/teo.eb4e117a.webp" alt="">
             </div>
         </h3>
         <h5 class="teodle-score">Your score: <span id="teodle-score-stars"></span> <span id="teodle-score-number">⋯</span></h5>
