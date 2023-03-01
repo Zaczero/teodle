@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.twitch.tv/*
 // @grant       none
-// @version     1.0
+// @version     1.0.1
 // @license     GNU Affero General Public License v3.0
 // @author      Zaczero
 // @description 2/25/2023, 2:02:17 PM
@@ -27,13 +27,12 @@
     // determine username, abort if not logged in
     const username = getCookie('login')
 
-    if (username !== undefined) {
-        console.info(`[Teodle] Logged in as ${username}`)
-    }
-    else {
-        console.info('[Teodle] Not logged in, aborting')
+    if (username === undefined) {
+        console.info('[Teodle] Not logged in to Twitch.tv')
         return
     }
+
+    console.info(`[Teodle] Logged in as ${username}, hello!`)
 
     // userscript configuration
     const channelName = 'teosgame'
@@ -172,59 +171,77 @@
         return div.firstChild
     }
 
-    // query .chat-room__content and inject the root element
+    // query selector and inject the root element
     const inject = node => {
-        const chatRoom = node.querySelector('.chat-room__content')
-
-        if (!chatRoom)
+        // skip if already injected
+        if (rootElement && node.contains(rootElement))
             return false
 
-        // prevent repeated inject
-        if (chatRoom.querySelector('#teodle-for-twitch'))
+        const target = node.querySelector('.chat-room__content')
+        if (!target) {
+            // warn only on specific targets
+            if (node !== document.body)
+                console.warn('[Teodle] Failed to query selector')
+
             return false
+        }
 
-        // css
-        document.head.insertAdjacentHTML('beforeend', `<style>${rootStyle}</style>`)
+        // inject css (if missing)
+        if (!document.head.querySelector('#teodle-for-twitch-css'))
+            document.head.insertAdjacentHTML('beforeend', `<style id="teodle-for-twitch-css">${rootStyle}</style>`)
 
-        // html
+        // inject html
         rootElement = createElementFromHtml(rootHtml)
-        chatRoom.prepend(rootElement)
+        target.prepend(rootElement)
 
         scoreStarsElement = rootElement.querySelector('#teodle-score-stars')
         scoreNumberElement = rootElement.querySelector('#teodle-score-number')
         ranksElement = rootElement.querySelector('#teodle-ranks')
 
+        console.info('[Teodle] Injected component')
         return true
     }
 
-    // inject wrapper which also manages the observer
-    const injectObserverWrapper = node => {
-        if (inject(node)) {
-            observer.disconnect()
-            afterObserver()
-        }
-        // don't warn if the node is the body (early inject attempt)
-        else if (node !== document.body) {
-            console.warn('[Teodle] Failed to inject')
-            console.log(node)
-        }
-    }
-
-    // wait for the chat to load
+    // observe the dom for changes and try to inject
     const observer = new MutationObserver(mutations => {
+        // observe only on the channel page
+        if (!document.location.pathname.startsWith(channelBaseUrl))
+            return
+
         for (const mutation of mutations) {
             for (const node of mutation.addedNodes) {
 
-                // check if the node's direct child contains the .stream-chat class (fast check)
-                if (node.children && node.children[0] && node.children[0].classList.contains('stream-chat'))
-                    injectObserverWrapper(node)
+                // only specific targets/events for performance
+                if (
+                    (node.classList && // case: chat reset (e.g., switch streamer)
+                        node.classList.contains('stream-chat')) ||
+                    (node.children && // case: page load
+                        node.children[0] &&
+                        node.children[0].classList &&
+                        node.children[0].classList.contains('stream-chat'))) {
+
+                    inject(node)
+                }
 
             }
         }
     })
 
-    // listen for url changes and manage the websocket connection
-    const afterObserver = () => {
+    // utility function to start the observer
+    const startMutationObserver = () => {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        })
+
+        // attempt to inject on start (in case the chat is already loaded)
+        inject(document.body)
+
+        console.info('[Teodle] Started mutation observer')
+    }
+
+    // listen for url changes and manage the websocket
+    const startUrlListener = () => {
         window.history.pushState = new Proxy(window.history.pushState, {
             apply: (target, thisObj, args) => {
 
@@ -242,16 +259,10 @@
             }
         })
 
-        console.info('[Teodle] Initialization complete')
-
+        // check if we are already on the channel page
         if (document.location.pathname === channelBaseUrl)
             connect()
     }
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    })
 
     // websocket
     const max_reconnect_interval = 15000
@@ -282,7 +293,7 @@
         if (reconnect_interval !== undefined)
             clearTimeout(reconnect_timeout)
 
-        ws.close()
+        ws.close(1000)
         ws = undefined
 
         reconnect_interval = undefined
@@ -315,6 +326,7 @@
     const onclose = e => {
         console.log(e)
 
+        // do nothing if normal close
         if (e.code === 1000)
             return
 
@@ -328,21 +340,19 @@
         reconnect_interval += Math.floor((Math.random() * 2 - 1) * jitter_reconnect_interval)
 
         // schedule reconnect
-        reconnect_timeout = setTimeout(() => {
-            connect()
-        }, reconnect_interval)
+        reconnect_timeout = setTimeout(connect, reconnect_interval)
 
         console.info(`[Teodle] Reconnecting in ${reconnect_interval}ms...`)
     }
 
-    // application logic
+    // handle state changes
     const update = obj => {
         if (obj.clip.vote_state === 0) {
-            // IDLE
+            // state: IDLE
             rootElement.classList.add('teodle-hidden')
         }
         else if (obj.clip.vote_state === 1) {
-            // VOTING
+            // state: VOTING
             rootElement.classList.remove('teodle-hidden')
 
             if (obj.vote && obj.vote.clip_idx === obj.clip.clip_idx)
@@ -351,7 +361,7 @@
                 ranksElement.classList.remove('teodle-ranks-locked')
         }
         else {
-            // RESULTS
+            // state: RESULTS
             rootElement.classList.remove('teodle-hidden')
             ranksElement.classList.add('teodle-ranks-locked')
         }
@@ -370,7 +380,7 @@
         }
         else {
             newScoreStarsHtml = ''
-            newScoreNumberHtml = '0';
+            newScoreNumberHtml = '0'
         }
 
         scoreStarsElement.innerHTML = newScoreStarsHtml
@@ -389,7 +399,7 @@
                 extraClasses.push('teodle-answer')
 
             newRanksHtml +=
-            `<div class="${extraClasses.join(' ')}">
+                `<div class="${extraClasses.join(' ')}">
                 <img src="https://teodle.monicz.dev/ranks/${filename}" alt="">
                 <span>${text}</span>
             </div>`
@@ -398,7 +408,10 @@
         ranksElement.innerHTML = newRanksHtml
     }
 
-    // attempt early inject (if the chat is already loaded)
-    injectObserverWrapper(document.body)
+    // start everything
+    startMutationObserver()
+    startUrlListener()
+
+    console.info('[Teodle] Initialization complete')
 
 })()
