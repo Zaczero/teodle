@@ -8,9 +8,9 @@
 
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    {% if vote.result.teo_stars == 0 and vote.result.users_stars >= 2 %}
+                    {% if vote.result.streamer_stars == 0 and vote.result.users_stars >= 2 %}
                         <img src="/static/img/laugh.png" height="48">
-                    {% elif vote.result.teo_stars >= 2 and vote.result.users_stars == 0 %}
+                    {% elif vote.result.streamer_stars >= 2 and vote.result.users_stars == 0 %}
                         <img src="/static/img/teo-gold.png" height="48" style="transform: scale(1.75)">
                     {% else %}
                         <img src="/static/img/teo.png" height="48">
@@ -19,7 +19,7 @@
                     <h3 class="mb-0 ms-3">
                         Teo
 
-                        {% for _ in range(vote.result.teo_stars) %}
+                        {% for _ in range(vote.result.streamer_stars) %}
                             🌟
                         {% endfor %}
                     </h3>

@@ -38,7 +38,7 @@ class UserScore:
 
 @dataclass(frozen=True, kw_only=True, slots=True)
 class ClipResult:
-    teo_stars: int
+    streamer_stars: int
     users_stars: int
     users_rank: Rank
     users_rank_percentages: dict[Rank, float]
@@ -122,7 +122,7 @@ class UsersBoard:
         users_rank_percentages = {k: v / non_zero_total_votes for k, v in votes_per_rank.items()}
 
         indices = clip.indices()
-        teo_stars = calculate_stars(indices[teo_rank], clip.answer_idx)
+        streamer_stars = calculate_stars(indices[teo_rank], clip.answer_idx)
         users_stars = calculate_stars(indices[users_rank], clip.answer_idx)
 
         # calculate scores for the current clip
@@ -169,7 +169,7 @@ class UsersBoard:
             publish(TYPE_USER_SCORE(user_score.username), user_score.stars)
 
         return ClipResult(
-            teo_stars=teo_stars,
+            streamer_stars=streamer_stars,
             users_stars=users_stars,
             users_rank=users_rank,
             users_rank_percentages=users_rank_percentages,

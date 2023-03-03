@@ -89,7 +89,7 @@ class Vote:
 
         self.result = self.board.calculate_clip_result(self.clip_idx, self.teo_rank)
 
-        self.total_streamer_stars += self.result.teo_stars
+        self.total_streamer_stars += self.result.streamer_stars
         self.total_users_stars += self.result.users_stars
         publish(TYPE_CLIP_STATE, ClipState(self))
 
