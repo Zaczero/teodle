@@ -93,7 +93,7 @@ INDEX_REDIRECT = RedirectResponse('/', status_code=status.HTTP_302_FOUND)
 async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
     # ensure the client state
     if vote.clip_idx == clip_idx and vote.state in {VoteState.VOTING}:
-        vote.cast_teo_vote(rank)
+        vote.cast_streamer_vote(rank)
         vote.end_clip()
 
         if not vote.has_next_clip:

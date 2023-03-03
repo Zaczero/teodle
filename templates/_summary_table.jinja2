@@ -16,16 +16,16 @@
                     <tr>
                         <td>{{ entry.date }}</td>
                         <td class="text-center">
-                            {{ entry.teo_stars }}
+                            {{ entry.streamer_stars }}
 
-                            {% if entry.teo_stars > entry.users_stars %}
+                            {% if entry.streamer_stars > entry.users_stars %}
                             <span class="winner">Winner</span>
                             {% endif %}
                         </td>
                         <td class="text-center">
                             {{ entry.users_stars }}
 
-                            {% if entry.users_stars > entry.teo_stars %}
+                            {% if entry.users_stars > entry.streamer_stars %}
                             <span class="winner">Winner</span>
                             {% endif %}
                         </td>

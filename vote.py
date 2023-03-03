@@ -23,7 +23,7 @@ class Vote:
     result: ClipResult | None = None
     teo_rank: Rank | None = None
 
-    total_teo_stars: int = 0
+    total_streamer_stars: int = 0
     total_users_stars: int = 0
 
     def __init__(self, path_or_text: Path | str, blacklist: Blacklist | None = None) -> None:
@@ -89,11 +89,11 @@ class Vote:
 
         self.result = self.board.calculate_clip_result(self.clip_idx, self.teo_rank)
 
-        self.total_teo_stars += self.result.teo_stars
+        self.total_streamer_stars += self.result.teo_stars
         self.total_users_stars += self.result.users_stars
         publish(TYPE_CLIP_STATE, ClipState(self))
 
-    def cast_teo_vote(self, vote: str) -> None:
+    def cast_streamer_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
 
         vote = vote.lower()

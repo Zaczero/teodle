@@ -1,7 +1,7 @@
 [
   {
-    "date": "28 Feb 2023",
-    "teo_stars": 3,
+    "date": "22 Feb 2023",
+    "streamer_stars": 2,
     "users_stars": 10,
     "top_user_name": "<none>",
     "top_user_stars": 0,
@@ -9,7 +9,7 @@
   },
   {
     "date": "22 Feb 2023",
-    "teo_stars": 2,
+    "streamer_stars": 4,
     "users_stars": 10,
     "top_user_name": "<none>",
     "top_user_stars": 0,
@@ -17,15 +17,7 @@
   },
   {
     "date": "22 Feb 2023",
-    "teo_stars": 4,
-    "users_stars": 10,
-    "top_user_name": "<none>",
-    "top_user_stars": 0,
-    "max_stars": 10
-  },
-  {
-    "date": "22 Feb 2023",
-    "teo_stars": 1,
+    "streamer_stars": 1,
     "users_stars": 10,
     "top_user_name": "<none>",
     "top_user_stars": 0,

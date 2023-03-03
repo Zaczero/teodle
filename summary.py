@@ -10,7 +10,7 @@ from vote import Vote, VoteState
 @dataclass(frozen=True, kw_only=True, slots=True)
 class SummaryEntry:
     date: str
-    teo_stars: int
+    streamer_stars: int
     users_stars: int
     top_user_name: str
     top_user_stars: int
@@ -28,7 +28,7 @@ def update_summary(vote: Vote) -> None:
     summary = get_summary()
     summary.insert(0, SummaryEntry(
         date=datetime.utcnow().strftime('%d %b %Y'),
-        teo_stars=vote.total_teo_stars,
+        streamer_stars=vote.total_streamer_stars,
         users_stars=vote.total_users_stars,
         top_user_name=top_user[1].username,
         top_user_stars=top_user[1].stars,

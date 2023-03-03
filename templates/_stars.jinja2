@@ -12,12 +12,12 @@
                         <div class="row g-2">
                             <div class="col-auto">
                                 <div class="d-flex align-items-center h-100">
-                                    <span class="total-stars">{{ vote.total_teo_stars }}</span>
+                                    <span class="total-stars">{{ vote.total_streamer_stars }}</span>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="d-flex align-items-center justify-content-end h-100">
-                                    {% for _ in range(vote.total_teo_stars) %}
+                                    {% for _ in range(vote.total_streamer_stars) %}
                                     ⭐️
                                     {% endfor %}
                                 </div>
