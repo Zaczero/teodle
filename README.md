@@ -30,13 +30,14 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-- Ep10 https://www.twitch.tv/videos/1748843377?t=00h40m01s (newest)
+- Ep11 https://www.twitch.tv/videos/1755443214?t=00h37m45s (newest)
+- Ep10 https://www.twitch.tv/videos/1748843377?t=00h40m01s
 - Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s
-- Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
 
 <details>
 <summary>Show more</summary>
 
+- Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
 - Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
 - Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
 - Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
