@@ -6,6 +6,7 @@ from time import time
 from blacklist import Blacklist
 from clip import Clip
 from clip_state import ClipState
+from commentator import Commentator
 from config import BLACKLIST_PATH, DUMMY_VOTES
 from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, empty_user_state, publish
 from rank import Rank
@@ -16,6 +17,7 @@ from vote_state import VoteState
 class Vote:
     clips: list[Clip]
     board: UsersBoard
+    commentator: Commentator
 
     state: VoteState = VoteState.IDLE
     clip_idx: int = -1
@@ -25,6 +27,8 @@ class Vote:
 
     total_streamer_stars: int = 0
     total_users_stars: int = 0
+
+    comment: list[str] | None = None
 
     def __init__(self, path_or_text: Path | str, blacklist: Blacklist | None = None) -> None:
         if isinstance(path_or_text, str):
@@ -40,6 +44,7 @@ class Vote:
 
         self.clips = [Clip(t) for t in text.split('\n\n') if t]
         self.board = UsersBoard(self.clips)
+        self.commentator = Commentator()
 
         for clip in self.clips:
             assert not blacklist.is_blacklisted(clip.credits), f'Blacklisted user found: {clip.credits}'
@@ -78,7 +83,7 @@ class Vote:
         publish(TYPE_CLIP_STATE, ClipState(self))
         return self.clip_idx >= 0
 
-    def end_clip(self) -> None:
+    async def end_clip(self) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
         assert self.teo_rank is not None, 'Invalid state (teo_rank)'
 
@@ -92,6 +97,8 @@ class Vote:
         self.total_streamer_stars += self.result.streamer_stars
         self.total_users_stars += self.result.users_stars
         publish(TYPE_CLIP_STATE, ClipState(self))
+
+        self.comment = await self.commentator.comment(self)
 
     def cast_streamer_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'

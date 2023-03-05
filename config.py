@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
 
+import openai
+
 for require in ['yt-dlp', 'ffmpeg']:
     assert any(os.path.exists(os.path.join(p, require))
                for p in os.environ['PATH'].split(os.pathsep)), \
         'You are missing the required dependency: ' + require
 
+APP_NAME = "Teodle"
 MAX_STARS = 2
 # (if applicable)
 # don't forget to adjust the easter egg values in results.jinja2
@@ -49,3 +52,8 @@ BOARDS_DIR.mkdir(exist_ok=True)
 # ensure proper directory permissions
 for dir in [DOWNLOAD_DIR, BOARDS_DIR]:
     assert os.access(dir, os.W_OK | os.X_OK), f'Permission denied: {dir}'
+
+OPENAI_KEY = os.getenv('OPENAI_KEY', None)
+
+if OPENAI_KEY:
+    openai.api_key = OPENAI_KEY

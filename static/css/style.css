@@ -180,3 +180,19 @@ td.expand {
     position: relative;
     top: 0.05em;
 }
+
+.comment {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 500;
+    font-size: 1.1em;
+    letter-spacing: .3px;
+    text-align: center;
+}
+
+.comment p {
+    margin-bottom: .3em;
+}
+
+.comment p:last-child {
+    margin-bottom: 0;
+}

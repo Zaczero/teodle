@@ -94,7 +94,7 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
     # ensure the client state
     if vote.clip_idx == clip_idx and vote.state in {VoteState.VOTING}:
         vote.cast_streamer_vote(rank)
-        vote.end_clip()
+        await vote.end_clip()
 
         if not vote.has_next_clip:
             update_summary(vote)

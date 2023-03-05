@@ -52,6 +52,21 @@
         </div>
     </div>
 
+    {% if vote.comment %}
+    <div class="card mb-3">
+        <div class="card-body comment px-2 py-3">
+            {% for line in vote.comment %}
+                <p>{{ line }}</p>
+            {% endfor %}
+        </div>
+        <div class="card-footer text-end small py-1">
+            <p class="mb-0">
+                Commentary 💡
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="mb-4">
         <canvas id="chart" style="height: 550px"></canvas>
     </div>
