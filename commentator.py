@@ -10,9 +10,11 @@ from config import APP_NAME, MAX_STARS, OPENAI_KEY
 class Commentator:
     def __init__(self):
         system = f"""
-You provide interesting and joyful commentary for a guess-a-rank type of game called "{APP_NAME}".
+You provide joyful commentary for a guess-a-rank type of game called "{APP_NAME}".
 
-Your say no more than 3 sentences.
+Your say at most 3 sentences at a time.
+
+You use easy to understand language - conversational English for consumers.
 
 What you say is logically correct.
 
@@ -51,7 +53,7 @@ Chat clip score: {vote.result.users_stars} stars
                 model='gpt-3.5-turbo',
                 messages=self._story,
                 temperature=1.0,
-                max_tokens=256,
+                max_tokens=128,
                 timeout=10,
             )
         except:
