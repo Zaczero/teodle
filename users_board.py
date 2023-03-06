@@ -7,7 +7,7 @@ from typing import NamedTuple
 import orjson
 
 from clip import Clip
-from config import BOARDS_DIR, SUMMARY_MIN_VOTES, VOTE_WHITELIST
+from config import BOARDS_DIR, N_TOP_USERS, SUMMARY_MIN_VOTES, VOTE_WHITELIST
 from events import TYPE_USER_SCORE, TYPE_USER_VOTE_STATE, publish
 from rank import Rank
 from user_vote_state import UserVoteState
@@ -103,7 +103,7 @@ class UsersBoard:
         clip = self.clips[clip_idx]
         return len(self.state[clip])
 
-    def calculate_clip_result(self, clip_idx: int, teo_rank: Rank, n_top_users: int = 5) -> ClipResult:
+    def calculate_clip_result(self, clip_idx: int, teo_rank: Rank) -> ClipResult:
         clip = self.clips[clip_idx]
         votes_per_rank = {r: 0 for r in clip.ranks}
         users_rank_users = {r: [] for r in clip.ranks}
@@ -155,10 +155,10 @@ class UsersBoard:
         # sort by stars and then by order (~ vote time)
         sl = list(sorted(users_scores,
                          key=lambda s: (s.stars, max_order - s.order),
-                         reverse=True)[:n_top_users])
+                         reverse=True)[:N_TOP_USERS])
 
         # fill up with dummy users
-        sl.extend(UserScore.dummy() for _ in range(max(n_top_users - len(sl), 0)))
+        sl.extend(UserScore.dummy() for _ in range(max(N_TOP_USERS - len(sl), 0)))
 
         # add the rank (#1, #2, #3, etc.)
         # TODO: namedtuple

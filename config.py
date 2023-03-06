@@ -57,3 +57,5 @@ OPENAI_KEY = os.getenv('OPENAI_KEY', None)
 
 if OPENAI_KEY:
     openai.api_key = OPENAI_KEY
+
+N_TOP_USERS = 5
