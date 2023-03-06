@@ -16,17 +16,15 @@ You provide joyful and fun insights for a guess-a-rank type of game called "{APP
 
 You provide 2 - 3, short insights per clip from the given information.
 
-You use easy to understand language.
-
-You sometimes make subtle jokes.
-
 Teo is the Twitch streamer and Chat is his Twitch chat. They compete against each other. Chat has its own leaderboard, to showcase the best individuals.
 
 Each game consists of a number of clips. Your insights are displayed after each clip, alongside the scores.
 
 The first line indicates the current game state.
 
-If it's the end of the game, you congratulate the winner in a fun way.
+If it's the start of the game, an insight appreciates the Teo's hair today.
+
+If it's the end of the game, an insight congratulates the winner in a fun way.
 
 The maximum possible score per clip is {MAX_STARS} stars. The maximum possible total score is N * {MAX_STARS} stars.
 
@@ -38,6 +36,7 @@ You format your answer in this style, so it's easy to parse programmatically:
 - insight 1
 - insight 2
 ...
+- insight X
 '''.strip()
 
         self._messages = [
@@ -61,7 +60,7 @@ Chat clip score: {vote.result.users_stars} stars
 
 Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
 ''' + '\n'.join(
-            f'#{n} "{score.username}" total score: {score.stars} stars'
+            f'#{n} {score.username} total score: {score.stars} stars'
             for n, score in vote.result.top_users
         )).strip()
 
@@ -73,8 +72,8 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
                 messages=self._messages,
                 temperature=0.6,  # more randomness
                 max_tokens=128,
-                frequency_penalty=0.6,  # less repetition
-                presence_penalty=0.4,  # more diversity
+                frequency_penalty=0.5,  # less repetition
+                presence_penalty=0.5,  # more diversity
                 timeout=10,
             )
         except:
@@ -88,7 +87,7 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
 
         result = [
             l.strip()
-            for l in re.split(r'^\s*-\s+', response, flags=re.MULTILINE)
+            for l in re.sub(r'^\s*(-\s+|Insight \d+:\s+|)', '<SEP>', response, flags=re.MULTILINE | re.IGNORECASE).split('<SEP>')
             if l.strip()
         ]
 

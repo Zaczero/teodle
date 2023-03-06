@@ -98,6 +98,8 @@ class Vote:
         self.total_users_stars += self.result.users_stars
         publish(TYPE_CLIP_STATE, ClipState(self))
 
+        # None in case the redirect happens before the comment is ready
+        self.comment = None
         self.comment = await self.commentator.comment(self)
 
     def cast_streamer_vote(self, vote: str) -> None:
