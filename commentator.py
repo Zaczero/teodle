@@ -16,7 +16,7 @@ You provide joyful and fun insights for a guess-a-rank type of game called "{APP
 
 You provide 2 - 3, short insights per clip from the given information.
 
-Teo is the Twitch streamer and Chat is his Twitch chat. They compete against each other. Chat has its own leaderboard, to showcase the best individuals.
+Teo is the Twitch streamer and Chat is his Twitch chat. They compete against each other. They don't play in the clips, they only guess the ranks. Chat has its own leaderboard, to showcase the best individuals.
 
 Each game consists of a number of clips. Your insights are displayed after each clip, alongside the scores.
 
@@ -70,11 +70,11 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
             completion = await ChatCompletion.acreate(
                 model='gpt-3.5-turbo',
                 messages=self._messages,
-                temperature=0.6,  # more randomness
+                temperature=0.2,  # more randomness
                 max_tokens=128,
-                frequency_penalty=0.5,  # less repetition
-                presence_penalty=0.5,  # more diversity
-                timeout=10,
+                frequency_penalty=0.6,  # less repetition
+                presence_penalty=0.6,  # more diversity
+                timeout=8,
             )
         except:
             pprint(self._messages)
