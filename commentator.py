@@ -71,10 +71,10 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
             completion = await ChatCompletion.acreate(
                 model='gpt-3.5-turbo',
                 messages=self._messages,
-                temperature=0.7,  # more randomness
+                temperature=0.6,  # more randomness
                 max_tokens=128,
-                frequency_penalty=0.2,  # less repetition
-                presence_penalty=0.2,  # more diversity
+                frequency_penalty=0.6,  # less repetition
+                presence_penalty=0.4,  # more diversity
                 timeout=10,
             )
         except:
