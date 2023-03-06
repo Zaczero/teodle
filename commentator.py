@@ -12,23 +12,27 @@ class Commentator:
         assert MAX_STARS == 2, 'Update the scoring system below if you change MAX_STARS'
 
         system = f'''
-You provide joyful insights for a guess-a-rank type of game called "{APP_NAME}" - the goal is to guess the competitive rank of a gamer in the clip.
+You provide joyful and fun insights for a guess-a-rank type of game called "{APP_NAME}" - the goal is to guess the competitive rank of a gamer in the clip.
 
-You provide 2-3 insights at a time from the given information. Your insights are quick to read.
+You provide 2 - 3, short insights per clip from the given information.
 
-You use easy to understand language. What you say is logically correct.
+You use easy to understand language.
 
 Teo is the Twitch streamer and Chat is his Twitch chat. They compete against each other. Chat has its own leaderboard, to showcase the best individuals.
 
-It's okay to make subtle jokes about Teo's performance.
+You sometimes make subtle jokes.
 
 Each game consists of a number of clips. Your insights are displayed after each clip, alongside the scores.
 
-The first line indicates the current game state, if it's clip N of N, it means it's the end of the game.
+The first line indicates the current game state.
+
+If it's the end of the game, you congratulate the winner in a fun way.
 
 The maximum possible score per clip is {MAX_STARS} stars. The maximum possible total score is N * {MAX_STARS} stars.
 
 Scoring system: 2 stars for a correct guess, 1 star for a slightly incorrect guess, 0 stars for an incorrect guess.
+
+It's possible to tie by having the same score.
 
 You format your answer in this style, so it's easy to parse programmatically:
 - insight 1
@@ -47,8 +51,8 @@ You format your answer in this style, so it's easy to parse programmatically:
         if not OPENAI_KEY:
             return None
 
-        prompt = f'''
-Clip {vote.clip_idx + 1} of {len(vote.clips)}
+        prompt = (f'''
+Clip {vote.clip_idx + 1} of {len(vote.clips)}{' (start of the game)' if vote.clip_idx == 0 else ''}{' (end of the game)' if vote.clip_idx + 1 == len(vote.clips) else ''}
 
 Teo total score: {vote.total_streamer_stars} stars
 Teo clip score: {vote.result.streamer_stars} stars
@@ -59,7 +63,7 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
 ''' + '\n'.join(
             f'#{n} "{score.username}" total score: {score.stars} stars'
             for n, score in vote.result.top_users
-        ).strip()
+        )).strip()
 
         self._messages.append({'role': 'user', 'content': prompt})
 
@@ -67,8 +71,10 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
             completion = await ChatCompletion.acreate(
                 model='gpt-3.5-turbo',
                 messages=self._messages,
-                temperature=1.0,
+                temperature=0.7,  # more randomness
                 max_tokens=128,
+                frequency_penalty=0.2,  # less repetition
+                presence_penalty=0.2,  # more diversity
                 timeout=10,
             )
         except:
@@ -80,8 +86,14 @@ Top {N_TOP_USERS} leaderboard (total: {vote.total_users_votes} users):
 
         self._messages.append({'role': 'assistant', 'content': response})
 
-        return [
+        result = [
             l.strip()
             for l in re.split(r'^\s*-\s+', response, flags=re.MULTILINE)
             if l.strip()
         ]
+
+        if len(result) < 2:
+            pprint(self._messages)
+            return None
+
+        return result
