@@ -1,8 +1,7 @@
 {% extends '_base.jinja2' %}
 {% block body %}
 
-<form class="text-center" action="/next_clip" method="post">
-    <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+<div class="text-center">
 
     <div class="alert alert-info mt-4 mb-3">
         <h5 class="alert-heading">Update: 5<sup>th</sup> March</h5>
@@ -26,7 +25,16 @@
     </div>
 
     <div class="mt-5 mb-4">
-        <input type="submit" class="btn btn-lg btn-primary" value="Start game">
+        <form class="d-inline me-3" action="/next_clip" method="post">
+            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+            <input type="submit" class="btn btn-lg btn-primary" value="Start game">
+        </form>
+
+        <form class="d-inline" action="/next_clip" method="post">
+            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+            <input type="hidden" name="testing" value="True">
+            <input type="submit" class="btn btn-sm btn-secondary" value="Test game">
+        </form>
     </div>
 
     <div class="text-secondary small">
@@ -46,6 +54,6 @@
         Learn and contribute — it's Python 🐍!
     </div>
 
-</form>
+</div>
 
 {% endblock %}

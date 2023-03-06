@@ -20,10 +20,20 @@ def TYPE_USER_SCORE(username: str) -> EventType:
 
 
 _subscriptions: dict[EventType, set['Subscription']] = defaultdict(set)
+_subscriptions_enabled: bool = True
 _publish_cache: dict[EventType, Any] = {}
 
 
+def toggle_subscriptions(*, enabled: bool) -> None:
+    global _subscriptions_enabled
+    _subscriptions_enabled = enabled
+    print(f'[EVENTS] Subscriptions {"enabled" if enabled else "disabled"}')
+
+
 def publish(type: EventType, args: Any = None) -> None:
+    if not _subscriptions_enabled:
+        return
+
     _publish_cache[type] = args
 
     for subscription in _subscriptions[type]:

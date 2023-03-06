@@ -15,7 +15,7 @@ import twitch_userscript
 from blacklist import Blacklist
 from config import BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
 from downloader import Downloader
-from events import TYPE_TOTAL_VOTES, Subscription
+from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
 from summary import get_summary, update_summary
 from twitch_monitor import TwitchMonitor
 from vote import Vote, VoteState
@@ -103,12 +103,17 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
 
 
 @app.post('/next_clip')
-async def next_clip(clip_idx: int = Form()):
+async def next_clip(clip_idx: int = Form(), testing: bool = Form(False)):
     global vote
 
     # ensure the client state
     if vote.clip_idx == clip_idx and vote.state in {VoteState.IDLE, VoteState.RESULTS}:
         if vote.has_next_clip:
+
+            # start of the game
+            if vote.clip_idx == -1:
+                toggle_subscriptions(enabled=not testing)
+
             async with twitch_monitor.lock:
                 if not twitch_monitor.run_loop.is_set():
                     await twitch_monitor.connect()
