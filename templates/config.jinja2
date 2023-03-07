@@ -3,18 +3,28 @@
 
 <form action="/config" method="post">
 
-    <div class="row mb-4">
-        <div class="col-9">
+    <div class="row mb-3">
+        <div class="col-7">
             <div>
                 <label class="form-label">Clips</label>
-                <textarea class="form-control" name="config" rows="20" required>{{ config }}</textarea>
+                <textarea class="form-control nowrap" name="config" rows="20" required>{{ config }}</textarea>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-5">
             <div>
-                <label class="form-label">User blacklist</label>
-                <textarea class="form-control" name="blacklist" rows="20">{{ blacklist }}</textarea>
+                <label class="form-label">Generator</label>
+                <textarea id="generator-input" class="form-control mb-2" rows="5" placeholder="Input"></textarea>
+                <button id="generator-btn" class="btn btn-primary w-100 mb-2" type="button">Submit</button>
+                <textarea id="generator-output" class="form-control" rows="13" placeholder="Output" readonly></textarea>
             </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <a class="btn btn-link" href="#collapse-blacklist" data-bs-toggle="collapse">User blacklist</a>
+
+        <div id="collapse-blacklist" class="collapse">
+            <textarea class="form-control nowrap" name="blacklist" rows="10">{{ blacklist }}</textarea>
         </div>
     </div>
 
@@ -24,5 +34,33 @@
     </div>
 
 </form>
+
+<script>
+    const generatorInput = document.getElementById('generator-input')
+    const generatorBtn = document.getElementById('generator-btn')
+    const generatorOutput = document.getElementById('generator-output')
+
+    generatorBtn.onclick = () => {
+        generatorBtn.disabled = true
+
+        const formData = new FormData()
+        formData.append('input', generatorInput.value.trim())
+
+        fetch('/generate', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                generatorOutput.value = data.body
+            })
+            .catch(error => {
+                console.error(error)
+            })
+            .finally(() => {
+                generatorBtn.disabled = false
+            })
+    }
+</script>
 
 {% endblock %}

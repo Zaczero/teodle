@@ -5,6 +5,7 @@ from functools import cache
 
 import timeago
 from fastapi import FastAPI, Form, WebSocket
+from fastapi.responses import JSONResponse
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
@@ -16,6 +17,7 @@ import twitch_userscript
 from blacklist import Blacklist
 from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR,
                     UI_CONFIG)
+from config_generator import generate_config
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
 from summary import get_summary, update_summary
@@ -192,6 +194,18 @@ async def post_config(config: str = Form(), blacklist: str = Form(default='')):
     set_vote(new_vote)
 
     return INDEX_REDIRECT
+
+
+@app.post('/generate')
+async def generate(input: str = Form()) -> JSONResponse:
+    if vote.state != VoteState.IDLE:
+        return JSONResponse({}, status_code=400)
+
+    response = {
+        'body': await generate_config(input),
+    }
+
+    return JSONResponse(response)
 
 
 @app.websocket('/ws')
