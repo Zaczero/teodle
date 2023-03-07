@@ -1,6 +1,7 @@
 import os
 from asyncio import create_task, sleep
 from datetime import datetime
+from functools import cache
 
 import timeago
 from fastapi import FastAPI, Form, WebSocket
@@ -13,7 +14,8 @@ from starlette.templating import Jinja2Templates
 
 import twitch_userscript
 from blacklist import Blacklist
-from config import BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR
+from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR,
+                    UI_CONFIG)
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
 from summary import get_summary, update_summary
@@ -57,7 +59,7 @@ def default_context(request: Request) -> dict:
         'request': request,
         'css_mtime': int(os.stat('static/css/style.css').st_mtime),
         'vote': vote
-    }
+    } | UI_CONFIG
 
 
 def clips_mtime() -> str:
@@ -65,21 +67,32 @@ def clips_mtime() -> str:
                           datetime.now())
 
 
+@cache
+def get_template_filename(name: str) -> str:
+    streamer_filename = f'{name}.{UI_CONFIG["STREAMER_NAME"].lower()}.jinja2'
+
+    if os.path.exists(f'templates/{streamer_filename}'):
+        return streamer_filename
+
+    generic_filename = f'{name}.jinja2'
+    return generic_filename
+
+
 @app.get('/')
 async def index(request: Request):
     ctx = default_context(request)
 
     if vote.state == VoteState.IDLE:
-        return tmpl.TemplateResponse('idle.jinja2', ctx | {
+        return tmpl.TemplateResponse(get_template_filename('idle'), ctx | {
             'config_mtime': clips_mtime(),
             'downloader': downloader
         })
 
     elif vote.state == VoteState.VOTING:
-        return tmpl.TemplateResponse('voting.jinja2', ctx)
+        return tmpl.TemplateResponse(get_template_filename('voting'), ctx)
 
     elif vote.state == VoteState.RESULTS:
-        return tmpl.TemplateResponse('results.jinja2', ctx | {
+        return tmpl.TemplateResponse(get_template_filename('results'), ctx | {
             'summary': get_summary() if not vote.has_next_clip else None
         })
 

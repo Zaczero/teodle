@@ -1,4 +1,4 @@
-{% macro new(your_vote, vote) %}
+{% macro new(rank) %}
 <div class="your-vote">
     <div class="table-responsive">
         <table class="table mb-0">
@@ -6,8 +6,8 @@
                 <tr>
                     <td class="shrink">You answered:</td>
                     <td class="expand">
-                        <img class="me-1" src="/ranks/{{ your_vote.image.name }}" alt="" height="30">
-                        {{ your_vote.title }}
+                        <img class="me-1" src="/ranks/{{ rank.image.name }}" alt="" height="30">
+                        {{ rank.title }}
                     </td>
                 </tr>
                 <tr>

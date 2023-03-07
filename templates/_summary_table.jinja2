@@ -1,4 +1,4 @@
-{% macro new(summary) %}
+{% macro new() %}
 <div class="summary card">
     <div class="card-body py-1">
         <div class="table-responsive">
@@ -6,7 +6,7 @@
                 <thead>
                     <tr>
                         <th>Played on</th>
-                        <th class="text-center"><img class="me-1" src="/static/img/teo.png" height="24">Teo</th>
+                        <th class="text-center"><img class="me-1" src="/static/img/{{ STREAMER_ICON }}" height="24">{{ STREAMER_NAME }}</th>
                         <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">Chat</th>
                         <th class="text-end pe-5"><img class="me-1" src="/static/img/chad.webp" height="24">MVP
                     </tr>

@@ -1,6 +1,6 @@
 {% extends '_base.jinja2' %}
-{% import '_your_vote.jinja2' as your_vote %}
-{% import '_summary_table.jinja2' as summary_table %}
+{% import '_your_vote.jinja2' as your_vote with context %}
+{% import '_summary_table.jinja2' as summary_table with context %}
 {% block body %}
 
     <div class="row mb-3">
@@ -8,16 +8,16 @@
 
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    {% if vote.result.streamer_stars == 0 and vote.result.users_stars >= 2 %}
-                        <img src="/static/img/laugh.png" height="48">
-                    {% elif vote.result.streamer_stars >= 2 and vote.result.users_stars == 0 %}
-                        <img src="/static/img/teo-gold.png" height="48" style="transform: scale(1.75)">
+                    {% if STREAMER_BAD_ICON and vote.result.streamer_stars == 0 and vote.result.users_stars >= 2 %}
+                        <img src="/static/img/{{ STREAMER_BAD_ICON }}" height="48">
+                    {% elif STREAMER_GOOD_ICON and vote.result.streamer_stars >= 2 and vote.result.users_stars == 0 %}
+                        <img src="/static/img/{{ STREAMER_GOOD_ICON }}" height="48" style="transform: scale(1.75)">
                     {% else %}
-                        <img src="/static/img/teo.png" height="48">
+                        <img src="/static/img/{{ STREAMER_ICON }}" height="48">
                     {% endif %}
 
                     <h3 class="mb-0 ms-3">
-                        Teo
+                        {{ STREAMER_NAME }}
 
                         {% for _ in range(vote.result.streamer_stars) %}
                             🌟
@@ -25,7 +25,7 @@
                     </h3>
                 </div>
                 <div class="card-body py-1">
-                    {{ your_vote.new(vote.teo_rank, vote) }}
+                    {{ your_vote.new(vote.teo_rank) }}
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                     <p class="mb-0 ms-auto">Total votes: <b>{{ vote.total_users_votes }}</b></p>
                 </div>
                 <div class="card-body py-1">
-                    {{ your_vote.new(vote.result.users_rank, vote) }}
+                    {{ your_vote.new(vote.result.users_rank) }}
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
 
     {% if summary %}
         <div class="mb-4">
-            {{ summary_table.new(summary) }}
+            {{ summary_table.new() }}
         </div>
     {% endif %}
 
@@ -232,7 +232,7 @@
 
             label: {
                 display: true,
-                content: urlToImage('/static/img/teo.png', 48, 48),
+                content: urlToImage('/static/img/{{ STREAMER_ICON }}', 48, 48),
                 backgroundColor: 'rgba(0,0,0,0)',
                 padding: 0,
                 position: '92.5%',

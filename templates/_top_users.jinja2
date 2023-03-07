@@ -1,11 +1,11 @@
-{% macro new(result) %}
+{% macro new() %}
 <div class="top-users card">
     <div class="card-body py-0">
         <div class="table-responsive">
             <table class="table mb-0">
                 <tbody>
 
-                    {% for top_user in result.top_users %}
+                    {% for top_user in vote.result.top_users %}
                     <tr>
                         <td class="shrink text-center">
                             {% if top_user[0] == 1 %}

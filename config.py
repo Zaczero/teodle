@@ -8,7 +8,6 @@ for require in ['yt-dlp', 'ffmpeg']:
                for p in os.environ['PATH'].split(os.pathsep)), \
         'You are missing the required dependency: ' + require
 
-APP_NAME = "Teodle"
 MAX_STARS = 2
 # (if applicable)
 # don't forget to adjust the easter egg values in results.jinja2
@@ -59,3 +58,18 @@ if OPENAI_KEY:
     openai.api_key = OPENAI_KEY
 
 N_TOP_USERS = 5
+
+
+UI_CONFIG = {
+    'APP_NAME': 'Teodle',
+    'STREAMER_NAME': 'Teo',
+    'STREAMER_ICON': 'teo.png',
+    'STREAMER_GOOD_ICON': 'teo-gold.png',
+    'STREAMER_BAD_ICON': 'laugh.png',
+    'MVP_ICON': 'chad.webp',
+}
+
+# override UI_CONFIG with environment variables
+for key, default in UI_CONFIG.items():
+    if (val := os.getenv(key, None)) is not None:
+        UI_CONFIG[key] = val

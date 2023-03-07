@@ -1,58 +1,15 @@
 {% extends '_base.jinja2' %}
+{% import '_start.jinja2' as start with context %}
+{% import '_footer.jinja2' as footer with context %}
 {% block body %}
 
 <div class="text-center">
 
-    <div class="alert alert-info mt-4 mb-3">
-        <h5 class="alert-heading">Update: 5<sup>th</sup> March</h5>
-        <div>
-            Added <b style="color: greenyellow">GPT-3 game insights</b> 💡<br>
-            <div class="mb-2"></div>
-            Submit vote will now take a few seconds longer to process.<br>
-            I may optimize it in the future updates.
-        </div>
-    </div>
-
-    <div class="alert alert-info mt-4 mb-3">
-        <h5 class="alert-heading">Update: 28<sup>th</sup> February</h5>
-        <div>
-            <b style="color: darkviolet">Teodle for Twitch</b> userscript is now available 🎉🎉<br>
-            Get it here: <a class="fs-5 text-decoration-none" href="https://teodle.monicz.dev" target="_blank">teodle.monicz.dev</a><br>
-            <small>Click for more details ^ ^ ^</small>
-            <hr>
-            Changed back to ⭐⭐ (2) stars mode.<br>
-        </div>
-    </div>
-
-    <div class="mt-5 mb-4">
-        <form class="d-inline me-3" action="/next_clip" method="post">
-            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-            <input type="submit" class="btn btn-lg btn-primary" value="Start game">
-        </form>
-
-        <form class="d-inline" action="/next_clip" method="post">
-            <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-            <input type="hidden" name="testing" value="True">
-            <input type="submit" class="btn btn-sm btn-secondary" value="Test game">
-        </form>
-    </div>
-
-    <div class="text-secondary small">
-        {% if downloader.processing < 1 %} Downloading {{ '{:.0%}' .format(downloader.processing) }} • {% else %} ✓ {%
-            endif %} <a class="text-secondary" href="/config">Configuration</a> • Last modified: {{ config_mtime }}
-    </div>
+    {{ start.new() }}
 
     <hr style="margin: 3.5em 0 2.5em">
 
-    <div class="text-secondary">
-        <small>
-            This website's code is publicly available at
-            <a class="text-decoration-none" href="https://github.com/Zaczero/teodle"
-                target="_blank">github.com/Zaczero/teodle</a>
-            <br>
-        </small>
-        Learn and contribute — it's Python 🐍!
-    </div>
+    {{ footer.new() }}
 
 </div>
 

@@ -4,7 +4,7 @@ from pprint import pprint
 
 from openai import ChatCompletion
 
-from config import APP_NAME, MAX_STARS, N_TOP_USERS, OPENAI_KEY
+from config import MAX_STARS, N_TOP_USERS, OPENAI_KEY, UI_CONFIG
 
 
 class Commentator:
@@ -12,7 +12,7 @@ class Commentator:
         assert MAX_STARS == 2, 'Update the scoring system below if you change MAX_STARS'
 
         system = f'''
-You provide joyful and fun insights for a guess-a-rank type of game called {APP_NAME} - the goal is to guess the competitive rank of a gamer in the clip.
+You provide joyful and fun insights for a guess-a-rank type of game called {UI_CONFIG["APP_NAME"]} - the goal is to guess the competitive rank of a gamer in the clip.
 
 You provide 2 - 3, short insights per clip from the given information.
 

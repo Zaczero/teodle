@@ -1,0 +1,26 @@
+{% macro new() %}
+<div class="mt-5 mb-4">
+    <form class="d-inline me-3" action="/next_clip" method="post">
+        <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+        <input type="submit" class="btn btn-lg btn-primary" value="Start game">
+    </form>
+
+    <form class="d-inline" action="/next_clip" method="post">
+        <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+        <input type="hidden" name="testing" value="True">
+        <input type="submit" class="btn btn-sm btn-secondary" value="Test game">
+    </form>
+</div>
+
+<div class="text-secondary small">
+    {% if downloader.processing < 1 %}
+    Downloading {{ '{:.0%}' .format(downloader.processing) }}
+    •
+    {% else %}
+    ✓
+    {% endif %}
+    <a class="text-secondary" href="/config">Configuration</a>
+    •
+    Last modified: {{ config_mtime }}
+</div>
+{% endmacro %}

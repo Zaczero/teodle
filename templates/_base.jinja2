@@ -1,12 +1,12 @@
-{% import '_stars.jinja2' as stars %}
-{% import '_top_users.jinja2' as top_users %}
+{% import '_stars.jinja2' as stars with context %}
+{% import '_top_users.jinja2' as top_users with context %}
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Teodle</title>
+    <title>{{ APP_NAME }}</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
@@ -48,23 +48,23 @@
                     <div class="d-flex align-items-center h-100">
                         <div class="w-100">
 
-                            <h3 class="text-center mb-0">Teodle</h3>
+                            <h3 class="text-center mb-0">{{ APP_NAME }}</h3>
                             <p class="text-center text-muted mb-2">Submit your clips <span class="vote-mark ms-1">!</span><span class="text-dark fw-bold">rankdle</span></p>
-                            {{ stars.new(vote) }}
+                            {{ stars.new() }}
 
                         </div>
                     </div>
                 </div>
                 <div class="col-auto">
 
-                    {{ top_users.new(vote.result) }}
+                    {{ top_users.new() }}
 
                 </div>
             </div>
 
         {% else %}
 
-            <h3 class="text-center mb-0">Teodle</h3>
+            <h3 class="text-center mb-0">{{ APP_NAME }}</h3>
             <p class="text-center text-muted mb-3">Submit your clips <span class="vote-mark ms-1">!</span><span class="text-dark fw-bold">rankdle</span></p>
 
         {% endif %}

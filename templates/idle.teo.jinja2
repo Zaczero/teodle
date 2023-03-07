@@ -1,0 +1,27 @@
+{% extends '_base.jinja2' %}
+{% import '_start.jinja2' as start with context %}
+{% import '_footer.jinja2' as footer with context %}
+{% block body %}
+
+<div class="text-center">
+
+    <div class="alert alert-info mt-4 mb-3">
+        <h5 class="alert-heading">Update: 28<sup>th</sup> February</h5>
+        <div>
+            <b style="color: darkviolet">Teodle for Twitch</b> userscript is now available 🎉🎉<br>
+            Get it here: <a class="fs-5 text-decoration-none" href="https://teodle.monicz.dev" target="_blank">teodle.monicz.dev</a><br>
+            <small>Click for more details ^ ^ ^</small>
+            <hr>
+            Changed back to ⭐⭐ (2) stars mode.<br>
+        </div>
+    </div>
+
+    {{ start.new() }}
+
+    <hr style="margin: 3.5em 0 2.5em">
+
+    {{ footer.new() }}
+
+</div>
+
+{% endblock %}
