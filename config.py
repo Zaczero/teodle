@@ -68,6 +68,7 @@ UI_CONFIG = {
     'STREAMER_ICON': 'teo.png',
     'STREAMER_GOOD_ICON': 'teo-gold.png',  # optional
     'STREAMER_BAD_ICON': 'laugh.png',  # optional
+    'FIRST_PLACE_ICON': 'jam.gif',
     'MVP_ICON': 'chad.webp',
 }
 

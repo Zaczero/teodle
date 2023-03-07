@@ -9,7 +9,7 @@
                     <tr>
                         <td class="shrink text-center">
                             {% if top_user[0] == 1 %}
-                            <img class="first-img" src="/static/img/jam.gif">
+                            <img class="first-img" src="/static/img/{{ FIRST_PLACE_ICON }}">
                             {% elif top_user[0] == 2 %}
                             <span class="board-2">{{ top_user[0] }}<sup>nd</sup></span>
                             {% elif top_user[0] == 3 %}
