@@ -100,7 +100,8 @@ class Vote:
 
         # None in case the redirect happens before the comment is ready
         self.comment = None
-        self.comment = await self.commentator.comment(self)
+        # temporarily disabled, further work needed
+        # self.comment = await self.commentator.comment(self)
 
     def cast_streamer_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
