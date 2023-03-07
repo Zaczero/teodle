@@ -1,3 +1,4 @@
+import re
 import traceback
 from functools import cache
 from pprint import pprint
@@ -10,6 +11,8 @@ from utils import tree
 
 @cache
 async def generate_config(input: str) -> str | None:
+    input = re.sub(r'\s+', ' ', input).strip()
+
     if len(input) < 32:
         return 'Too short'
 
@@ -43,7 +46,14 @@ The rank line which is specified by the input (or the closest one if not found) 
 
 You must only use names of the ranks as specified in the filesystem. Each path must be relative and valid and contain the game directory name.
 
-For example Rainbow 6 Siege Gold 3 will output:
+You don't add any boilerplate in the output as it breaks the configuration.
+'''.strip()
+
+    messages = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': 'Rainbow 6 Siege Gold 3 https://www.youtube.com/embed/Qoi_R38rhhI teofan'},
+        {'role': 'assistant', 'content': '''https://www.youtube.com/embed/Qoi_R38rhhI
+teofan
 r6/copper
 r6/bronze
 r6/silver
@@ -51,9 +61,10 @@ r6/silver
 r6/platinum
 r6/emerald
 r6/diamond
-r6/champions
-
-For example CSGO Gold Nova Master will output:
+r6/champions'''},
+        {'role': 'user', 'content': 'CSGO https://www.youtube.com/6hgZlksGTlQ Gold Nova Master absolute1337'},
+        {'role': 'assistant', 'content': '''https://www.youtube.com/6hgZlksGTlQ
+absolute1337
 cs/silver
 cs/silverelite
 *cs/nova
@@ -62,9 +73,10 @@ cs/mge
 cs/dmg
 cs/lem
 cs/supreme
-cs/global
-
-For example val plat will output:
+cs/global'''},
+        {'role': 'user', 'content': 'val https://github.com/Zaczero/clips plat theGamer'},
+        {'role': 'assistant', 'content': '''https://github.com/Zaczero/clips
+theGamer
 val/iron
 val/bronze
 val/silver
@@ -73,9 +85,10 @@ val/gold
 val/diamond
 val/ascendant
 val/immortal
-val/radiant
-
-For example Overwatch Bronze 1 will output:
+val/radiant'''},
+        {'role': 'user', 'content': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ toffot55 Bronze 1 OW'},
+        {'role': 'assistant', 'content': '''https://www.youtube.com/watch?v=dQw4w9WgXcQ
+toffot55
 *ow/bronze
 ow/silver
 ow/gold
@@ -83,13 +96,7 @@ ow/platinum
 ow/diamond
 ow/master
 ow/grandmaster
-ow/top500
-
-You don't add any boilerplate in the output as it breaks the configuration.
-'''.strip()
-
-    messages = [
-        {'role': 'system', 'content': system},
+ow/top500'''},
         {'role': 'user', 'content': input},
     ]
 
@@ -108,6 +115,6 @@ You don't add any boilerplate in the output as it breaks the configuration.
         traceback.print_exc()
         return 'Something went wrong'
 
-    response = completion.choices[0].message.content
+    response: str = completion.choices[0].message.content
 
-    return response
+    return response.strip()

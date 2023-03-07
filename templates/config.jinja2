@@ -44,7 +44,7 @@
         generatorBtn.disabled = true
 
         const formData = new FormData()
-        formData.append('input', generatorInput.value.trim())
+        formData.append('input', generatorInput.value)
 
         fetch('/generate', {
             method: 'POST',
