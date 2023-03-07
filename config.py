@@ -62,10 +62,12 @@ N_TOP_USERS = 5
 
 UI_CONFIG = {
     'APP_NAME': 'Teodle',
+    'APP_TITLE': 'Teodle',
+    'HEAD_PREFIX': 'teo',
     'STREAMER_NAME': 'Teo',
     'STREAMER_ICON': 'teo.png',
-    'STREAMER_GOOD_ICON': 'teo-gold.png',
-    'STREAMER_BAD_ICON': 'laugh.png',
+    'STREAMER_GOOD_ICON': 'teo-gold.png',  # optional
+    'STREAMER_BAD_ICON': 'laugh.png',  # optional
     'MVP_ICON': 'chad.webp',
 }
 
