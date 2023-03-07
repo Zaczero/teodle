@@ -2,17 +2,9 @@ html, body {
     font-size: 20px;
 }
 
-@media screen and (min-width: calc(1920px * 1.1)) {
+@media screen and (max-width: calc(1920px * 1.1)) {
     html, body {
-        zoom: 1.075;
-        /*zoom: 1.0675;*/
-    }
-}
-
-@media screen and (min-width: calc(1920px * 1.2)) {
-    html, body {
-        zoom: 1.15;
-        /*zoom: 1.135;*/
+        zoom: 0.92;
     }
 }
 
