@@ -25,7 +25,7 @@ class RankImage:
                     im.save(dest, RANK_FILE_EXT[1:], quality=95, method=6)
 
                 name += dest.suffix
-                print(f'[RANK] Optimized {file.name} to {dest.name}')
+                print(f'[RANK] Optimized {name} file')
 
         self.name = name
         self.path = RANKS_DIR / name
