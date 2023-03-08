@@ -40,17 +40,20 @@ A handy userscript for Twitch.tv which adds some more Teodle integration.
 | Greasemonkey  | [Link](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) |        |    ✔    |     ✔      |
 | Tampermonkey  |                  [Link](https://tampermonkey.net/)                   |   ✔    |    ✔    |            |
 
-2. Open the script and click <code>Install</code>:<br>
-   [https://teodle.monicz.dev/teodle.user.js](https://teodle.monicz.dev/teodle.user.js)
+> 💡 Opera users can install and use Chrome extensions
+
+2. [Install](https://teodle.monicz.dev/teodle.user.js) the script itself
 
 <center>![](./static/2023-02-28_10-57-05.png)</center>
 
-3. Done, don't forget to refresh the Twitch website
+> ❔ If you can't see the installation page, read step #1
+
+3. Reload the Twitch website — done!
 
 ## How to uninstall 🗑️
 
 1. Open the userscript manager
-2. Find the "Teodle for Twitch" and click <code>Remove</code>
+2. Find "Teodle for Twitch" and click <code>Remove</code>
 
 <center>![](./static/2023-02-28_10-45-27.png)</center>
 
