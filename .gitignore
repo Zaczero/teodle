@@ -305,6 +305,7 @@ poetry.toml
 .ionide
 
 data/boards/*
+data/cache/*
 data/download/*
 
 # TODO: make the script production ready

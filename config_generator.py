@@ -1,104 +1,28 @@
 import re
 import traceback
-from functools import cache
+from hashlib import blake2b
+from pathlib import Path
 from pprint import pprint
 
 from openai import ChatCompletion
 
-from config import OPENAI_KEY, RANKS_DIR
-from utils import tree
+from config import CACHE_DIR, OPENAI_KEY, RANKS_DIR
 
 
-@cache
-async def generate_config(input: str) -> str | None:
-    input = re.sub(r'\s+', ' ', input).strip()
+def get_dir_names(dir_path: Path) -> list[str]:
+    return list(path.name for path in dir_path.iterdir() if path.is_dir())
 
-    if len(input) < 32:
-        return 'Too short'
 
-    if len(input) > 128:
-        return 'Too long'
+def get_file_names(dir_path: Path, file_types: set[str] = {'.png', '.webp'}) -> list[str]:
+    return list(set(path.with_suffix("").name.lower() for path in dir_path.iterdir() if path.suffix in file_types))
 
-    if not OPENAI_KEY:
-        return 'Not configured'
 
-    filesystem = '\n'.join(tree(RANKS_DIR))
+async def complete(messages: list, **kwargs) -> None:
+    messages_hash = blake2b(str(messages).encode(), digest_size=4, usedforsecurity=False).hexdigest()
+    cache_file = CACHE_DIR / f'{messages_hash}.txt'
 
-    system = f'''
-The current filesystem is:
-{filesystem}
-
-You generate configuration files.
-
-From the user input you extract 4 kinds of information:
-1. URL
-2. Username
-3. Game name
-4. Competitive rank name from that game
-
-The first line of the configuration simply contains the URL.
-
-The second line of the configuration simply contains the username.
-
-The remaining configuration are rank files. Inside the filesystem, you find game directories with their corresponding rank files. You list the rank files in the game directory which is specified by the input. The ranks must be ordered from the lowest skill level to the highest skill level.
-
-The rank line which is specified by the input (or the closest one if not found) is prefixed with a * character.
-
-You must only use names of the ranks as specified in the filesystem. Each path must be relative and valid and contain the game directory name.
-
-You don't add any boilerplate in the output as it breaks the configuration.
-'''.strip()
-
-    messages = [
-        {'role': 'system', 'content': system},
-        {'role': 'user', 'content': 'Rainbow 6 Siege Gold 3 https://www.youtube.com/embed/Qoi_R38rhhI teofan'},
-        {'role': 'assistant', 'content': '''https://www.youtube.com/embed/Qoi_R38rhhI
-teofan
-r6/copper
-r6/bronze
-r6/silver
-*r6/gold
-r6/platinum
-r6/emerald
-r6/diamond
-r6/champions'''},
-        {'role': 'user', 'content': 'CSGO https://www.youtube.com/6hgZlksGTlQ Gold Nova Master absolute1337'},
-        {'role': 'assistant', 'content': '''https://www.youtube.com/6hgZlksGTlQ
-absolute1337
-cs/silver
-cs/silverelite
-*cs/nova
-cs/mg
-cs/mge
-cs/dmg
-cs/lem
-cs/supreme
-cs/global'''},
-        {'role': 'user', 'content': 'val https://github.com/Zaczero/clips plat theGamer'},
-        {'role': 'assistant', 'content': '''https://github.com/Zaczero/clips
-theGamer
-val/iron
-val/bronze
-val/silver
-val/gold
-*val/platinum
-val/diamond
-val/ascendant
-val/immortal
-val/radiant'''},
-        {'role': 'user', 'content': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ toffot55 Bronze 1 OW'},
-        {'role': 'assistant', 'content': '''https://www.youtube.com/watch?v=dQw4w9WgXcQ
-toffot55
-*ow/bronze
-ow/silver
-ow/gold
-ow/platinum
-ow/diamond
-ow/master
-ow/grandmaster
-ow/top500'''},
-        {'role': 'user', 'content': input},
-    ]
+    if cache_file.exists():
+        return cache_file.read_text()
 
     try:
         completion = await ChatCompletion.acreate(
@@ -109,12 +33,152 @@ ow/top500'''},
             frequency_penalty=0,  # less repetition
             presence_penalty=0,  # more diversity
             timeout=10,
+            **kwargs
         )
+
+        response: str = completion.choices[0].message.content.strip()
+        pprint(response)
     except:
         pprint(messages)
         traceback.print_exc()
-        return 'Something went wrong'
+        return 'Connection error'
 
-    response: str = completion.choices[0].message.content
+    cache_file.write_text(response)
 
-    return response.strip()
+    return response
+
+
+async def generate_config(input: str) -> str | None:
+    if not (match := re.search(r'https?://\S+', input)):
+        return 'Missing url'
+
+    url = match.group(0)
+
+    input = input[:match.start()] + input[match.end():]
+    input = re.sub(r'\b(true|false|null|nil|def|default|\d|\.|,|\-)\b', '', input, flags=re.IGNORECASE)
+    input = re.sub(r'\s+', ' ', input).strip()
+
+    if len(input) < 8:
+        return 'Too short'
+
+    if len(input) > 128:
+        return 'Too long'
+
+    if not OPENAI_KEY:
+        return 'Not configured'
+
+    games = get_dir_names(RANKS_DIR)
+    games_join = '\n'.join(games)
+
+    system = f'''From input extract information:
+username
+game
+
+Match game to one of the short names:
+{games_join}'
+
+If successful, print CSV:
+username,fullname,shortname
+
+If unsuccessful, print an error'''
+
+    messages = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': '.cs legendary eagle falseJade'},
+        {'role': 'assistant', 'content': 'falseJade,Counter-Strike: Global Offensive,cs'},
+        {'role': 'user', 'content': 'plat Voot siege,'},
+        {'role': 'assistant', 'content': 'Voot,Rainbow Six Siege,r6'},
+        {'role': 'user', 'content': 'grafan lol bronze but I play with higer friends (boosted)'},
+        {'role': 'assistant', 'content': 'grafan,League of Legends,lol'},
+        {'role': 'user', 'content': input},
+    ]
+
+    response = await complete(messages)
+
+    if not (match := re.match(r'^(?P<user>.*?),(?P<full>.*?),(?P<short>.*?)$', response)):
+        return response
+
+    username = match.group('user')
+    gameFull = match.group('full')
+    gameShort = match.group('short')
+
+    if gameShort not in games:
+        return f'Unknown game, response: {response}'
+
+    if username not in input:
+        return f'Username not found in input, response: {response}'
+
+    ranks = get_file_names(RANKS_DIR / gameShort)
+    ranks_join = '\n'.join(ranks)
+
+    system = 'Sort list of ranks from given game from lowest skill level to highest skill level'
+    user = f'''{gameFull}:\n{ranks_join}'''
+
+    messages = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': '''Counter-Strike: Global Offensive:
+silverelite
+global
+mge
+silver
+supreme
+dmg
+lem
+mg
+nova'''},
+        {'role': 'assistant', 'content': '''silver
+silverelite
+nova
+mg
+mge
+dmg
+lem
+supreme
+global'''},
+        {'role': 'user', 'content': user},
+    ]
+
+    response = await complete(messages)
+    lines = response.splitlines()
+
+    if len(lines) < 0.9 * len(ranks):
+        return response
+
+    ranks = [l for l in lines if l in ranks] + [r for r in ranks if r not in lines]
+    ranks_join = '\n'.join(ranks)
+
+    input = input.replace(username, '')
+    input = re.sub(r'\s+', ' ', input).strip()
+
+    system = '''In query find game rank, from list find entry which is closest match
+
+Output format CSV:
+entry'''
+    user = f'''{input}\n{gameFull}:\n{ranks_join}'''
+
+    messages = [
+        {'role': 'system', 'content': system},
+        {'role': 'user', 'content': '''query: cs Legendary Eagle
+
+Counter-Strike: Global Offensive:
+silver
+silverelite
+nova
+mg
+mge
+dmg
+lem
+supreme
+global'''},
+        {'role': 'assistant', 'content': 'lem'},
+        {'role': 'user', 'content': user},
+    ]
+
+    response = (await complete(messages)).lower()
+
+    config_ranks_join = '\n'.join(
+        f'*{gameShort}/{r}' if r == response else f'{gameShort}/{r}'
+        for r in ranks
+    )
+
+    return f'''{url}\n{username}\n{config_ranks_join}'''

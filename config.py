@@ -39,6 +39,9 @@ for file in [CLIPS_PATH, BLACKLIST_PATH, SUMMARY_PATH]:
     with open(file, 'a+') as f:
         pass
 
+CACHE_DIR = DATA_DIR / Path('cache')
+CACHE_DIR.mkdir(exist_ok=True)
+
 RANKS_DIR = DATA_DIR / Path('ranks')
 RANKS_DIR.mkdir(exist_ok=True)
 
@@ -49,7 +52,7 @@ BOARDS_DIR = DATA_DIR / Path('boards')
 BOARDS_DIR.mkdir(exist_ok=True)
 
 # ensure proper directory permissions
-for dir in [DOWNLOAD_DIR, BOARDS_DIR]:
+for dir in [CACHE_DIR, DOWNLOAD_DIR, BOARDS_DIR]:
     assert os.access(dir, os.W_OK | os.X_OK), f'Permission denied: {dir}'
 
 OPENAI_KEY = os.getenv('OPENAI_KEY', None)
