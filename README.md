@@ -50,13 +50,14 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### YouTube Series
 
-- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ (newest)
+- Ep9 https://www.youtube.com/watch?v=lTmzxbdpzC4 (newest)
+- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
 - Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
-- Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 
 <details>
 <summary>Show more</summary>
 
+- Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 - Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
 - Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
 - Ep3.5 https://www.youtube.com/watch?v=0MjMAeJJ67Q
