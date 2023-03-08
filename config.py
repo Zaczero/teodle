@@ -15,7 +15,8 @@ MAX_STARS = 2
 # maximum number of concurrent connections per userscript user
 MAX_USERSCRIPT_SLOTS = 3
 
-RANK_FILE_DEFAULT_EXT = '.png'
+RANK_FILE_CONVERT_EXT = {'.png'}
+RANK_FILE_EXT = '.webp'
 
 TTV_TOKEN = os.environ['TTV_TOKEN']
 TTV_USERNAME = os.environ['TTV_USERNAME']
