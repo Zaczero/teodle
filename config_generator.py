@@ -99,20 +99,20 @@ If unsuccessful, print an error'''
         return response
 
     username = match.group('user')
-    gameFull = match.group('full')
-    gameShort = match.group('short')
+    game_full = match.group('full')
+    game_short = match.group('short')
 
-    if gameShort not in games:
+    if game_short not in games:
         return f'Unknown game, response: {response}'
 
     if username not in input:
         return f'Username not found in input, response: {response}'
 
-    ranks = get_file_names(RANKS_DIR / gameShort)
+    ranks = get_file_names(RANKS_DIR / game_short)
     ranks_join = '\n'.join(ranks)
 
     system = 'Sort list of ranks from given game from lowest skill level to highest skill level'
-    user = f'''{gameFull}:\n{ranks_join}'''
+    user = f'''{game_full}:\n{ranks_join}'''
 
     messages = [
         {'role': 'system', 'content': system},
@@ -154,7 +154,7 @@ global'''},
 
 Output format CSV:
 entry'''
-    user = f'''{input}\n{gameFull}:\n{ranks_join}'''
+    user = f'''{input}\n{game_full}:\n{ranks_join}'''
 
     messages = [
         {'role': 'system', 'content': system},
@@ -177,7 +177,7 @@ global'''},
     response = (await complete(messages)).lower()
 
     config_ranks_join = '\n'.join(
-        f'*{gameShort}/{r}' if r == response else f'{gameShort}/{r}'
+        f'*{game_short}/{r}' if r == response else f'{game_short}/{r}'
         for r in ranks
     )
 
