@@ -1,4 +1,4 @@
-# <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
+# <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/teo/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
 
 ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/Zaczero/teodle)
 [![GitHub](https://img.shields.io/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
