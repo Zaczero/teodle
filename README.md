@@ -57,13 +57,14 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 *Updated on 26/03/2023*
 
-- Ep13 https://www.youtube.com/watch?v=2_D9oiSowj0 (newest)
+- Ep14 https://www.youtube.com/watch?v=Jjc5SB1DW2A (newest)
+- Ep13 https://www.youtube.com/watch?v=2_D9oiSowj0
 - Ep12 https://www.youtube.com/watch?v=RDM4UKYhsYw
-- Ep11 https://www.youtube.com/watch?v=9Yes19lVXvQ
 
 <details>
 <summary>Show more</summary>
 
+- Ep11 https://www.youtube.com/watch?v=9Yes19lVXvQ
 - Ep10 https://www.youtube.com/watch?v=lTmzxbdpzC4
 - Ep9 *miscount*
 - Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
