@@ -30,14 +30,18 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-- Ep12 https://www.twitch.tv/videos/1757327891?t=00h44m59s (newest)
-- Ep11 https://www.twitch.tv/videos/1755443214?t=00h37m45s
-- Ep10 https://www.twitch.tv/videos/1748843377?t=00h40m01s
+*Updated on 26/03/2023*
+
+- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s (newest)
+- Ep13 https://www.twitch.tv/videos/1757327891?t=00h44m59s
+- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
 
 <details>
 <summary>Show more</summary>
 
-- Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s
+- Ep11 https://www.twitch.tv/videos/1748843377?t=00h40m01s
+- Ep10 https://www.twitch.tv/videos/1743812126?t=00h11m50s
+- Ep9 *miscount*
 - Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
 - Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
 - Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
@@ -50,13 +54,18 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### YouTube Series
 
-- Ep10 https://www.youtube.com/watch?v=9Yes19lVXvQ (newest)
-- Ep9 https://www.youtube.com/watch?v=lTmzxbdpzC4
-- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
+*Updated on 26/03/2023*
+
+- Ep13 https://www.youtube.com/watch?v=2_D9oiSowj0 (newest)
+- Ep12 https://www.youtube.com/watch?v=RDM4UKYhsYw
+- Ep11 https://www.youtube.com/watch?v=9Yes19lVXvQ
 
 <details>
 <summary>Show more</summary>
 
+- Ep10 https://www.youtube.com/watch?v=lTmzxbdpzC4
+- Ep9 *miscount*
+- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
 - Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
 - Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 - Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
