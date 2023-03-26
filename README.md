@@ -32,13 +32,14 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 *Updated on 26/03/2023*
 
-- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s (newest)
+- Ep15 https://www.twitch.tv/videos/1764231088?t=00h46m13s (newest)
+- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s
 - Ep13 https://www.twitch.tv/videos/1757327891?t=00h44m59s
-- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
 
 <details>
 <summary>Show more</summary>
 
+- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
 - Ep11 https://www.twitch.tv/videos/1748843377?t=00h40m01s
 - Ep10 https://www.twitch.tv/videos/1743812126?t=00h11m50s
 - Ep9 *miscount*
