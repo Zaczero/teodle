@@ -2,7 +2,7 @@
 // @name        Teodle for Twitch
 // @description A handy userscript for Twitch.tv which adds some more Teodle integration
 // @author      Zaczero
-// @version     1.0.2
+// @version     1.1.0
 // @license     GNU Affero General Public License v3.0
 // @namespace   Violentmonkey Scripts
 // @match       https://www.twitch.tv/*
@@ -52,6 +52,10 @@
         </h3>
         <h5 class="teodle-score">Your score: <span id="teodle-score-stars"></span> <span id="teodle-score-number">⋯</span></h5>
         <div id="teodle-ranks"></div>
+        <div id="teodle-sign">
+            <img src="https://teodle.monicz.dev/hash/teo_sign.ddda5761.webp" alt="">
+            <span id="teodle-sign-text"></span>
+        </div>
     </div>`
 
     const rootStyle = `
@@ -60,8 +64,76 @@
         }
 
         #teodle-for-twitch {
+            position: relative;
+            overflow: hidden;
             padding: 10px 13px 12px;
             border-bottom: 1px solid rgba(128, 128, 128, 0.16);
+        }
+
+        #teodle-sign {
+            position: absolute;
+            overflow: hidden;
+            top: 18%;
+            right: -60%;
+            width: 60%;
+        }
+
+        #teodle-sign-text {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(3.2deg);
+            color: black;
+            font-weight: 900;
+            font-size: 2em;
+            width: 100%;
+            text-align: center;
+        }
+
+        @keyframes teodle-sign-in {
+            0% {
+                right: -60%;
+                transform: translateY(0);
+            }
+            16% {
+                right: -43%;
+                transform: translateY(-10%);
+            }
+            33% {
+                right: -26%;
+                transform: translateY(0);
+            }
+            50% {
+                right: -10%;
+                transform: translateY(-10%);
+            }
+            66% {
+                right: 7%;
+                transform: translateY(0);
+            }
+            83% {
+                right: 24%;
+                transform: translateY(-10%);
+            }
+            100% {
+                right: 40%;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes teodle-sign-rotate {
+            0% {
+                right: 40%;
+                transform: scaleX(1);
+            }
+            50% {
+                right: 40%;
+                transform: scaleX(-1);
+            }
+            100% {
+                right: 40%;
+                transform: scaleX(1);
+            }
         }
 
         .teodle-title {
@@ -165,6 +237,8 @@
     let scoreStarsElement = undefined
     let scoreNumberElement = undefined
     let ranksElement = undefined
+    let signElement = undefined
+    let signTextElement = undefined
 
     // utility function to create an element from html
     const createElementFromHtml = html => {
@@ -199,6 +273,8 @@
         scoreStarsElement = rootElement.querySelector('#teodle-score-stars')
         scoreNumberElement = rootElement.querySelector('#teodle-score-number')
         ranksElement = rootElement.querySelector('#teodle-ranks')
+        signElement = rootElement.querySelector('#teodle-sign')
+        signTextElement = rootElement.querySelector('#teodle-sign-text')
 
         console.info('[Teodle] Injected component')
         return true
@@ -264,6 +340,40 @@
         // check if we are already on the channel page
         if (document.location.pathname === channelBaseUrl)
             connect()
+    }
+
+    // utility function to animate the round sign
+    let lastAnimateSignRound = undefined
+    const animateSign = (round) => {
+        // skip if the round is the same
+        if (lastAnimateSignRound === round)
+            return
+
+        lastAnimateSignRound = round
+
+        // skip the first round animation
+        if (round <= 1)
+            return
+
+        signTextElement.innerText = `Round ${round}`
+
+        // enter from the right
+        signElement.style.animation = 'teodle-sign-in 3s ease-in-out forwards'
+
+        setTimeout(() => {
+            // rotate
+            signElement.style.animation = 'teodle-sign-rotate 1.5s linear forwards'
+
+            setTimeout(() => {
+                // exit to the right
+                signElement.style.animation = 'teodle-sign-in 3s ease-in-out forwards reverse'
+
+                setTimeout(() => {
+                    // reset the animation
+                    signElement.style.animation = ''
+                }, 3000)
+            }, 1500)
+        }, 3000)
     }
 
     // websocket
@@ -359,8 +469,10 @@
 
             if (obj.vote && obj.vote.clip_idx === obj.clip.clip_idx)
                 ranksElement.classList.add('teodle-ranks-locked')
-            else
+            else {
                 ranksElement.classList.remove('teodle-ranks-locked')
+                animateSign(obj.clip.clip_idx + 1)
+            }
         }
         else {
             // state: RESULTS
