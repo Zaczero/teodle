@@ -1,4 +1,4 @@
-# <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
+# <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/teo/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
 
 ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/Zaczero/teodle)
 [![GitHub](https://img.shields.io/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
@@ -30,14 +30,20 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-- Ep12 https://www.twitch.tv/videos/1757327891?t=00h44m59s (newest)
-- Ep11 https://www.twitch.tv/videos/1755443214?t=00h37m45s
-- Ep10 https://www.twitch.tv/videos/1748843377?t=00h40m01s
+*Updated on 26/03/2023*
+
+- Ep16 https://www.twitch.tv/videos/1772594285?t=01h06m37s (newest)
+- Ep15 https://www.twitch.tv/videos/1764231088?t=00h46m13s
+- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s
 
 <details>
 <summary>Show more</summary>
 
-- Ep9 https://www.twitch.tv/videos/1743812126?t=00h11m50s
+- Ep13 https://www.twitch.tv/videos/1757327891?t=00h44m59s
+- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
+- Ep11 https://www.twitch.tv/videos/1748843377?t=00h40m01s
+- Ep10 https://www.twitch.tv/videos/1743812126?t=00h11m50s
+- Ep9 *miscount*
 - Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
 - Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
 - Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
@@ -50,13 +56,20 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### YouTube Series
 
-- Ep9 https://www.youtube.com/watch?v=lTmzxbdpzC4 (newest)
-- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
-- Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
+*Updated on 26/03/2023*
+
+- Ep14 https://www.youtube.com/watch?v=Jjc5SB1DW2A (newest)
+- Ep13 https://www.youtube.com/watch?v=2_D9oiSowj0
+- Ep12 https://www.youtube.com/watch?v=RDM4UKYhsYw
 
 <details>
 <summary>Show more</summary>
 
+- Ep11 https://www.youtube.com/watch?v=9Yes19lVXvQ
+- Ep10 https://www.youtube.com/watch?v=lTmzxbdpzC4
+- Ep9 *miscount*
+- Ep8 https://www.youtube.com/watch?v=SLw8tRcXaBQ
+- Ep7 https://www.youtube.com/watch?v=oI3jhIh2u8M
 - Ep6 https://www.youtube.com/watch?v=nLFWqaHy6EM
 - Ep5 https://www.youtube.com/watch?v=fU9lOPAeA08
 - Ep4 https://www.youtube.com/watch?v=cELkMah_xTM
