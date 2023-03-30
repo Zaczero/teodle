@@ -24,6 +24,7 @@ TTV_CHANNEL = os.environ['TTV_CHANNEL']
 
 VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().split(','))
 NO_MONITOR = os.getenv('NO_MONITOR') == '1'
+NO_DOWNLOAD = os.getenv('NO_DOWNLOAD') == '1'
 DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
 
 DATA_DIR = Path('data')

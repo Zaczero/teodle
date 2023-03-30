@@ -1,5 +1,4 @@
 import asyncio
-import os
 import sys
 import traceback
 from asyncio import Event
@@ -8,7 +7,7 @@ from pathlib import Path
 from werkzeug.utils import secure_filename
 
 from clip import Clip
-from config import DOWNLOAD_DIR
+from config import DOWNLOAD_DIR, NO_DOWNLOAD
 from vote import Vote
 
 
@@ -53,6 +52,9 @@ class Downloader:
         self._load_event.set()
 
     async def loop(self) -> None:
+        if NO_DOWNLOAD:
+            return
+
         while True:
             await self._load_event.wait()
             self._load_event.clear()

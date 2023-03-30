@@ -2,7 +2,7 @@
 // @name        Teodle for Twitch
 // @description A handy userscript for Twitch.tv which adds some more Teodle integration
 // @author      Zaczero
-// @version     1.1.0
+// @version     1.1.2
 // @license     GNU Affero General Public License v3.0
 // @namespace   Violentmonkey Scripts
 // @match       https://www.twitch.tv/*
@@ -14,6 +14,10 @@
 // ==/UserScript==
 
 (() => {
+
+    const version = '1.1.2'
+    const websocketUrl = `wss://teodle.monicz.dev/ws?version=${version}`
+    // const websocketUrl = `wss://teodle-beta.monicz.dev/userscript/ws?version=${version}`
 
     // utility function to get a cookie by name
     const getCookie = name => {
@@ -65,7 +69,6 @@
 
         #teodle-for-twitch {
             position: relative;
-            overflow: hidden;
             padding: 10px 13px 12px;
             border-bottom: 1px solid rgba(128, 128, 128, 0.16);
         }
@@ -166,7 +169,7 @@
 
         .teodle-rank {
             width: 100%;
-            padding: .4em .5em .25em;
+            padding: .35em .5em .2em;
             border: 1px solid rgba(128, 128, 128, 0.16);
         }
 
@@ -358,11 +361,11 @@
         signTextElement.innerText = `Round ${round}`
 
         // enter from the right
-        signElement.style.animation = 'teodle-sign-in 3s ease-in-out forwards'
+        signElement.style.animation = 'teodle-sign-in 2.9s ease-in-out forwards'
 
         setTimeout(() => {
             // rotate
-            signElement.style.animation = 'teodle-sign-rotate 1.5s linear forwards'
+            signElement.style.animation = 'teodle-sign-rotate 1.3s linear forwards'
 
             setTimeout(() => {
                 // exit to the right
@@ -372,8 +375,8 @@
                     // reset the animation
                     signElement.style.animation = ''
                 }, 3000)
-            }, 1500)
-        }, 3000)
+            }, 1300)
+        }, 2900)
     }
 
     // websocket
@@ -393,7 +396,7 @@
         }
 
         // create a new websocket
-        ws = new WebSocket('wss://teodle.monicz.dev/ws')
+        ws = new WebSocket(websocketUrl)
         ws.onopen = onopen
         ws.onmessage = onmessage
         ws.onclose = onclose
