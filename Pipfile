@@ -17,6 +17,7 @@ timeago = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 werkzeug = "*"
 yt-dlp = "*"
+tenacity = "*"
 
 [dev-packages]
 autopep8 = "*"

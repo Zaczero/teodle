@@ -52,16 +52,14 @@
         </div>
     </div>
 
-    {% if vote.comment %}
+    {% if not vote.has_next_clip %}
     <div class="card mb-3">
-        <div class="card-body comment px-2 py-3">
-            {% for line in vote.comment %}
-                <p>{{ line }}</p>
-            {% endfor %}
+        <div id="congratulate" class="card-body comment px-2 py-3">
+            Loading...
         </div>
         <div class="card-footer text-end small py-1">
             <p class="mb-0">
-                Insights 💡
+                ≋ M ≋ V ≋ P ≋
             </p>
         </div>
     </div>
@@ -387,6 +385,19 @@
             if (ws.readyState === WebSocket.OPEN)
                 ws.close()
         }, 3 * 60 * 1000)
+
+        /* fetch congratulate */
+        const congratulateEl = document.getElementById('congratulate')
+
+        fetch('/congratulate')
+            .then(res => res.json())
+            .then(obj => {
+                congratulateEl.innerText = obj.content
+            })
+            .catch(err => {
+                console.error(err)
+                congratulateEl.innerText = 'Congratulations!'
+            })
     {% endif %}
 
 </script>

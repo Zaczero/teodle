@@ -1,4 +1,5 @@
 import os
+import re
 from asyncio import create_task, sleep
 from datetime import datetime
 from functools import cache
@@ -14,6 +15,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 import twitch_userscript
+from ai import complete
 from blacklist import Blacklist
 from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR,
                     UI_CONFIG)
@@ -142,6 +144,26 @@ async def next_clip(clip_idx: int = Form(), testing: bool = Form(False)):
             set_vote(Vote(CLIPS_PATH))
 
     return INDEX_REDIRECT
+
+
+@app.get('/congratulate')
+async def congratulate() -> JSONResponse:
+    # ensure the client state
+    if not vote.has_next_clip and vote.state == VoteState.RESULTS:
+        system = \
+            "You write an insanely creative congratulations for the given username - it's a reward for winning the game. " \
+            "The congratulations message must rhyme. " \
+            "You must always incorporate the username in an insanely creative way. " \
+            "You write about 3-4 sentences and use a newline separator. " \
+            "Your message ends with a simple complementary ASCII art."
+
+        content = await complete(system, vote.result.top_users[0][1].username, temperature=0.8, max_tokens=512)
+
+        return JSONResponse({
+            'content': content
+        })
+
+    raise HTTPException(500, 'Bad state')
 
 
 @app.get('/config')
