@@ -6,14 +6,15 @@ from pprint import pprint
 
 from openai import ChatCompletion
 
-from config import CACHE_DIR, OPENAI_KEY, RANK_FILE_EXT, RANKS_DIR
+from config import (CACHE_DIR, OPENAI_KEY, RANK_FILE_CONVERT_EXT,
+                    RANK_FILE_EXT, RANKS_DIR)
 
 
 def get_dir_names(dir_path: Path) -> list[str]:
     return list(path.name for path in dir_path.iterdir() if path.is_dir())
 
 
-def get_file_names(dir_path: Path, file_types: set[str] = {RANK_FILE_EXT}) -> list[str]:
+def get_file_names(dir_path: Path, file_types: set[str] = {RANK_FILE_EXT, *RANK_FILE_CONVERT_EXT}) -> list[str]:
     return list(set(path.with_suffix("").name.lower() for path in dir_path.iterdir() if path.suffix in file_types))
 
 
