@@ -147,6 +147,9 @@ global'''},
     ranks = [l for l in lines if l in ranks] + [r for r in ranks if r not in lines]
     ranks_join = '\n'.join(ranks)
 
+    # make ranks needed checking stand out
+    ranks = [r if r in lines else f'{r}.checkme' for r in ranks]
+
     input = input.replace(username, '')
     input = re.sub(r'\s+', ' ', input).strip()
 
