@@ -307,6 +307,3 @@ poetry.toml
 data/boards/*
 data/cache/*
 data/download/*
-
-# TODO: make the script production ready
-scripts/userscript-update.sh
