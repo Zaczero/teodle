@@ -188,3 +188,8 @@ td.expand {
 .comment p:last-child {
     margin-bottom: 0;
 }
+
+.userscore:hover:after {
+    content: attr(score);
+    display: block;
+}

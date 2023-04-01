@@ -25,7 +25,7 @@
                             {{ top_user[1].username }}
                             {% endif %}
                         </td>
-                        <td class="expand">
+                        <td class="expand userscore" score={{vote.board.get_scores_for_user_as_str(top_user[1].username)}}>
                             {{ top_user[1].stars }} ✕ ⭐️
                         </td>
                     </tr>
