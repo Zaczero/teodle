@@ -189,7 +189,19 @@ td.expand {
     margin-bottom: 0;
 }
 
-.userscore:hover:after {
-    content: attr(score);
-    display: block;
+.summary-wrapper {
+    max-height: 30em;
+    overflow-y: auto;
+}
+
+.summary-wrapper thead {
+    position: sticky;
+    top: 0;
+    background: white;
+    box-shadow: 0 1px 0 rgba(128, 128, 128, .5);
+    z-index: 1;
+}
+
+.summary-wrapper thead th {
+    border-bottom: unset;
 }
