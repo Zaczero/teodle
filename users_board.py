@@ -217,3 +217,12 @@ class UsersBoard:
             f.write(json)
 
         print(f'[BOARD] Saved scores for clip {clip_idx} to {path}')
+
+    def get_scores_for_user(self, username: str) -> dict[Clip, int]:
+        dict = {}
+        for clip, scores in self.scores.items():
+            user_score = [x.stars for x in scores if x.username == username]
+            dict[clip] = user_score[0] if len(user_score) > 0 else 0
+        return dict
+
+    def get_scores_for_user_as_str(self, username: str) -> str: return ','.join(map(str, self.get_scores_for_user(username).values()))
