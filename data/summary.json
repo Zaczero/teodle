@@ -1,50 +1,145 @@
 [
   {
-    "date": "02 Apr 2023",
-    "streamer_stars": 2,
-    "users_stars": 10,
-    "top_user_name": "<none>",
-    "top_user_stars": 0,
-    "top_user_stars_history": [
-      "-"
-    ],
-    "max_stars": 10
-  },
-  {
-    "date": "02 Apr 2023",
-    "streamer_stars": 1,
-    "users_stars": 10,
-    "top_user_name": "<none>",
-    "top_user_stars": 0,
-    "top_user_stars_history": [
-      "-"
-    ],
-    "max_stars": 10
-  },
-  {
-    "date": "02 Apr 2023",
-    "streamer_stars": 2,
-    "users_stars": 10,
-    "top_user_name": "<none>",
-    "top_user_stars": 0,
-    "top_user_stars_history": [
-      "-"
-    ],
-    "max_stars": 10
-  },
-  {
-    "date": "02 Apr 2023",
-    "streamer_stars": 3,
+    "date": "01 Apr 2023",
+    "streamer_stars": 6,
     "users_stars": 7,
-    "top_user_name": "zaczero",
-    "top_user_stars": 1,
-    "top_user_stars_history": [
-      "-",
-      "0",
-      "-",
-      "1",
-      "-"
-    ],
+    "top_user_name": "mrhoovy",
+    "top_user_stars": 10,
+    "top_user_stars_history": [2, 2, 0, 2, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "30 Mar 2023",
+    "streamer_stars": 6,
+    "users_stars": 7,
+    "top_user_name": "spasky3",
+    "top_user_stars": 12,
+    "top_user_stars_history": [2, 2, 2, 2, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "22 Mar 2023",
+    "streamer_stars": 5,
+    "users_stars": 6,
+    "top_user_name": "totallyahacker",
+    "top_user_stars": 11,
+    "top_user_stars_history": [2, 1, 2, 2, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "13 Mar 2023",
+    "streamer_stars": 5,
+    "users_stars": 8,
+    "top_user_name": "antwanos",
+    "top_user_stars": 11,
+    "top_user_stars_history": [2, 1, 2, 2, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "11 Mar 2023",
+    "streamer_stars": 5,
+    "users_stars": 7,
+    "top_user_name": "mrcheese2k3",
+    "top_user_stars": 8,
+    "top_user_stars_history": [2, 0, 2, 0, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "06 Mar 2023",
+    "streamer_stars": 6,
+    "users_stars": 8,
+    "top_user_name": "monke_0",
+    "top_user_stars": 11,
+    "top_user_stars_history": [2, 2, 1, 2, 2, 2],
+    "max_stars": 12
+  },
+  {
+    "date": "04 Mar 2023",
+    "streamer_stars": 1,
+    "users_stars": 4,
+    "top_user_name": "vikke57",
+    "top_user_stars": 8,
+    "top_user_stars_history": [2, 2, 1, 2, 1, 0],
+    "max_stars": 12
+  },
+  {
+    "date": "25 Feb 2023",
+    "streamer_stars": 9,
+    "users_stars": 12,
+    "top_user_name": "crypticm1",
+    "top_user_stars": 16,
+    "max_stars": 18
+  },
+  {
+    "date": "20 Feb 2023",
+    "streamer_stars": 7,
+    "users_stars": 5,
+    "top_user_name": "weebysoph",
+    "top_user_stars": 10,
+    "max_stars": 12
+  },
+  {
+    "date": "14 Feb 2023",
+    "streamer_stars": 5,
+    "users_stars": 5,
+    "top_user_name": "lykus00",
+    "top_user_stars": 7,
+    "max_stars": 10
+  },
+  {
+    "date": "5 Feb 2023",
+    "streamer_stars": 4,
+    "users_stars": 4,
+    "top_user_name": "capitolhogettes",
+    "top_user_stars": 6,
+    "max_stars": 10
+  },
+  {
+    "date": "28 Jan 2023",
+    "streamer_stars": 7,
+    "users_stars": 7,
+    "top_user_name": "ripmegx",
+    "top_user_stars": 8,
+    "max_stars": 10
+  },
+  {
+    "date": "22 Jan 2023",
+    "streamer_stars": 5,
+    "users_stars": 6,
+    "top_user_name": "onepoppyboi",
+    "top_user_stars": 7,
+    "max_stars": 10
+  },
+  {
+    "date": "21 Jan 2023",
+    "streamer_stars": 4,
+    "users_stars": 4,
+    "top_user_name": "toto222",
+    "top_user_stars": 6,
+    "max_stars": 10
+  },
+  {
+    "date": "19 Jan 2023",
+    "streamer_stars": 7,
+    "users_stars": 7,
+    "top_user_name": "xxlisatje16",
+    "top_user_stars": 9,
+    "max_stars": 10
+  },
+  {
+    "date": "18 Jan 2023",
+    "streamer_stars": 5,
+    "users_stars": 5,
+    "top_user_name": "trayel1",
+    "top_user_stars": 7,
+    "max_stars": 10
+  },
+  {
+    "date": "16 Jan 2023",
+    "streamer_stars": 4,
+    "users_stars": 7,
+    "top_user_name": "",
+    "top_user_stars": 0,
     "max_stars": 10
   }
 ]
