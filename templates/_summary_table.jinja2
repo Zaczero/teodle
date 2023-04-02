@@ -30,17 +30,25 @@
                             <span class="winner">Winner</span>
                             {% endif %}
                         </td>
-                        <td class="text-end">
+                        <td class="text-end {{ 'star-glow' if entry.top_user_stars == entry.max_stars else '' }}">
                             {% if entry.top_user_stars > 0 %}
+
                             <span class="me-2">
                                 {{ entry.top_user_name }}
                             </span>
+
                             <span class="me-1">
                                 {{ entry.top_user_stars }}
                                 of
                                 {{ entry.max_stars }}
                             </span>
+
+                            {% if entry.top_user_stars == entry.max_stars %}
+                            🌟
+                            {% else %}
                             ⭐️
+                            {% endif %}
+
                             {% endif %}
                         </td>
                         <td class="font-monospace">
