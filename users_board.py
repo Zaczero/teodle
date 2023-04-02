@@ -2,7 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from random import random
 from time import time
-from typing import NamedTuple
+from typing import Generator, NamedTuple
 
 import orjson
 
@@ -25,6 +25,7 @@ class UserScore:
     delay: float
     order: int
     stars: int
+    stars_history: tuple[str, ...]
 
     @classmethod
     def dummy(cls) -> 'UserScore':
@@ -32,7 +33,8 @@ class UserScore:
             username='<none>',
             delay=0,
             order=0,
-            stars=0
+            stars=0,
+            stars_history=('-',)
         )
 
 
@@ -131,22 +133,31 @@ class UsersBoard:
         # save the scores
         self._save_clip_scores(clip_idx)
 
-        # group all scores into: username -> list of the user scores
-        grouped = defaultdict(list)
+        # group all scores into: username -> dict of: clip_idx -> user score
+        grouped = defaultdict(dict)
 
-        for clip_scores in self.scores.values():
+        for clip_, clip_scores in self.scores.items():
+            clip_idx = self.clips.index(clip_)
+
             for user_score in clip_scores:
-                grouped[user_score.username].append(user_score)
+                grouped[user_score.username][clip_idx] = user_score
+
+        # helper function to build the stars history which handles clips in which the user did not vote
+        def build_stars_history(scores_dict: dict[int, UserScore]) -> Generator[str, None, None]:
+            return (
+                str(scores_dict[idx].stars) if idx in scores_dict else '-'
+                for idx in range(clip_idx + 1))
 
         # calculate the total score for each user
         users_scores = [
             UserScore(
                 username=username,
-                delay=sum(s.delay for s in scores),
-                order=sum(s.order for s in scores),
-                stars=sum(s.stars for s in scores)
+                delay=sum(s.delay for s in scores_dict.values()),
+                order=sum(s.order for s in scores_dict.values()),
+                stars=sum(s.stars for s in scores_dict.values()),
+                stars_history=tuple(build_stars_history(scores_dict))
             )
-            for username, scores in grouped.items()
+            for username, scores_dict in grouped.items()
         ]
 
         # find the max order (we are doing an inverse sort)
@@ -193,7 +204,8 @@ class UsersBoard:
                 username=username,
                 delay=user_vote.delay,
                 order=user_order,
-                stars=user_stars
+                stars=user_stars,
+                stars_history=tuple()  # it doesn't make sense to create history for a single clip
             ))
 
         self.scores[clip] = clip_scores
@@ -217,12 +229,3 @@ class UsersBoard:
             f.write(json)
 
         print(f'[BOARD] Saved scores for clip {clip_idx} to {path}')
-
-    def get_scores_for_user(self, username: str) -> dict[Clip, int]:
-        dict = {}
-        for clip, scores in self.scores.items():
-            user_score = [x.stars for x in scores if x.username == username]
-            dict[clip] = user_score[0] if len(user_score) > 0 else 0
-        return dict
-
-    def get_scores_for_user_as_str(self, username: str) -> str: return ','.join(map(str, self.get_scores_for_user(username).values()))

@@ -14,6 +14,7 @@ class SummaryEntry:
     users_stars: int
     top_user_name: str
     top_user_stars: int
+    top_user_stars_history: tuple[str, ...] = ()
     max_stars: int
 
 
@@ -32,6 +33,7 @@ def update_summary(vote: Vote) -> None:
         users_stars=vote.total_users_stars,
         top_user_name=top_user[1].username,
         top_user_stars=top_user[1].stars,
+        top_user_stars_history=top_user[1].stars_history,
         max_stars=len(vote.clips) * MAX_STARS
     ))
 

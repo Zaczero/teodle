@@ -17,8 +17,8 @@ from starlette.templating import Jinja2Templates
 import twitch_userscript
 from ai import complete
 from blacklist import Blacklist
-from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, RANKS_DIR,
-                    UI_CONFIG)
+from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, NO_AUTO_FINISH,
+                    RANKS_DIR, UI_CONFIG)
 from config_generator import generate_config
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
@@ -254,5 +254,8 @@ class WSFinish(WSRoute):
         print('[WSFinish] Connection established')
 
     async def on_disconnect(self) -> None:
+        if NO_AUTO_FINISH:
+            return
+
         print('[WSFinish] Finishing the game')
         await next_clip(self.clip_idx)
