@@ -111,7 +111,7 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
     # ensure the client state
     if vote.clip_idx == clip_idx and vote.state in {VoteState.VOTING}:
         vote.cast_streamer_vote(rank)
-        await vote.end_clip()
+        await vote.end_vote()
 
         if not vote.has_next_clip:
             update_summary(vote)
@@ -135,7 +135,7 @@ async def next_clip(clip_idx: int = Form(), testing: bool = Form(False)):
                 if not twitch_monitor.run_loop.is_set():
                     await twitch_monitor.connect()
 
-            vote.begin_next_clip()
+            vote.begin_next_state()
 
         else:
             async with twitch_monitor.lock:

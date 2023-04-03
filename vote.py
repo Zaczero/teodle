@@ -63,7 +63,7 @@ class Vote:
     def total_users_votes(self) -> int:
         return self.board.total_votes(self.clip_idx)
 
-    def begin_next_clip(self) -> bool:
+    def begin_next_state(self) -> bool:
         assert self.state in {VoteState.IDLE, VoteState.RESULTS}, 'Invalid state'
 
         self.clip_idx += 1
@@ -80,7 +80,7 @@ class Vote:
         publish(TYPE_CLIP_STATE, ClipState(self))
         return self.clip_idx >= 0
 
-    async def end_clip(self) -> None:
+    async def end_vote(self) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
         assert self.teo_rank is not None, 'Invalid state (teo_rank)'
 
