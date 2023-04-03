@@ -6,6 +6,7 @@ from pprint import pprint
 
 from openai import ChatCompletion
 
+import ai
 from config import (CACHE_DIR, OPENAI_KEY, RANK_FILE_CONVERT_EXT,
                     RANK_FILE_EXT, RANKS_DIR)
 
@@ -112,12 +113,17 @@ If unsuccessful, print an error'''
     ranks = get_file_names(RANKS_DIR / game_short)
     ranks_join = '\n'.join(ranks)
 
-    system = 'Sort list of ranks from given game from lowest skill level to highest skill level'
-    user = f'''{game_full}:\n{ranks_join}'''
+    if game_full == 'Rainbow Six Siege':
+        response = 'copper\nbronze\nsilver\ngold\nplatinum\nemerald\ndiamond\nchampions'
+    elif game_full == 'Valorant':
+        response = 'iron\nbronze\nsilver\ngold\nplatinum\ndiamond\nascendant\nimmortal\nradiant'
+    else:
+        system = 'Sort list of ranks from given game from lowest skill level to highest skill level.'
+        user = f'{game_full}:\n{ranks_join}'
 
-    messages = [
-        {'role': 'system', 'content': system},
-        {'role': 'user', 'content': '''Counter-Strike: Global Offensive:
+        response = await ai.complete(
+            system,
+            '''Counter-Strike: Global Offensive:
 silverelite
 global
 mge
@@ -126,8 +132,8 @@ supreme
 dmg
 lem
 mg
-nova'''},
-        {'role': 'assistant', 'content': '''silver
+nova''',
+            '''silver
 silverelite
 nova
 mg
@@ -135,11 +141,10 @@ mge
 dmg
 lem
 supreme
-global'''},
-        {'role': 'user', 'content': user},
-    ]
+global''',
+            user,
+            max_tokens=256)
 
-    response = await complete(messages)
     lines = response.splitlines()
 
     if len(lines) < 0.9 * len(ranks):
