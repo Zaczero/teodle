@@ -1,15 +1,24 @@
 {% macro new() %}
-<div class="mt-5 mb-4">
+<div class="d-flex justify-content-center mt-5 mb-4">
     <form class="d-inline me-3" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-        <input type="submit" class="btn btn-lg btn-primary" value="Start game">
+        <button type="submit" class="btn btn-lg btn-primary start-game">
+            <span class="me-2">Play as <b>{{ STREAMER_NAME }}</b></span>
+            <img src="/static/img/{{ STREAMER_ICON }}" height="36">
+        </button>
     </form>
 
-    <form class="d-inline" action="/next_clip" method="post">
+    {% for i, friend in FRIENDS | enumerate %}
+    <form class="d-inline me-3" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
-        <input type="hidden" name="testing" value="True">
-        <input type="submit" class="btn btn-sm btn-outline-secondary" value="Test game">
+        <input type="hidden" name="friend_idx" value="{{ i }}">
+        <button type="submit" class="btn btn-lg btn-primary start-game">
+            <span class="me-2">Play as <b>{{ friend.name }}</b></span>
+            <img src="/static/img/{{ friend.icon }}" height="36">
+        </button>
     </form>
+    {% endfor %}
+
 </div>
 
 <div class="text-secondary small">
@@ -20,6 +29,12 @@
     ✓
     {% endif %}
     <a class="text-secondary" href="/config">Configuration</a>
+    •
+    <form class="d-inline" action="/next_clip" method="post">
+        <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
+        <input type="hidden" name="testing" value="True">
+        <input type="submit" class="btn btn-sm btn-link p-0" value="Test game">
+    </form>
     •
     Last modified: {{ config_mtime }}
 </div>

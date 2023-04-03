@@ -34,6 +34,7 @@ app.mount('/ranks', StaticFiles(directory=RANKS_DIR), name='ranks')
 app.mount('/download', StaticFiles(directory=DOWNLOAD_DIR), name='download')
 
 tmpl = Jinja2Templates(directory='templates')
+tmpl.env.filters['enumerate'] = enumerate
 
 
 vote: Vote

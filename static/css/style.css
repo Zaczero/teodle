@@ -209,3 +209,9 @@ td.expand {
 .star-glow {
     text-shadow: 0 0 10px rgb(255, 166, 0, .8)
 }
+
+.start-game {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
