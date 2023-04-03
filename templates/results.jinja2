@@ -25,7 +25,7 @@
                     </h3>
                 </div>
                 <div class="card-body py-1">
-                    {{ your_vote.new(vote.teo_rank) }}
+                    {{ your_vote.new(vote.streamer_rank) }}
                 </div>
             </div>
 
@@ -224,7 +224,7 @@
         {
             type: 'line',
             scaleID: 'x',
-            value: '{{ vote.teo_rank.title }}',
+            value: '{{ vote.streamer_rank.title }}',
 
             borderWidth: 0,
 

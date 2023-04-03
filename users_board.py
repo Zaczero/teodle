@@ -77,25 +77,25 @@ class UsersBoard:
             return False
 
         vote = vote.lower()
-        vote_delay = time() - clip_time
-        user_rank = next((r for r in clip.ranks if r.text == vote), None)
+        delay = time() - clip_time
+        rank = next((r for r in clip.ranks if r.text == vote), None)
 
         # use vote as a prefix match for the rank
-        if user_rank is None and len(vote) >= 3:
+        if rank is None and len(vote) >= 3:
             matched_ranks = list(r for r in clip.ranks if r.text.startswith(vote))
 
             # if there is only one match, use it
             if len(matched_ranks) == 1:
                 vote = matched_ranks[0].text
-                user_rank = matched_ranks[0]
+                rank = matched_ranks[0]
 
-        if user_rank is None:
+        if rank is None:
             return False
 
         # register the vote
         self.state[clip][username] = UserVote(
-            delay=vote_delay,
-            rank=user_rank
+            delay=delay,
+            rank=rank
         )
 
         publish(TYPE_USER_VOTE_STATE(username), UserVoteState(vote=vote, clip_idx=clip_idx))
@@ -105,7 +105,7 @@ class UsersBoard:
         clip = self.clips[clip_idx]
         return len(self.state[clip])
 
-    def calculate_clip_result(self, clip_idx: int, teo_rank: Rank) -> ClipResult:
+    def calculate_clip_result(self, clip_idx: int, streamer_rank: Rank) -> ClipResult:
         clip = self.clips[clip_idx]
         votes_per_rank = {r: 0 for r in clip.ranks}
         users_rank_users = {r: [] for r in clip.ranks}
@@ -124,7 +124,7 @@ class UsersBoard:
         users_rank_percentages = {k: v / non_zero_total_votes for k, v in votes_per_rank.items()}
 
         indices = clip.indices()
-        streamer_stars = calculate_stars(indices[teo_rank], clip.answer_idx)
+        streamer_stars = calculate_stars(indices[streamer_rank], clip.answer_idx)
         users_stars = calculate_stars(indices[users_rank], clip.answer_idx)
 
         # calculate scores for the current clip

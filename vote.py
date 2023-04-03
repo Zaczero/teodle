@@ -21,7 +21,7 @@ class Vote:
     clip_idx: int = -1
     clip_time: float = 0
     result: ClipResult | None = None
-    teo_rank: Rank | None = None
+    streamer_rank: Rank | None = None
 
     total_streamer_stars: int = 0
     total_users_stars: int = 0
@@ -73,7 +73,7 @@ class Vote:
             self.clip_idx = -1
             self.state = VoteState.IDLE
         else:
-            self.teo_rank = None
+            self.streamer_rank = None
             self.state = VoteState.VOTING
 
         publish(TYPE_TOTAL_VOTES, 0)
@@ -82,14 +82,14 @@ class Vote:
 
     async def end_vote(self) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
-        assert self.teo_rank is not None, 'Invalid state (teo_rank)'
+        assert self.streamer_rank is not None, 'Invalid state (streamer_rank)'
 
         for _ in range(DUMMY_VOTES):
             self.cast_user_vote(str(random()), choice(list(r.text for r in self.clip.ranks)))
 
         self.state = VoteState.RESULTS
 
-        self.result = self.board.calculate_clip_result(self.clip_idx, self.teo_rank)
+        self.result = self.board.calculate_clip_result(self.clip_idx, self.streamer_rank)
 
         self.total_streamer_stars += self.result.streamer_stars
         self.total_users_stars += self.result.users_stars
@@ -99,11 +99,11 @@ class Vote:
         assert self.state == VoteState.VOTING, 'Invalid state'
 
         vote = vote.lower()
-        teo_rank = next((r for r in self.clip.ranks if r.text == vote), None)
+        rank = next((r for r in self.clip.ranks if r.text == vote), None)
 
-        assert teo_rank is not None, f'Invalid vote: {vote}'
+        assert rank is not None, f'Invalid vote: {vote}'
 
-        self.teo_rank = teo_rank
+        self.streamer_rank = rank
 
     def cast_user_vote(self, username: str, vote: str) -> bool:
         if self.state != VoteState.VOTING:
