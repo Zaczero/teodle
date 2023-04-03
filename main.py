@@ -155,9 +155,19 @@ async def congratulate() -> JSONResponse:
             "The congratulations message must rhyme. " \
             "You must always incorporate the username in an insanely creative way. " \
             "You write about 3-4 sentences and use a newline separator. " \
-            "Your message ends with a simple complementary ASCII art."
+            "Your message ends with a random simple complementary ASCII art."
 
-        content = await complete(system, vote.result.top_users[0][1].username, temperature=0.8, max_tokens=512)
+        content = await complete(
+            system,
+            'hobocutie',
+            "Congratulations hobocutie, you're truly a beauty,\n"
+            "You played the game with grace and duty,\n"
+            "Now take a bow and show off that cutie booty!\n"
+            "\n"
+            "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+            vote.result.top_users[0][1].username,
+            temperature=0.8,
+            max_tokens=512)
 
         return JSONResponse({
             'content': content
