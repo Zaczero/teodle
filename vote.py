@@ -6,7 +6,6 @@ from time import time
 from blacklist import Blacklist
 from clip import Clip
 from clip_state import ClipState
-from commentator import Commentator
 from config import BLACKLIST_PATH, DUMMY_VOTES
 from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, empty_user_state, publish
 from rank import Rank
@@ -17,7 +16,6 @@ from vote_state import VoteState
 class Vote:
     clips: list[Clip]
     board: UsersBoard
-    commentator: Commentator
 
     state: VoteState = VoteState.IDLE
     clip_idx: int = -1
@@ -44,7 +42,6 @@ class Vote:
 
         self.clips = [Clip(t) for t in text.split('\n\n') if t]
         self.board = UsersBoard(self.clips)
-        self.commentator = Commentator()
 
         for clip in self.clips:
             assert not blacklist.is_blacklisted(clip.credits), f'Blacklisted user found: {clip.credits}'
@@ -97,11 +94,6 @@ class Vote:
         self.total_streamer_stars += self.result.streamer_stars
         self.total_users_stars += self.result.users_stars
         publish(TYPE_CLIP_STATE, ClipState(self))
-
-        # None in case the redirect happens before the comment is ready
-        self.comment = None
-        # temporarily disabled, further work needed
-        # self.comment = await self.commentator.comment(self)
 
     def cast_streamer_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'
