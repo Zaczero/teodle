@@ -30,12 +30,12 @@
     {% endif %}
     <a class="text-secondary" href="/config">Configuration</a>
     •
+    Last modified: {{ config_mtime }}
+    •
     <form class="d-inline" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
         <input type="hidden" name="testing" value="True">
         <input type="submit" class="btn btn-sm btn-link p-0" value="Test game">
     </form>
-    •
-    Last modified: {{ config_mtime }}
 </div>
 {% endmacro %}
