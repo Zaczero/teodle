@@ -307,3 +307,4 @@ poetry.toml
 data/boards/*
 data/cache/*
 data/download/*
+data/db.json

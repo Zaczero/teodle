@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import NamedTuple
 
 import openai
+from tinydb import TinyDB
+
+from orjson_storage import ORJSONStorage
 
 
 class FriendConfig(NamedTuple):
@@ -52,27 +55,27 @@ DUMMY_VOTES = int(os.getenv('DUMMY_VOTES', '0'))
 DATA_DIR = Path('data')
 DATA_DIR.mkdir(exist_ok=True)
 
-CLIPS_PATH = DATA_DIR / Path('clips.txt')
-BLACKLIST_PATH = DATA_DIR / Path('blacklist.txt')
+CLIPS_PATH = DATA_DIR / 'clips.txt'
+BLACKLIST_PATH = DATA_DIR / 'blacklist.txt'
+DB_PATH = DATA_DIR / 'db.json'
 
 SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '5'))
-SUMMARY_PATH = DATA_DIR / Path('summary.json')
 
 # ensure proper file permissions
-for file in [CLIPS_PATH, BLACKLIST_PATH, SUMMARY_PATH]:
+for file in [CLIPS_PATH, BLACKLIST_PATH, DB_PATH]:
     with open(file, 'a+') as f:
         pass
 
-CACHE_DIR = DATA_DIR / Path('cache')
+CACHE_DIR = DATA_DIR / 'cache'
 CACHE_DIR.mkdir(exist_ok=True)
 
-RANKS_DIR = DATA_DIR / Path('ranks')
+RANKS_DIR = DATA_DIR / 'ranks'
 RANKS_DIR.mkdir(exist_ok=True)
 
-DOWNLOAD_DIR = DATA_DIR / Path('download')
+DOWNLOAD_DIR = DATA_DIR / 'download'
 DOWNLOAD_DIR.mkdir(exist_ok=True)
 
-BOARDS_DIR = DATA_DIR / Path('boards')
+BOARDS_DIR = DATA_DIR / 'boards'
 BOARDS_DIR.mkdir(exist_ok=True)
 
 # ensure proper directory permissions
@@ -131,3 +134,5 @@ for i in itertools.count():
         channel=channel))
 
 print(f'[CONFIG] Loaded 1+{len(FRIENDS) - 1} friend profiles')
+
+DB = TinyDB(DB_PATH, storage=ORJSONStorage)

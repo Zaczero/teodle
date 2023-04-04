@@ -13,6 +13,7 @@ from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
+import migration
 import twitch_userscript
 from ai import complete
 from blacklist import Blacklist
@@ -54,6 +55,7 @@ set_vote(Vote(CLIPS_PATH))
 
 @app.on_event('startup')
 async def startup() -> None:
+    migration.run()
     create_task(downloader.loop())
     create_task(twitch_monitor.loop())
 

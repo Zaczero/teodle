@@ -18,6 +18,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 werkzeug = "*"
 yt-dlp = "*"
 tenacity = "*"
+tinydb = "*"
 
 [dev-packages]
 autopep8 = "*"
