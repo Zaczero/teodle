@@ -1,8 +1,10 @@
+from dataclasses import asdict
 from datetime import datetime
 
 import orjson
 
-from config import DATA_DIR, DB
+from config import DATA_DIR, DB, TTV_CHANNEL
+from summary import FriendState, TopUser
 
 
 def run() -> None:
@@ -21,3 +23,28 @@ def run() -> None:
             # parse date string to timestamp
             entry['date'] = int(datetime.strptime(entry['date'], '%d %b %Y').timestamp())
             summary_table.update(entry, doc_ids=[entry.doc_id])
+
+    # migrate top_user data
+    summary_table = DB.table('summary')
+    for entry in summary_table.all():
+        if 'friend_states' not in entry:
+            entry['friend_states'] = {
+                TTV_CHANNEL: asdict(FriendState(
+                    date=entry['date'],
+                    streamer_stars=entry['streamer_stars'],
+                    users_stars=entry['users_stars'],
+                    top_user=TopUser(
+                        username=entry['top_user_name'],
+                        stars=entry['top_user_stars'],
+                        stars_history=entry.get('top_user_stars_history', tuple())
+                    )
+                ))
+            }
+
+            entry.pop('streamer_stars')
+            entry.pop('users_stars')
+            entry.pop('top_user_name')
+            entry.pop('top_user_stars')
+            entry.pop('top_user_stars_history', None)
+            summary_table.remove(doc_ids=[entry.doc_id])
+            summary_table.insert(entry)

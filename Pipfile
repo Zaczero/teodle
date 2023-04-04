@@ -19,6 +19,7 @@ werkzeug = "*"
 yt-dlp = "*"
 tenacity = "*"
 tinydb = "*"
+dacite = "*"
 
 [dev-packages]
 autopep8 = "*"
