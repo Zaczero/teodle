@@ -1,5 +1,4 @@
 import os
-import re
 from asyncio import create_task, sleep
 from datetime import datetime
 from functools import cache
@@ -17,8 +16,8 @@ from starlette.templating import Jinja2Templates
 import twitch_userscript
 from ai import complete
 from blacklist import Blacklist
-from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, NO_AUTO_FINISH,
-                    RANKS_DIR, UI_CONFIG)
+from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, FRIENDS,
+                    NO_AUTO_FINISH, RANKS_DIR, UI_CONFIG)
 from config_generator import generate_config
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
@@ -64,7 +63,7 @@ def default_context(request: Request) -> dict:
         'request': request,
         'css_mtime': int(os.stat('static/css/style.css').st_mtime),
         'vote': vote
-    } | UI_CONFIG
+    } | vote.friend_config.ui_config()
 
 
 def clips_mtime() -> str:
@@ -121,7 +120,7 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
 
 
 @app.post('/next_clip')
-async def next_clip(clip_idx: int = Form(), testing: bool = Form(False)):
+async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None), testing: bool = Form(False)):
     global vote
 
     # ensure the client state
@@ -130,11 +129,12 @@ async def next_clip(clip_idx: int = Form(), testing: bool = Form(False)):
 
             # start of the game
             if vote.clip_idx == -1:
-                toggle_subscriptions(enabled=not testing)
+                assert friend_idx is not None
+                vote.friend_config = FRIENDS[friend_idx]
+                toggle_subscriptions(enabled=not testing)  # TODO: compatibility
 
             async with twitch_monitor.lock:
-                if not twitch_monitor.run_loop.is_set():
-                    await twitch_monitor.connect()
+                await twitch_monitor.connect(vote.friend_config.channel)
 
             vote.begin_next_state()
 

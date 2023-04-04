@@ -5,7 +5,7 @@ import websockets
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.client import WebSocketClientProtocol
 
-from config import NO_MONITOR, TTV_CHANNEL, TTV_TOKEN, TTV_USERNAME
+from config import NO_MONITOR, TTV_TOKEN, TTV_USERNAME
 from utils import normalize_username
 from vote import Vote
 
@@ -15,17 +15,19 @@ class TwitchMonitor:
     run_loop = Event()
 
     _vote: Vote
+    _channel: str = ''
 
     _socket: WebSocketClientProtocol | None = None
 
     def load(self, vote: Vote) -> None:
         self._vote = vote
 
-    async def disconnect(self) -> None:
-        if NO_MONITOR:
-            return
+    async def reconnect(self) -> None:
+        await self.disconnect()
+        await self.connect(self._channel)
 
-        if self._socket is None:
+    async def disconnect(self) -> None:
+        if not self.run_loop.is_set():
             return
 
         self.run_loop.clear()
@@ -36,13 +38,18 @@ class TwitchMonitor:
             pass
 
         self._socket = None
-        print('[TTV] 🔴 Disconnected')
+        print(f'[TTV] 🔴 Disconnected from @{self._channel}')
 
-    async def connect(self) -> None:
+    async def connect(self, channel: str) -> None:
         if NO_MONITOR:
             return
 
-        await self.disconnect()
+        if self._channel != channel:
+            await self.disconnect()
+            self._channel = channel
+
+        if self.run_loop.is_set():
+            return
 
         timeout = 0.5
 
@@ -56,7 +63,7 @@ class TwitchMonitor:
                 timeout = min(timeout * 2, 5)
 
         self.run_loop.set()
-        print('[TTV] 🟢 Connected')
+        print(f'[TTV] 🟢 Connected to @{channel}')
 
     async def loop(self) -> None:
         if NO_MONITOR:
@@ -66,17 +73,17 @@ class TwitchMonitor:
             # reset connection if connected
             async with self.lock:
                 if self.run_loop.is_set():
-                    await self.connect()
+                    await self.reconnect()
 
             await self.run_loop.wait()
 
-            print('[TTV] Started monitoring')
+            print(f'[TTV] Started monitoring on @{self._channel}')
 
             try:
                 await self._socket.send(f'CAP REQ :twitch.tv/membership')
                 await self._socket.send(f'PASS oauth:{TTV_TOKEN}')
                 await self._socket.send(f'NICK {TTV_USERNAME}')
-                await self._socket.send(f'JOIN #{TTV_CHANNEL}')
+                await self._socket.send(f'JOIN #{self._channel}')
 
                 while True:
                     raw = (await self._socket.recv()).strip()
@@ -89,7 +96,7 @@ class TwitchMonitor:
                         nonce = ' '.join(parts[1:])
                         await self._socket.send(f'PONG {nonce}')  # 🏓
 
-                    elif parts[1] == 'PRIVMSG' and parts[2] == f'#{TTV_CHANNEL}':
+                    elif parts[1] == 'PRIVMSG' and parts[2] == f'#{self._channel}':
                         username = normalize_username(parts[0].split('!')[0].lstrip(':'))
                         message = ' '.join(parts[3:]).lstrip(':').lower()
 
@@ -112,4 +119,4 @@ class TwitchMonitor:
                 traceback.print_exc()
                 await sleep(2)
 
-            print('[TTV] Stopped monitoring')
+            print(f'[TTV] Stopped monitoring on @{self._channel}')

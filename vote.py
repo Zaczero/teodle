@@ -6,7 +6,7 @@ from time import time
 from blacklist import Blacklist
 from clip import Clip
 from clip_state import ClipState
-from config import BLACKLIST_PATH, DUMMY_VOTES
+from config import BLACKLIST_PATH, DUMMY_VOTES, FRIENDS, FriendConfig
 from events import TYPE_CLIP_STATE, TYPE_TOTAL_VOTES, empty_user_state, publish
 from rank import Rank
 from users_board import ClipResult, UsersBoard
@@ -26,7 +26,7 @@ class Vote:
     total_streamer_stars: int = 0
     total_users_stars: int = 0
 
-    comment: list[str] | None = None
+    friend_config: FriendConfig = FRIENDS[0]
 
     def __init__(self, path_or_text: Path | str, blacklist: Blacklist | None = None) -> None:
         if isinstance(path_or_text, str):

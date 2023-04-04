@@ -7,15 +7,16 @@ import openai
 
 
 class FriendConfig(NamedTuple):
+    is_friend: bool
     name: str
     icon: str
     good_icon: str
     bad_icon: str
     channel: str
 
-    def configure_ui(self) -> dict[str, str]:
+    def ui_config(self) -> dict[str, str]:
         return UI_CONFIG | {
-            'IS_FRIEND': True,
+            'IS_FRIEND': self.is_friend,
             'STREAMER_NAME': self.name,
             'STREAMER_ICON': self.icon,
             'STREAMER_GOOD_ICON': self.good_icon,
@@ -41,20 +42,6 @@ RANK_FILE_EXT = '.webp'
 TTV_TOKEN = os.environ['TTV_TOKEN']
 TTV_USERNAME = os.environ['TTV_USERNAME']
 TTV_CHANNEL = os.environ['TTV_CHANNEL']
-
-FRIENDS = []
-
-for i in itertools.count():
-    if (name := os.getenv(f'FRIEND_{i}_NAME')) is None \
-            or (icon := os.getenv(f'FRIEND_{i}_ICON')) is None \
-            or (good_icon := os.getenv(f'FRIEND_{i}_GOOD_ICON')) is None \
-            or (bad_icon := os.getenv(f'FRIEND_{i}_BAD_ICON')) is None \
-            or (channel := os.getenv(f'FRIEND_{i}_CHANNEL')) is None:
-        break
-
-    FRIENDS.append(FriendConfig(name, icon, good_icon, bad_icon, channel))
-
-print(f'[CONFIG] Loaded {len(FRIENDS)} friend profiles')
 
 VOTE_WHITELIST = set(u.strip() for u in os.getenv('VOTE_WHITELIST', '').lower().split(','))
 NO_MONITOR = os.getenv('NO_MONITOR') == '1'
@@ -104,17 +91,43 @@ UI_CONFIG = {
     'APP_NAME': 'Teodle',
     'APP_TITLE': 'Teodle',
     'HEAD_PREFIX': 'teo',
-    'IS_FRIEND': False,
     'STREAMER_NAME': 'Teo',
     'STREAMER_ICON': 'teo.png',
     'STREAMER_GOOD_ICON': 'teo-gold.png',  # optional
     'STREAMER_BAD_ICON': 'laugh.png',  # optional
     'FIRST_PLACE_ICON': 'jam.gif',
     'MVP_ICON': 'chad.webp',
-    'FRIENDS': FRIENDS
+    'FRIENDS': []
 }
 
 # override UI_CONFIG with environment variables
 for key, default in UI_CONFIG.items():
     if (val := os.getenv(key, None)) is not None:
         UI_CONFIG[key] = val
+
+FRIENDS: list[FriendConfig] = UI_CONFIG['FRIENDS']
+FRIENDS.append(FriendConfig(
+    is_friend=False,
+    name=UI_CONFIG['STREAMER_NAME'],
+    icon=UI_CONFIG['STREAMER_ICON'],
+    good_icon=UI_CONFIG['STREAMER_GOOD_ICON'],
+    bad_icon=UI_CONFIG['STREAMER_BAD_ICON'],
+    channel=TTV_CHANNEL))
+
+for i in itertools.count():
+    if (name := os.getenv(f'FRIEND_{i}_NAME')) is None \
+            or (icon := os.getenv(f'FRIEND_{i}_ICON')) is None \
+            or (good_icon := os.getenv(f'FRIEND_{i}_GOOD_ICON')) is None \
+            or (bad_icon := os.getenv(f'FRIEND_{i}_BAD_ICON')) is None \
+            or (channel := os.getenv(f'FRIEND_{i}_CHANNEL')) is None:
+        break
+
+    FRIENDS.append(FriendConfig(
+        is_friend=True,
+        name=name,
+        icon=icon,
+        good_icon=good_icon,
+        bad_icon=bad_icon,
+        channel=channel))
+
+print(f'[CONFIG] Loaded 1+{len(FRIENDS) - 1} friend profiles')
