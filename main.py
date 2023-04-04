@@ -22,7 +22,7 @@ from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, FRIENDS,
 from config_generator import generate_config
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
-from summary import get_summary, update_summary
+from summary import get_summary, is_game_available, update_summary
 from twitch_monitor import TwitchMonitor
 from vote import Vote, VoteState
 from ws_route import WSLoopTaskRoute, WSRoute
@@ -91,7 +91,8 @@ async def index(request: Request):
     if vote.state == VoteState.IDLE:
         return tmpl.TemplateResponse(get_template_filename('idle'), ctx | {
             'config_mtime': clips_mtime(),
-            'downloader': downloader
+            'downloader': downloader,
+            'is_game_available': is_game_available,
         })
 
     elif vote.state == VoteState.VOTING:
@@ -132,7 +133,9 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
             # start of the game
             if vote.clip_idx == -1:
                 assert friend_idx is not None
-                vote.friend_config = FRIENDS[friend_idx]
+                friend_config = FRIENDS[friend_idx]
+                assert is_game_available(friend_config.channel), 'No game available'
+                vote.friend_config = friend_config
                 toggle_subscriptions(enabled=not testing)  # TODO: compatibility
 
             async with twitch_monitor.lock:
@@ -141,6 +144,7 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
             vote.begin_next_state()
 
         else:
+            # end of the game
             async with twitch_monitor.lock:
                 await twitch_monitor.disconnect()
 

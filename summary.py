@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from time import time
 
 from dacite import Config, from_dict
+from tinydb import Query
 
 from config import (DB, FRIENDS, MAX_STARS, SUMMARY_MIN_VOTES, TTV_CHANNEL,
                     FriendConfig)
@@ -62,6 +63,20 @@ def get_summary() -> list[SummaryEntry]:
                   reverse=True)
 
 
+def is_game_available(channel: str) -> bool:
+    if channel == TTV_CHANNEL:
+        return True
+
+    summaries = get_summary()
+
+    if not summaries:
+        return False
+
+    last = summaries[0]
+
+    return channel not in last.friend_states
+
+
 def update_summary(vote: Vote) -> None:
     assert vote.state == VoteState.RESULTS
 
@@ -72,19 +87,37 @@ def update_summary(vote: Vote) -> None:
     top_user_score = vote.result.top_users[0][1]
 
     summary_table = DB.table('summary')
-    summary_table.insert(asdict(SummaryEntry(
-        date=now,
-        max_stars=len(vote.clips) * MAX_STARS,
-        friend_states={
-            TTV_CHANNEL: FriendState(
-                date=now,
-                streamer_stars=vote.total_streamer_stars,
-                users_stars=vote.total_users_stars,
-                top_user=TopUser(
-                    username=top_user_score.username,
-                    stars=top_user_score.stars,
-                    stars_history=top_user_score.stars_history
+
+    if vote.friend_config.channel == TTV_CHANNEL:
+        summary_table.insert(asdict(SummaryEntry(
+            date=now,
+            max_stars=len(vote.clips) * MAX_STARS,
+            friend_states={
+                TTV_CHANNEL: FriendState(
+                    date=now,
+                    streamer_stars=vote.total_streamer_stars,
+                    users_stars=vote.total_users_stars,
+                    top_user=TopUser(
+                        username=top_user_score.username,
+                        stars=top_user_score.stars,
+                        stars_history=top_user_score.stars_history
+                    )
                 )
+            }
+        )))
+
+    else:
+        last = get_summary()[0]
+        last.friend_states[vote.friend_config.channel] = FriendState(
+            date=now,
+            streamer_stars=vote.total_streamer_stars,
+            users_stars=vote.total_users_stars,
+            top_user=TopUser(
+                username=top_user_score.username,
+                stars=top_user_score.stars,
+                stars_history=top_user_score.stars_history
             )
-        }
-    )))
+        )
+
+        entry = Query()
+        summary_table.update(asdict(last), entry.date == last.date)

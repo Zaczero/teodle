@@ -4,10 +4,17 @@
     <form class="d-inline me-3" action="/next_clip" method="post">
         <input type="hidden" name="clip_idx" value="{{ vote.clip_idx }}">
         <input type="hidden" name="friend_idx" value="{{ i }}">
+        {% if is_game_available(friend.channel) %}
         <button type="submit" class="btn btn-lg btn-primary start-game">
             <span class="me-2">Play as <b>{{ friend.name }}</b></span>
             <img src="/static/img/{{ friend.icon }}" height="36">
         </button>
+        {% else %}
+        <button type="submit" class="btn btn-lg btn-secondary start-game" style="opacity: .5" disabled>
+            <span class="me-2">Play as <b>{{ friend.name }}</b></span>
+            <img src="/static/img/{{ friend.icon }}" height="36">
+        </button>
+        {% endif %}
     </form>
     {% endfor %}
 
