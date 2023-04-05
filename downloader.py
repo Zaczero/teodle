@@ -34,11 +34,11 @@ def find_file(clip: Clip, variant: str | None = None) -> tuple[Path, Path | None
     return prefix, None
 
 
-def cleanup(whitelist_files: set[Path]) -> None:
-    for match in DOWNLOAD_DIR.glob('*.*'):
-        if match not in whitelist_files:
-            print(f'[DL] Cleanup file: {match}')
-            match.unlink()
+def cleanup() -> None:
+    for match in DOWNLOAD_DIR.glob('*.*.*'):
+        # if match not in whitelist_files:
+        print(f'[DL] Cleanup file: {match}')
+        match.unlink()
 
 
 class Downloader:
@@ -173,7 +173,8 @@ class Downloader:
                 except Exception:
                     traceback.print_exc()
 
-            cleanup(clip_paths)
+            # TODO: support replay clips
+            cleanup()
 
             print(f'[DL] Processing finished ✅')
 
