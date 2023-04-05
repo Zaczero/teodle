@@ -1,3 +1,4 @@
+import traceback
 from dataclasses import asdict
 from datetime import datetime
 
@@ -13,8 +14,13 @@ def run() -> None:
         data = orjson.loads(summary_path.read_bytes())
         assert isinstance(data, list)
         summary_table = DB.table('summary')
+        summary_table.truncate()
         summary_table.insert_multiple(data)
-        summary_path.unlink()
+        try:
+            summary_path.unlink()
+        except Exception:
+            traceback.print_exc()
+            pass
 
     # migrate SummaryEntry date from str to int timestamp
     summary_table = DB.table('summary')
