@@ -9,7 +9,7 @@ from summary import FriendState, TopUser
 
 def run() -> None:
     # migrate data from summary.json to tinydb
-    if (summary_path := DATA_DIR / 'summary.json').exists():
+    if (summary_path := DATA_DIR / 'summary.json').exists() and summary_path.stat().st_size > 0:
         data = orjson.loads(summary_path.read_bytes())
         assert isinstance(data, list)
         summary_table = DB.table('summary')
