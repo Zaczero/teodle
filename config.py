@@ -63,7 +63,7 @@ DB_PATH = DATA_DIR / 'db.json'
 SUMMARY_MIN_VOTES = int(os.getenv('SUMMARY_MIN_VOTES', '5'))
 
 # ensure proper file permissions
-for file in [CLIPS_PATH, BLACKLIST_PATH, DB_PATH]:
+for file in [CLIPS_PATH, CLIPS_REPLAY_PATH, BLACKLIST_PATH, DB_PATH]:
     with open(file, 'a+') as f:
         pass
 
