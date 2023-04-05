@@ -1,4 +1,5 @@
 import os
+import shutil
 from asyncio import create_task, sleep
 from datetime import datetime
 from functools import cache
@@ -17,8 +18,9 @@ import migration
 import twitch_userscript
 from ai import complete
 from blacklist import Blacklist
-from config import (BLACKLIST_PATH, CLIPS_PATH, DOWNLOAD_DIR, FRIENDS,
-                    NO_AUTO_FINISH, RANKS_DIR, UI_CONFIG)
+from config import (BLACKLIST_PATH, CLIPS_PATH, CLIPS_REPLAY_PATH,
+                    DOWNLOAD_DIR, FRIENDS, NO_AUTO_FINISH, RANKS_DIR,
+                    UI_CONFIG)
 from config_generator import generate_config
 from downloader import Downloader
 from events import TYPE_TOTAL_VOTES, Subscription, toggle_subscriptions
@@ -135,6 +137,9 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
                 assert friend_idx is not None
                 friend_config = FRIENDS[friend_idx]
                 assert is_game_available(friend_config.channel), 'No game available'
+
+                clips_path = CLIPS_PATH if not friend_config.is_friend else CLIPS_REPLAY_PATH
+                set_vote(Vote(clips_path))  # TODO: refactor
                 vote.set_friend_config(friend_config)
                 toggle_subscriptions(enabled=not testing)
 
@@ -147,6 +152,10 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
             # end of the game
             async with twitch_monitor.lock:
                 await twitch_monitor.disconnect()
+
+            # copy clips to replay
+            if not vote.friend_config.is_friend:
+                shutil.copyfile(CLIPS_PATH, CLIPS_REPLAY_PATH)
 
             set_vote(Vote(CLIPS_PATH))
 

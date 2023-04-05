@@ -56,6 +56,7 @@ DATA_DIR = Path('data')
 DATA_DIR.mkdir(exist_ok=True)
 
 CLIPS_PATH = DATA_DIR / 'clips.txt'
+CLIPS_REPLAY_PATH = DATA_DIR / 'clips_replay.txt'
 BLACKLIST_PATH = DATA_DIR / 'blacklist.txt'
 DB_PATH = DATA_DIR / 'db.json'
 

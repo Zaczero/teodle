@@ -6,8 +6,8 @@ from time import time
 from dacite import Config, from_dict
 from tinydb import Query
 
-from config import (DB, FRIENDS, MAX_STARS, SUMMARY_MIN_VOTES, TTV_CHANNEL,
-                    FriendConfig)
+from config import (CLIPS_REPLAY_PATH, DB, FRIENDS, MAX_STARS,
+                    SUMMARY_MIN_VOTES, TTV_CHANNEL, FriendConfig)
 from vote import Vote, VoteState
 
 
@@ -78,6 +78,9 @@ def get_summary(channel: str | None = None) -> list[SummaryEntry]:
 def is_game_available(channel: str) -> bool:
     if channel == TTV_CHANNEL:
         return True
+
+    if not CLIPS_REPLAY_PATH.exists() or CLIPS_REPLAY_PATH.stat().st_size == 0:
+        return False
 
     summary = get_summary()
 
