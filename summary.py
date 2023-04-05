@@ -25,6 +25,13 @@ class FriendState:
     users_stars: int
     top_user: TopUser
 
+    @property
+    def date_str(self) -> str:
+        return datetime.fromtimestamp(self.date, tz=UTC).strftime('%d %b %Y')
+
+    def get_extra_states(self) -> None:
+        return None
+
 
 @dataclass(frozen=True, kw_only=True, slots=True)
 class SummaryEntry:
@@ -56,23 +63,28 @@ class SummaryEntry:
         ]
 
 
-def get_summary() -> list[SummaryEntry]:
+def get_summary(channel: str | None = None) -> list[SummaryEntry]:
     summary_table = DB.table('summary')
-    return sorted([from_dict(SummaryEntry, d, config=Config(check_types=False)) for d in summary_table.all()],
-                  key=lambda e: e.date,
-                  reverse=True)
+    summary = sorted([from_dict(SummaryEntry, d, config=Config(check_types=False)) for d in summary_table.all()],
+                     key=lambda e: e.date,
+                     reverse=True)
+
+    if channel is None or channel == TTV_CHANNEL:
+        return summary
+
+    return [state for e in summary if (state := e.friend_states.get(channel, None)) is not None]
 
 
 def is_game_available(channel: str) -> bool:
     if channel == TTV_CHANNEL:
         return True
 
-    summaries = get_summary()
+    summary = get_summary()
 
-    if not summaries:
+    if not summary:
         return False
 
-    last = summaries[0]
+    last = summary[0]
 
     return channel not in last.friend_states
 

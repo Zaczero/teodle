@@ -8,13 +8,20 @@
                         <th>Played on</th>
                         <th class="text-center"><img class="me-1" src="/static/img/{{ STREAMER_ICON }}" height="24">{{ STREAMER_NAME }}</th>
                         <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">Chat</th>
+
+                        {% if not IS_FRIEND %}
+                        {% for config, state in summary[0].get_extra_states() %}
+                        <th class="text-center" title="{{ config.name }}"><img class="me-1" src="/static/img/{{ config.icon }}" height="24"></th>
+                        {% endfor %}
                         <th class="text-end"><img class="me-1" src="/static/img/chad.webp" height="24">MVP</th>
                         <th></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in summary %}
                     <tr>
+
                         <td>{{ entry.date_str }}</td>
                         <td class="text-center">
                             {{ entry.streamer_stars }}
@@ -30,6 +37,15 @@
                             <span class="winner">Winner</span>
                             {% endif %}
                         </td>
+
+                        {% if not IS_FRIEND %}
+
+                        {% for config, state in entry.get_extra_states() %}
+                        <td class="text-center friend-score-cell">
+                            {{ state.streamer_stars }}
+                        </td>
+                        {% endfor %}
+
                         <td class="text-end {{ 'star-glow' if entry.top_user.stars == entry.max_stars else '' }}">
                             {% if entry.top_user.stars > 0 %}
 
@@ -56,6 +72,8 @@
                             | {{ entry.top_user.stars_history | join(' ') }}
                             {% endif %}
                         </td>
+                        {% endif %}
+
                     </tr>
                     {% endfor %}
                 </tbody>

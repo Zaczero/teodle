@@ -100,7 +100,7 @@ async def index(request: Request):
 
     elif vote.state == VoteState.RESULTS:
         return tmpl.TemplateResponse(get_template_filename('results'), ctx | {
-            'summary': get_summary() if not vote.has_next_clip else None
+            'summary': get_summary(vote.friend_config.channel) if not vote.has_next_clip else None
         })
 
     raise Exception('Not implemented vote state')
