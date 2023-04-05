@@ -135,7 +135,7 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
                 assert friend_idx is not None
                 friend_config = FRIENDS[friend_idx]
                 assert is_game_available(friend_config.channel), 'No game available'
-                vote.friend_config = friend_config
+                vote.set_friend_config(friend_config)
                 toggle_subscriptions(enabled=not testing)  # TODO: compatibility
 
             async with twitch_monitor.lock:

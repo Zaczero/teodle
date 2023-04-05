@@ -15,7 +15,7 @@ from vote_state import VoteState
 
 class Vote:
     clips: list[Clip]
-    board: UsersBoard
+    board: UsersBoard | None = None
 
     state: VoteState = VoteState.IDLE
     clip_idx: int = -1
@@ -41,15 +41,17 @@ class Vote:
         text = re.sub(r'[\t\r]', '', text)
 
         self.clips = [Clip(t) for t in text.split('\n\n') if t]
-        self.board = UsersBoard(self.clips)
 
         for clip in self.clips:
             assert not blacklist.is_blacklisted(clip.credits), f'Blacklisted user found: {clip.credits}'
 
         print(f'[VOTE] Loaded {len(self.clips)} clips')
+
         empty_user_state()
         publish(TYPE_TOTAL_VOTES, 0)
-        publish(TYPE_CLIP_STATE, ClipState(self))
+
+        for f in FRIENDS:
+            publish(TYPE_CLIP_STATE(f.channel), ClipState(self))
 
     @property
     def clip(self) -> Clip:
@@ -62,6 +64,10 @@ class Vote:
     @property
     def total_users_votes(self) -> int:
         return self.board.total_votes(self.clip_idx)
+
+    def set_friend_config(self, friend_config: FriendConfig) -> None:
+        assert self.state == VoteState.IDLE, 'Invalid state'
+        self.friend_config = friend_config
 
     def begin_next_state(self) -> bool:
         assert self.state in {VoteState.IDLE, VoteState.RESULTS}, 'Invalid state'
@@ -76,8 +82,12 @@ class Vote:
             self.streamer_rank = None
             self.state = VoteState.VOTING
 
+        if self.clip_idx == 0:
+            assert self.board is None
+            self.board = UsersBoard(self.clips, self.friend_config.channel)
+
         publish(TYPE_TOTAL_VOTES, 0)
-        publish(TYPE_CLIP_STATE, ClipState(self))
+        publish(TYPE_CLIP_STATE(self.friend_config.channel), ClipState(self))
         return self.clip_idx >= 0
 
     async def end_vote(self) -> None:
@@ -93,7 +103,7 @@ class Vote:
 
         self.total_streamer_stars += self.result.streamer_stars
         self.total_users_stars += self.result.users_stars
-        publish(TYPE_CLIP_STATE, ClipState(self))
+        publish(TYPE_CLIP_STATE(self.friend_config.channel), ClipState(self))
 
     def cast_streamer_vote(self, vote: str) -> None:
         assert self.state == VoteState.VOTING, 'Invalid state'

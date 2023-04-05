@@ -6,17 +6,21 @@ from typing import Any, NewType
 EventType = NewType('EventType', str)
 
 TYPE_TOTAL_VOTES = EventType('TOTAL_VOTES')
-TYPE_CLIP_STATE = EventType('CLIP_STATE')
 
 
 @cache
-def TYPE_USER_VOTE_STATE(username: str) -> EventType:
-    return EventType(f'USER_VOTE_STATE_{username}')
+def TYPE_CLIP_STATE(channel: str) -> EventType:
+    return EventType(f'CLIP_STATE_{channel}')
 
 
 @cache
-def TYPE_USER_SCORE(username: str) -> EventType:
-    return EventType(f'USER_SCORE_{username}')
+def TYPE_USER_VOTE_STATE(channel: str, username: str) -> EventType:
+    return EventType(f'USER_VOTE_STATE_{channel}_{username}')
+
+
+@cache
+def TYPE_USER_SCORE(channel: str, username: str) -> EventType:
+    return EventType(f'USER_SCORE_{channel}_{username}')
 
 
 _subscriptions: dict[EventType, set['Subscription']] = defaultdict(set)

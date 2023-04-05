@@ -6,7 +6,7 @@ import orjson
 from fastapi import APIRouter, WebSocket
 
 from clip_state import ClipState
-from config import MAX_USERSCRIPT_SLOTS
+from config import FRIENDS, MAX_USERSCRIPT_SLOTS, TTV_CHANNEL
 from events import (TYPE_CLIP_STATE, TYPE_USER_SCORE, TYPE_USER_VOTE_STATE,
                     Subscription)
 from user_vote_state import UserVoteState
@@ -37,6 +37,7 @@ addr_slots: dict[str, Counter] = defaultdict(Counter)
 @router.websocket('/ws')
 class WS(WSLoopTaskRoute):
     username: str = ''
+    channel: str = ''
     func_on_disconnect: list[Callable]
 
     def __init__(self, ws: WebSocket):
@@ -45,7 +46,7 @@ class WS(WSLoopTaskRoute):
 
     @property
     def identifier(self) -> str:
-        return f'{super().identifier} @ {self.username}'
+        return f'{super().identifier} @ {self.channel} : {self.username}'
 
     async def on_connect(self) -> None:
         addr = self.ws.client.host
@@ -59,12 +60,21 @@ class WS(WSLoopTaskRoute):
         assert self.task is None, 'Unexpected receive'
         assert 'username' in data, 'Missing username'
 
+        # TODO: in later release
+        # assert 'channel' in data, 'Missing channel'
+
         username = normalize_username(data['username'])
 
         # Twitch usernames must be between 4 and 25 characters
         assert 4 <= len(username) <= 25, f'Invalid username: {username}'
 
+        channel = data.get('channel', TTV_CHANNEL)
+
+        # Channel must be valid
+        assert any(f.channel == channel for f in FRIENDS), f'Invalid channel: {channel}'
+
         self.username = username
+        self.channel = channel
 
         if not user_slots[self.username].inc():
             raise Exception(f'Too many connections (user={self.username})')
@@ -83,9 +93,9 @@ class WS(WSLoopTaskRoute):
         await self.ws.send_text('ok')
 
         with \
-                Subscription(TYPE_CLIP_STATE) as s_clip, \
-                Subscription(TYPE_USER_VOTE_STATE(self.username)) as s_vote, \
-                Subscription(TYPE_USER_SCORE(self.username)) as s_score:
+                Subscription(TYPE_CLIP_STATE(self.channel)) as s_clip, \
+                Subscription(TYPE_USER_VOTE_STATE(self.channel, self.username)) as s_vote, \
+                Subscription(TYPE_USER_SCORE(self.channel, self.username)) as s_score:
 
             clip: ClipState | None = None
             vote: UserVoteState | None = None

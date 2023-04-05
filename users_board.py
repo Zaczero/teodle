@@ -50,13 +50,15 @@ class ClipResult:
 
 class UsersBoard:
     clips: list[Clip]
+    channel: str
     state: dict[Clip, dict[str, UserVote]]
     scores: dict[Clip, list[UserScore]]
 
     _max_known_clip_idx: int = 0
 
-    def __init__(self, clips: list[Clip]):
+    def __init__(self, clips: list[Clip], channel: str):
         self.clips = clips
+        self.channel = channel
         self.state = {c: {} for c in clips}
         self.scores = {}
 
@@ -98,7 +100,7 @@ class UsersBoard:
             rank=rank
         )
 
-        publish(TYPE_USER_VOTE_STATE(username), UserVoteState(vote=vote, clip_idx=clip_idx))
+        publish(TYPE_USER_VOTE_STATE(self.channel, username), UserVoteState(vote=vote, clip_idx=clip_idx))
         return True
 
     def total_votes(self, clip_idx: int) -> int:
@@ -177,7 +179,7 @@ class UsersBoard:
 
         # publish the user scores
         for user_score in users_scores:
-            publish(TYPE_USER_SCORE(user_score.username), user_score.stars)
+            publish(TYPE_USER_SCORE(self.channel, user_score.username), user_score.stars)
 
         return ClipResult(
             streamer_stars=streamer_stars,
