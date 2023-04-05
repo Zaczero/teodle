@@ -119,7 +119,11 @@ async def cast_vote(clip_idx: int = Form(), rank: str = Form()):
         await vote.end_vote()
 
         if not vote.has_next_clip:
-            update_summary(vote)
+            if update_summary(vote):
+
+                if not vote.friend_config.is_friend:
+                    # copy clips to replay
+                    shutil.copyfile(CLIPS_PATH, CLIPS_REPLAY_PATH)
 
     return INDEX_REDIRECT
 
@@ -152,10 +156,6 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
             # end of the game
             async with twitch_monitor.lock:
                 await twitch_monitor.disconnect()
-
-            # copy clips to replay
-            if not vote.friend_config.is_friend:
-                shutil.copyfile(CLIPS_PATH, CLIPS_REPLAY_PATH)
 
             set_vote(Vote(CLIPS_PATH))
 

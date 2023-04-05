@@ -92,11 +92,11 @@ def is_game_available(channel: str) -> bool:
     return channel not in last.friend_states
 
 
-def update_summary(vote: Vote) -> None:
+def update_summary(vote: Vote) -> bool:
     assert vote.state == VoteState.RESULTS
 
     if vote.total_users_votes < SUMMARY_MIN_VOTES:
-        return
+        return False
 
     now = int(time())
     top_user_score = vote.result.top_users[0][1]
@@ -136,3 +136,5 @@ def update_summary(vote: Vote) -> None:
 
         entry = Query()
         summary_table.update(asdict(last), entry.date == last.date)
+
+    return True
