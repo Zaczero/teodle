@@ -43,6 +43,7 @@ RUN mkdir -p data/boards data/cache data/download && \
     touch data/blacklist.txt data/clips.txt data/clips_replay.txt data/db.json
 
 COPY --chown=1000:1000 LICENSE *.py ./
+COPY --chown=1000:1000 html ./html/
 COPY --chown=1000:1000 static ./static/
 COPY --chown=1000:1000 templates ./templates/
 

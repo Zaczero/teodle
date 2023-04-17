@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <h1>Authentication</h1>
+    <form id="auth-form">
+      <input id="auth-value" type="password" />
+      <button type="submit">Submit</button>
+    </form>
+    <script>
+      document.getElementById("auth-form").onsubmit = (e) => {
+        e.preventDefault()
+
+        const auth_value = document.getElementById("auth-value").value
+        const now = new Date()
+        const oneYear = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
+
+        document.cookie =
+          "auth=" +
+          encodeURIComponent(auth_value) +
+          "; expires=" +
+          oneYear.toUTCString() +
+          "; path=/"
+
+        location.reload()
+      }
+    </script>
+  </body>
+</html>

@@ -42,6 +42,11 @@ MAX_USERSCRIPT_SLOTS = 3
 RANK_FILE_CONVERT_EXT = {'.png'}
 RANK_FILE_EXT = '.webp'
 
+PASSWORD = os.getenv('PASSWORD', None)
+
+if PASSWORD is None:
+    print('[WARN] 🚧 You have not set the PASSWORD environment variable')
+
 TTV_TOKEN = os.environ['TTV_TOKEN']
 TTV_USERNAME = os.environ['TTV_USERNAME']
 TTV_CHANNEL = os.environ['TTV_CHANNEL']

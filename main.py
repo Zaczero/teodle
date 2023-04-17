@@ -9,6 +9,7 @@ from fastapi import FastAPI, Form, WebSocket
 from fastapi.responses import JSONResponse
 from starlette import status
 from starlette.exceptions import HTTPException
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
@@ -17,6 +18,7 @@ from starlette.templating import Jinja2Templates
 import migration
 import twitch_userscript
 from ai import complete
+from auth import auth_middleware
 from blacklist import Blacklist
 from config import (BLACKLIST_PATH, CLIPS_PATH, CLIPS_REPLAY_PATH,
                     DOWNLOAD_DIR, FRIENDS, NO_AUTO_FINISH, RANKS_DIR,
@@ -30,6 +32,7 @@ from vote import Vote, VoteState
 from ws_route import WSLoopTaskRoute, WSRoute
 
 app = FastAPI()
+app.add_middleware(BaseHTTPMiddleware, dispatch=auth_middleware)
 app.include_router(twitch_userscript.router)
 app.mount('/static', StaticFiles(directory='static'), name='static')
 app.mount('/ranks', StaticFiles(directory=RANKS_DIR), name='ranks')
