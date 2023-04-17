@@ -6,7 +6,7 @@ from time import time
 from dacite import Config, from_dict
 from tinydb import Query
 
-from config import (CLIPS_REPLAY_PATH, DB, FRIENDS, MAX_STARS,
+from config import (CLIPS_PATH, CLIPS_REPLAY_PATH, DB, FRIENDS, MAX_STARS,
                     SUMMARY_MIN_VOTES, TTV_CHANNEL, FriendConfig)
 from vote import Vote, VoteState
 
@@ -76,20 +76,28 @@ def get_summary(channel: str | None = None) -> list[SummaryEntry]:
 
 
 def is_game_available(channel: str) -> bool:
-    if channel == TTV_CHANNEL:
-        return True
-
-    if not CLIPS_REPLAY_PATH.exists() or CLIPS_REPLAY_PATH.stat().st_size == 0:
-        return False
-
     summary = get_summary()
 
-    if not summary:
-        return False
+    if channel == TTV_CHANNEL:
+        # is host
+        if not summary:
+            return True
 
-    last = summary[0]
+        last = summary[0]
 
-    return channel not in last.friend_states
+        return CLIPS_PATH.stat().st_mtime > last.date
+
+    else:
+        # is friend
+        if not CLIPS_REPLAY_PATH.is_file() or CLIPS_REPLAY_PATH.stat().st_size == 0:
+            return False
+
+        if not summary:
+            return False
+
+        last = summary[0]
+
+        return channel not in last.friend_states
 
 
 def update_summary(vote: Vote) -> bool:
