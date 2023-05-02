@@ -50,7 +50,9 @@ class Rank:
             parts = raw.split('/')
             assert len(parts) == 2, f'Invalid rank format: {raw}'
             game, rank = parts
-            assert self.image.path.exists(), f'Rank image not found: {self.image.path}'
+
+            if not self.image.path.is_file():
+                print(f'[WARN] ⚠️ Rank image not found: {self.image.path}')
         else:
             rank = raw
 
