@@ -2,7 +2,7 @@ const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 const congratulateModalTriggers = document.querySelectorAll('.congratulate-modal-trigger')
-if (congratulateModalTriggers) {
+if (congratulateModalTriggers.length > 0) {
     const congratulateModalSelector = document.getElementById('congratulate-modal')
     const congratulateModal = new bootstrap.Modal(congratulateModalSelector, {})
     const congratulateModalUsername = document.getElementById('congratulate-modal-username')
