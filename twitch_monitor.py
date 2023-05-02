@@ -89,8 +89,7 @@ class TwitchMonitor:
                     raw = (await self._socket.recv()).strip()
                     parts = raw.split(' ')
 
-                    assert len(
-                        parts) >= 2, f'Message contains no spaces: {raw}'
+                    assert len(parts) >= 2, f'Message contains no spaces: {raw}'
 
                     if parts[0] == 'PING':
                         nonce = ' '.join(parts[1:])
