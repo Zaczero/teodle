@@ -117,6 +117,8 @@ If unsuccessful, print an error'''
         response = 'copper\nbronze\nsilver\ngold\nplatinum\nemerald\ndiamond\nchampions'
     elif game_full == 'Valorant':
         response = 'iron\nbronze\nsilver\ngold\nplatinum\ndiamond\nascendant\nimmortal\nradiant'
+    elif game_full == 'Counter-Strike: Global Offensive':
+        response = '''silver\nsilverelite\nnova\nmg\nmge\nle\nsupreme\nglobal'''
     else:
         system = 'Sort list of ranks from given game from lowest skill level to highest skill level.'
         user = f'{game_full}:\n{ranks_join}'
@@ -126,6 +128,7 @@ If unsuccessful, print an error'''
             '''Counter-Strike: Global Offensive:
 silverelite
 global
+le
 mge
 silver
 supreme
@@ -139,6 +142,7 @@ nova
 mg
 mge
 dmg
+le
 lem
 supreme
 global''',
@@ -167,7 +171,7 @@ entry'''
 
     messages = [
         {'role': 'system', 'content': system},
-        {'role': 'user', 'content': '''query: cs Legendary Eagle
+        {'role': 'user', 'content': '''query: cs DMG
 
 Counter-Strike: Global Offensive:
 silver
@@ -175,11 +179,10 @@ silverelite
 nova
 mg
 mge
-dmg
-lem
+le
 supreme
 global'''},
-        {'role': 'assistant', 'content': 'lem'},
+        {'role': 'assistant', 'content': 'mge'},
         {'role': 'user', 'content': user},
     ]
 
