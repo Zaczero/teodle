@@ -5,7 +5,7 @@ from datetime import datetime
 from functools import cache
 
 import timeago
-from fastapi import FastAPI, Form, WebSocket
+from fastapi import FastAPI, Form, Query, WebSocket
 from fastapi.responses import JSONResponse
 from starlette import status
 from starlette.exceptions import HTTPException
@@ -166,33 +166,36 @@ async def next_clip(clip_idx: int = Form(), friend_idx: int | None = Form(None),
 
 
 @app.get('/congratulate')
-async def congratulate() -> JSONResponse:
-    # ensure the client state
-    if not vote.has_next_clip and vote.state == VoteState.RESULTS:
-        system = \
-            "You write an insanely creative congratulations for the given username - it's a reward for winning the game. " \
-            "The congratulations message must rhyme. " \
-            "You must always incorporate the username in an insanely creative way. " \
-            "You write about 3-4 sentences and use a newline separator. " \
-            "Your message ends with a random simple complementary ASCII art."
+async def congratulate(username: str | None = Query(None)) -> JSONResponse:
+    if not username:
+        # ensure the client state
+        if not vote.has_next_clip and vote.state == VoteState.RESULTS:
+            username = vote.result.top_users[0][1].username
+        else:
+            raise HTTPException(400, 'Bad state')
 
-        content = await complete(
-            system,
-            'hobocutie',
-            "Congratulations hobocutie, you're truly a beauty,\n"
-            "You played the game with grace and duty,\n"
-            "Now take a bow and show off that cutie booty!\n"
-            "\n"
-            "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
-            vote.result.top_users[0][1].username,
-            temperature=0.8,
-            max_tokens=512)
+    system = \
+        "You write an insanely creative congratulations for the given username - it's a reward for winning the game. " \
+        "The congratulations message must rhyme. " \
+        "You must always incorporate the username in an insanely creative way. " \
+        "You write about 3-4 sentences and use a newline separator. " \
+        "Your message ends with a random simple complementary ASCII art."
 
-        return JSONResponse({
-            'content': content
-        })
+    content = await complete(
+        system,
+        'hobocutie',
+        "Congratulations hobocutie, you're truly a beauty,\n"
+        "You played the game with grace and duty,\n"
+        "Now take a bow and show off that cutie booty!\n"
+        "\n"
+        "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
+        username,
+        temperature=0.8,
+        max_tokens=512)
 
-    raise HTTPException(500, 'Bad state')
+    return JSONResponse({
+        'content': content
+    })
 
 
 @app.get('/config')

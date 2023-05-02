@@ -1,3 +1,4 @@
+{% import '_congratulate_modal.jinja2' as congratulate_modal with context %}
 {% macro new() %}
 <div class="summary card">
     <div class="card-body py-1 px-0">
@@ -6,14 +7,23 @@
                 <thead>
                     <tr>
                         <th>Played on</th>
-                        <th class="text-center"><img class="me-1" src="/static/img/{{ STREAMER_ICON }}" height="24">{{ STREAMER_NAME }}</th>
-                        <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">Chat</th>
+                        <th class="text-center"><img class="me-1" src="/static/img/{{ STREAMER_ICON }}" height="24">
+                            {{ STREAMER_NAME }}
+                        </th>
+                        <th class="text-center"><img class="me-1" src="/static/img/chat.png" height="24">
+                            Chat
+                        </th>
 
                         {% if not IS_FRIEND %}
                         {% for config, state in summary[0].get_extra_states() %}
-                        <th class="text-center" title="{{ config.name }}"><img class="me-1" src="/static/img/{{ config.icon }}" height="24"></th>
+                        <th class="text-center" title="{{ config.name }}">
+                            <img class="me-1" src="/static/img/{{ config.icon }}" height="24">
+                        </th>
                         {% endfor %}
-                        <th class="text-end"><img class="me-1" src="/static/img/chad.webp" height="24">MVP</th>
+                        <th class="text-end">
+                            <img class="me-1" src="/static/img/chad.webp" height="24">MVP
+                        </th>
+                        <th></th>
                         <th></th>
                         {% endif %}
                     </tr>
@@ -72,6 +82,14 @@
                             | {{ entry.top_user.stars_history | join(' ') }}
                             {% endif %}
                         </td>
+                        <td>
+                            {% if entry.top_user.stars > 0 %}
+                            <a class="congratulate-modal-trigger" href="javascript:;"
+                                data-username="{{ entry.top_user.username }}">
+                                💬
+                            </a>
+                            {% endif %}
+                        </td>
                         {% endif %}
 
                     </tr>
@@ -81,4 +99,5 @@
         </div>
     </div>
 </div>
+{{ congratulate_modal.new() }}
 {% endmacro %}
