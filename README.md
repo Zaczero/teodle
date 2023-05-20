@@ -30,7 +30,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### Twitch VODs
 
-*Updated on 12/05/2023*
+*Updated on 20/05/2023*
 
 - Ep22 https://www.twitch.tv/videos/1818065229?t=00h45m41s (newest)
 - Ep21 https://www.twitch.tv/videos/1803232893?t=00h26m09s
@@ -62,15 +62,16 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### YouTube Series
 
-*Updated on 12/05/2023*
+*Updated on 20/05/2023*
 
-- Ep21 https://www.youtube.com/watch?v=G8xHJP-_n_g (newest)
+- Ep22 https://www.youtube.com/watch?v=TetOU20Y0mw (newest)
+- Ep21 https://www.youtube.com/watch?v=G8xHJP-_n_g
 - Ep20 https://www.youtube.com/watch?v=swWwUJP8eLY
-- Ep19 https://www.youtube.com/watch?v=fznYRqL2gZI
 
 <details>
 <summary>Show more</summary>
 
+- Ep19 https://www.youtube.com/watch?v=fznYRqL2gZI
 - Ep18 https://www.youtube.com/watch?v=8X01TBHzPCA
 - Ep17 https://www.youtube.com/watch?v=2cYykkCNc-0
 - Ep16 https://www.youtube.com/watch?v=Lr3u9d2veKY
