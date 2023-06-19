@@ -1,7 +1,8 @@
 # <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/teo/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
 
 ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/Zaczero/teodle)
-[![GitHub](https://img.shields.io/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
+[![Project license](https://img.shields.io/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
+[![Support my work](https://img.shields.io/badge/%E2%99%A5%EF%B8%8F%20Support%20my%20work-purple)](https://monicz.dev/#support-my-work)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Zaczero/teodle?style=social)](https://github.com/Zaczero/teodle)
 
 Teodle is a Python-powered website for [Twitch streamer Teo](https://www.twitch.tv/teosgame), to watch game clips submitted by his community and guess the ranks.
@@ -27,38 +28,6 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 ### Screenshots
 
 <img width="60%" src="https://github.com/Zaczero/teodle/blob/main/resources/thumbnail2.png?raw=true">
-
-### Twitch VODs
-
-*Updated on 20/05/2023*
-
-- Ep22 https://www.twitch.tv/videos/1818065229?t=00h45m41s (newest)
-- Ep21 https://www.twitch.tv/videos/1803232893?t=00h26m09s
-- Ep20 https://www.twitch.tv/videos/1794531842?t=00h31m40s
-
-<details>
-<summary>Show more</summary>
-
-- Ep19 https://www.twitch.tv/videos/1791825425?t=02h11m59s
-- Ep18 https://www.twitch.tv/videos/1781985886?t=01h48m19s
-- Ep17 https://www.twitch.tv/videos/1780008529?t=00h44m40s
-- Ep16 https://www.twitch.tv/videos/1772594285?t=01h06m37s
-- Ep15 https://www.twitch.tv/videos/1764231088?t=00h46m13s
-- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s
-- Ep13 https://www.twitch.tv/videos/1757327891?t=00h44m59s
-- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
-- Ep11 https://www.twitch.tv/videos/1748843377?t=00h40m01s
-- Ep10 https://www.twitch.tv/videos/1743812126?t=00h11m50s
-- Ep9 *miscount*
-- Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
-- Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
-- Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
-- Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
-- Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
-- Ep3.5 https://www.twitch.tv/videos/1712305474?t=00h14m05s
-- Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
-- Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
-</details>
 
 ### YouTube Series
 
@@ -90,6 +59,38 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 - Ep3.5 https://www.youtube.com/watch?v=0MjMAeJJ67Q
 - Ep3 https://www.youtube.com/watch?v=-RRyqxI9K64
 - Ep2 https://www.youtube.com/watch?v=noQXO2jvAcw
+</details>
+
+### Twitch VODs
+
+*Updated on 20/05/2023*
+
+- Ep22 https://www.twitch.tv/videos/1818065229?t=00h45m41s (newest)
+- Ep21 https://www.twitch.tv/videos/1803232893?t=00h26m09s
+- Ep20 https://www.twitch.tv/videos/1794531842?t=00h31m40s
+
+<details>
+<summary>Show more</summary>
+
+- Ep19 https://www.twitch.tv/videos/1791825425?t=02h11m59s
+- Ep18 https://www.twitch.tv/videos/1781985886?t=01h48m19s
+- Ep17 https://www.twitch.tv/videos/1780008529?t=00h44m40s
+- Ep16 https://www.twitch.tv/videos/1772594285?t=01h06m37s
+- Ep15 https://www.twitch.tv/videos/1764231088?t=00h46m13s
+- Ep14 https://www.twitch.tv/videos/1762126641?t=00h19m28s
+- Ep13 https://www.twitch.tv/videos/1757327891?t=00h44m59s
+- Ep12 https://www.twitch.tv/videos/1755443214?t=00h37m45s
+- Ep11 https://www.twitch.tv/videos/1748843377?t=00h40m01s
+- Ep10 https://www.twitch.tv/videos/1743812126?t=00h11m50s
+- Ep9 *miscount*
+- Ep8 https://www.twitch.tv/videos/1737987350?t=00h52m29s
+- Ep7 https://www.twitch.tv/videos/1729233989?t=00h00m25s
+- Ep6 https://www.twitch.tv/videos/1721001903?t=00h37m58s
+- Ep5 https://www.twitch.tv/videos/1715086976?t=00h22m27s
+- Ep4 https://www.twitch.tv/videos/1714133387?t=00h26m40s
+- Ep3.5 https://www.twitch.tv/videos/1712305474?t=00h14m05s
+- Ep3 https://www.twitch.tv/videos/1711228781?t=00h23m25s
+- Ep2 https://www.twitch.tv/videos/1709156468?t=00h13m20s
 </details>
 
 ## Deployment
