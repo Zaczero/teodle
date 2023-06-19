@@ -1,9 +1,9 @@
 # <img height="24" src="https://github.com/Zaczero/teodle/blob/main/static/teo/favicon-32x32.png?raw=true"> Teodle - Guess the rank!
 
-![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/Zaczero/teodle)
-[![Project license](https://img.shields.io/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
-[![Support my work](https://img.shields.io/badge/%E2%99%A5%EF%B8%8F%20Support%20my%20work-purple)](https://monicz.dev/#support-my-work)
-[![GitHub Repo stars](https://img.shields.io/github/stars/Zaczero/teodle?style=social)](https://github.com/Zaczero/teodle)
+![GitHub Pipenv locked Python version](https://shields.monicz.dev/github/pipenv/locked/python-version/Zaczero/teodle)
+[![Project license](https://shields.monicz.dev/github/license/Zaczero/teodle)](https://github.com/Zaczero/teodle/blob/main/LICENSE)
+[![Support my work](https://shields.monicz.dev/badge/%E2%99%A5%EF%B8%8F%20Support%20my%20work-purple)](https://monicz.dev/#support-my-work)
+[![GitHub Repo stars](https://shields.monicz.dev/github/stars/Zaczero/teodle?style=social)](https://github.com/Zaczero/teodle)
 
 Teodle is a Python-powered website for [Twitch streamer Teo](https://www.twitch.tv/teosgame), to watch game clips submitted by his community and guess the ranks.
 The livestream viewers can also participate in the game by casting their votes in the Twitch chat.
