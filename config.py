@@ -93,6 +93,9 @@ OPENAI_KEY = os.getenv('OPENAI_KEY', None)
 if OPENAI_KEY:
     openai.api_key = OPENAI_KEY
 
+FAST_MODEL = os.getenv('DEFAULT_MODEL', 'gpt-3.5-turbo')
+SMART_MODEL = os.getenv('SMART_MODEL', 'gpt-4')
+
 N_TOP_USERS = 5
 
 

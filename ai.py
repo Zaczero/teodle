@@ -6,13 +6,13 @@ from pprint import pprint
 from openai import ChatCompletion
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from config import CACHE_DIR, OPENAI_KEY
+from config import CACHE_DIR, FAST_MODEL, OPENAI_KEY, SMART_MODEL
 
 lock = asyncio.Lock()
 
 
 @retry(wait=wait_exponential(), stop=stop_after_attempt(5))
-async def _complete(messages: list, **kwargs) -> str:
+async def _complete(messages: list, smart: bool, **kwargs) -> str:
     messages_hash = blake2b(str(messages).encode(), digest_size=4, usedforsecurity=False).hexdigest()
     cache_file = CACHE_DIR / f'{messages_hash}.txt'
 
@@ -21,7 +21,7 @@ async def _complete(messages: list, **kwargs) -> str:
 
     try:
         completion = await ChatCompletion.acreate(
-            model='gpt-3.5-turbo',
+            model=SMART_MODEL if smart else FAST_MODEL,
             messages=messages,
             **({
                 'temperature': 0,  # more randomness
@@ -44,7 +44,7 @@ async def _complete(messages: list, **kwargs) -> str:
     return response
 
 
-async def complete(system: str, *conversation: str, **kwargs) -> str:
+async def complete(system: str, *conversation: str, smart: bool = False, **kwargs) -> str:
     assert len(conversation) % 2 == 1, 'Conversation must be of odd length'
 
     if not OPENAI_KEY:
@@ -62,4 +62,4 @@ async def complete(system: str, *conversation: str, **kwargs) -> str:
         })
 
     async with lock:
-        return (await _complete(messages, **kwargs)).strip()
+        return (await _complete(messages, smart=smart, **kwargs)).strip()

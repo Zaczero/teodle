@@ -2,19 +2,22 @@
 
 pkgs.mkShell {
   buildInputs = with pkgs; [
+    gnumake
     python311
     pipenv
-    ffmpeg_5-full
+    ffmpeg_6-headless
 
     # just to be safe (ffmpeg libs):
     x264 # H.264 video
     libopus # Opus audio
   ];
 
-  shellHook = ''
+  shellHook = with pkgs; ''
+    export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH"
     export PIPENV_VENV_IN_PROJECT=1
     export PIPENV_VERBOSITY=-1
-    [ ! -f ".venv/bin/activate" ] && pipenv install --deploy --ignore-pipfile --keep-outdated --dev
-    exec pipenv shell --fancy
+    [ -v DOCKER ] && [ ! -f .venv/bin/activate ] && pipenv sync
+    [ ! -v DOCKER ] && [ ! -f .venv/bin/activate ] && pipenv sync --dev
+    [ ! -v DOCKER ] && exec pipenv shell --fancy
   '';
 }

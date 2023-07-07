@@ -190,6 +190,7 @@ async def congratulate(username: str | None = Query(None)) -> JSONResponse:
         "\n"
         "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧",
         username,
+        smart=True,
         temperature=0.8,
         max_tokens=512)
 
