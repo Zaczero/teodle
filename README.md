@@ -31,7 +31,7 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 ### YouTube Series
 
-*Updated on 19/07/2023*
+*Updated on 30/08/2023*
 
 - Ep24 https://www.youtube.com/watch?v=8hNENZa_oAs (newest)
 - Ep23 https://www.youtube.com/watch?v=GzgINh-eV5o
