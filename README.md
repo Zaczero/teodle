@@ -33,14 +33,15 @@ Viewers can play along during livestreams by voting in the chat and competing fo
 
 *Updated on 19/07/2023*
 
-- Ep23 https://www.youtube.com/watch?v=GzgINh-eV5o (newest)
+- Ep24 https://www.youtube.com/watch?v=8hNENZa_oAs (newest)
+- Ep23 https://www.youtube.com/watch?v=GzgINh-eV5o
 - Ep22 https://www.youtube.com/watch?v=TetOU20Y0mw
 - Ep21 https://www.youtube.com/watch?v=G8xHJP-_n_g
-- Ep20 https://www.youtube.com/watch?v=swWwUJP8eLY
 
 <details>
 <summary>Show more</summary>
 
+- Ep20 https://www.youtube.com/watch?v=swWwUJP8eLY
 - Ep19 https://www.youtube.com/watch?v=fznYRqL2gZI
 - Ep18 https://www.youtube.com/watch?v=8X01TBHzPCA
 - Ep17 https://www.youtube.com/watch?v=2cYykkCNc-0
